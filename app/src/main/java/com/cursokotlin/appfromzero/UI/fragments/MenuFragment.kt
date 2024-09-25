@@ -1,4 +1,4 @@
-package com.example.fromzero_andre.fragments
+package com.cursokotlin.appfromzero.UI.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,7 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
-import com.example.fromzero_andre.R
+import com.cursokotlin.appfromzero.R
+
 
 /**
  * A simple [Fragment] subclass.
