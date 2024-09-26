@@ -27,4 +27,6 @@
     <string name="elige_tu_tipo_de_usuario">Elige tu tipo de usuario</string>
     <string name="dev">Dev</string>
     <string name="empresas">Empresas</string>
+    <string name="usuario">Usuario</string>
+    <string name="email">Email</string>
 </resources>
