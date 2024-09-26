@@ -12,4 +12,8 @@
     <string name="search_fragment">Search Fragment</string>
     <string name="support_fragment">Support Fragment</string>
     <string name="notifications">Notifications</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="entregables">Entregables</string>
+    <string name="description">Plataforma de Comercio Electrónico Geekit</string>
 </resources>
