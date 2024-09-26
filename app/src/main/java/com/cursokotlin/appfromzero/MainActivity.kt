@@ -6,10 +6,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.cursokotlin.appfromzero.UI.fragments.DeliverablesFragment
 import com.cursokotlin.appfromzero.UI.fragments.HomeFragment
 import com.cursokotlin.appfromzero.UI.fragments.MenuFragment
 import com.cursokotlin.appfromzero.UI.fragments.MessageFragment
-import com.cursokotlin.appfromzero.UI.fragments.SearchFragment
 import com.qamar.curvedbottomnaviagtion.CurvedBottomNavigation
 
 class MainActivity : AppCompatActivity() {
@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.setOnClickMenuListener {
             when(it.id){
                 1 -> {replaceFragment(HomeFragment())}
-                2 -> {replaceFragment(SearchFragment())}
+                2 -> {replaceFragment(DeliverablesFragment())}
                 3 -> {replaceFragment(MessageFragment())}
                 4 -> {replaceFragment(MenuFragment())}
             }
