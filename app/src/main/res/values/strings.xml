@@ -21,4 +21,10 @@
     <string name="iniciar_sesion">Iniciar Sesion</string>
     <string name="user">User</string>
     <string name="password">Password</string>
+    <string name="volver">Volver</string>
+    <string name="Volver">Volver</string>
+    <string name="siguiente"><![CDATA[Siguiente ->]]></string>
+    <string name="elige_tu_tipo_de_usuario">Elige tu tipo de usuario</string>
+    <string name="dev">Dev</string>
+    <string name="empresas">Empresas</string>
 </resources>

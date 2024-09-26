@@ -63,7 +63,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="41dp"
+            android:layout_height="48dp"
             android:hint="@string/password"
             android:textSize="24sp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -97,7 +97,7 @@
         android:textColor="@color/green_fromzero"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:translationX="120dp"
+        android:translationX="125dp"
         android:translationY="640dp" />
 
     <LinearLayout
@@ -110,7 +110,7 @@
 
         <ImageButton
             android:id="@+id/imageButton2"
-            android:layout_width="31dp"
+            android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:backgroundTint="#00FFFFFF"
             android:src="@drawable/ic_arrow_left" />
@@ -119,7 +119,7 @@
             android:id="@+id/textView6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/adelante"
+            android:text="@string/volver"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold" />
