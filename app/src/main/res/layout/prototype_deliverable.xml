@@ -7,11 +7,13 @@
     android:layout_height="wrap_content"
     android:layout_margin="15dp"
     android:animateLayoutChanges="true"
+    app:layout_constrainedHeight="true"
+
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tvProjectName"
