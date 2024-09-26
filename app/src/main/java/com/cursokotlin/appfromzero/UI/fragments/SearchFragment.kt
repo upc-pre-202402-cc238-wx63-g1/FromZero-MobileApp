@@ -5,14 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
+import com.cursokotlin.appfromzero.adapter.DeveloperAdapter
+import com.cursokotlin.appfromzero.model.Developer
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [SearchFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class SearchFragment : Fragment() {
 
     override fun onCreateView(
@@ -20,6 +18,21 @@ class SearchFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        val view = inflater.inflate(R.layout.fragment_search, container, false)
+
+        // Initialize RecyclerView
+        val recyclerView: RecyclerView = view.findViewById(R.id.rvDevelopers)
+        recyclerView.layoutManager = LinearLayoutManager(context)
+
+        // Sample data
+        val developers = listOf(
+            Developer("Juan Pérez", 4.5f, R.drawable.sample_profile, R.drawable.sample_flag, "Especialista en desarrollo móvil con 5 años de experiencia en Android y iOS.", "Android, iOS, Kotlin, Swift"),
+            // Add more developers here
+        )
+
+        // Set adapter
+        recyclerView.adapter = DeveloperAdapter(developers)
+
+        return view
     }
 }
