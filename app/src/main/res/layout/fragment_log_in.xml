@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:backgroundTint="@color/green_fromzero"
+    tools:context=".UI.fragments.LogInFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/fondo_start"
+        android:layout_width="860dp"
+        android:layout_height="985dp"
+        android:src="@drawable/ic_start_design"
+        android:translationX="-208dp"
+        android:translationY="-630dp" />
+
+    <ImageView
+        android:id="@+id/imageView11"
+        android:layout_width="215dp"
+        android:layout_height="175dp"
+        android:src="@drawable/ic_logo"
+        android:translationX="90dp"
+        android:translationY="40dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/user"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/green_fromzero"
+        android:foregroundTint="@color/green_fromzero"
+        android:outlineAmbientShadowColor="@color/green_fromzero"
+        android:outlineSpotShadowColor="@color/green_fromzero"
+        android:textColorHint="@color/green_fromzero"
+        android:translationX="20dp"
+        android:translationY="370dp"
+        app:boxStrokeColor="@color/green_fromzero"
+        app:hintTextColor="@color/green_fromzero"
+        app:placeholderTextColor="@color/green_fromzero"
+        app:prefixTextColor="@color/green_fromzero">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:backgroundTint="@color/green_fromzero"
+            android:drawableTint="@color/green_fromzero"
+            android:hint="@string/user"
+            android:outlineAmbientShadowColor="@color/green_fromzero"
+            android:outlineSpotShadowColor="@color/green_fromzero"
+            android:textColor="@color/green_fromzero"
+            android:textSize="24sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/green_fromzero"
+        android:textColorHint="@color/green_fromzero"
+        android:translationX="20dp"
+        android:translationY="450dp"
+        app:boxStrokeColor="@color/green_fromzero">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="41dp"
+            android:hint="@string/password"
+            android:textSize="24sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/iniciar_sesion"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:translationX="70dp"
+        android:translationY="520dp" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/olvidaste_tu_contrase_a"
+        android:textColor="@color/green_fromzero"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:translationX="80dp"
+        android:translationY="600dp" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/crear_cuenta"
+        android:textColor="@color/green_fromzero"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:translationX="120dp"
+        android:translationY="640dp" />
+
+    <LinearLayout
+        android:id="@+id/ll_Next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="clip_horizontal|center|end"
+        android:orientation="horizontal"
+        android:translationY="680dp">
+
+        <ImageButton
+            android:id="@+id/imageButton2"
+            android:layout_width="31dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00FFFFFF"
+            android:src="@drawable/ic_arrow_left" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/adelante"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</FrameLayout>
