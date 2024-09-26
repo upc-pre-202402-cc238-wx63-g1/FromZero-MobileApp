@@ -42,7 +42,10 @@ class HomeFragment : Fragment() {
         projectList = listOf(
             ProjectCard("Proyecto A", 5, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
             ProjectCard("Proyecto B", 3, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
-            ProjectCard("Proyecto C", 10, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg")
+            ProjectCard("Proyecto C", 10, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
+            ProjectCard("Proyecto E", 7, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
+            ProjectCard("Proyecto F", 6, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
+            ProjectCard("Proyecto G", 0, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg")
         )
 
         adapter = ProjectCardAdapter(projectList, object : ProjectCardAdapter.OnItemClickListener {
