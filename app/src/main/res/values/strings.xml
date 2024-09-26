@@ -12,4 +12,10 @@
     <string name="search_fragment">Search Fragment</string>
     <string name="support_fragment">Support Fragment</string>
     <string name="notifications">Notifications</string>
+    <string name="titulo">Título</string>
+    <string name="descripcion">Descripción</string>
+    <string name="crear_un_entregable">Crear un entregable</string>
+    <string name="fecha_limite">Fecha límite</string>
+    <string name="crear">Crear</string>
+    <string name="cancelar">Cancelar</string>
 </resources>

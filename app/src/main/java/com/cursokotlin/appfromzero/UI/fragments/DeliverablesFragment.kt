@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -35,6 +36,8 @@ class DeliverablesFragment : Fragment() {
         loadDeliverables()
         initView(view)
         return view
+
+
     }
 
     private fun initView(view: View) {
@@ -42,6 +45,16 @@ class DeliverablesFragment : Fragment() {
         deliverableAdapter = DeliverableAdapter(deliverables)
         rvDeliverables.adapter = deliverableAdapter
         rvDeliverables.layoutManager = LinearLayoutManager(requireContext())
+
+        val ivAddDeliverable=view.findViewById<ImageView>(R.id.ivAddDeliverable)
+        ivAddDeliverable.setOnClickListener {
+            //Toast.makeText(context,"funca", Toast.LENGTH_SHORT).show()
+            val dialog = CreateDeliverableFragment()
+            dialog.show(parentFragmentManager, "AddDeliverableDialog")
+        }
+
+
+
     }
 
     private fun loadDeliverables() {
@@ -50,4 +63,6 @@ class DeliverablesFragment : Fragment() {
         deliverables.add(Deliverable("Entregable 3", "Plataforma de Comercio Electrónico Geekit","30/11/2024","Espera","Este entregable consistirá en el código fuente del frontend y backend de la Plataforma de Comercio Electrónico Geekit. Se proporcionará una estructura de directorios organizada, con comentarios claros y limpios en el código para facilitar la comprensión y el mantenimiento futuro."))
         deliverables.add(Deliverable("Entregable 4", "Plataforma de Comercio Electrónico Geekit","30/11/2024","Espera","Este entregable consistirá en el código fuente del frontend y backend de la Plataforma de Comercio Electrónico Geekit. Se proporcionará una estructura de directorios organizada, con comentarios claros y limpios en el código para facilitar la comprensión y el mantenimiento futuro."))
     }
+
+
 }
