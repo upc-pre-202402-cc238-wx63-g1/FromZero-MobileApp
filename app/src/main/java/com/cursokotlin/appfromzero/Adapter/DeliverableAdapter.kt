@@ -100,13 +100,14 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         views.forEach { it.visibility = View.GONE }
 
+        // Aseguramos que el colapso se detenga en tvState
         cvDeliverableCard.measure(
             View.MeasureSpec.makeMeasureSpec(cvDeliverableCard.width, View.MeasureSpec.EXACTLY),
             View.MeasureSpec.UNSPECIFIED
         )
-        val targetHeight = initialHeight - cvDeliverableCard.measuredHeight
+        val stateVisibleHeight = tvState.bottom
 
-        val animator = ValueAnimator.ofInt(initialHeight, targetHeight)
+        val animator = ValueAnimator.ofInt(initialHeight, stateVisibleHeight)
         animator.addUpdateListener { valueAnimator ->
             val layoutParams = cvDeliverableCard.layoutParams
             layoutParams.height = valueAnimator.animatedValue as Int
