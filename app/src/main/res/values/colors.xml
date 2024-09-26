@@ -6,4 +6,5 @@
     <color name="primary_title_color">#6B74B4</color>
     <color name="secondary_title_color">#3554BC</color>
     <color name="primary_text_color">#858585</color>
+    <color name="project_card_background">#EFEFEF</color>
 </resources>
