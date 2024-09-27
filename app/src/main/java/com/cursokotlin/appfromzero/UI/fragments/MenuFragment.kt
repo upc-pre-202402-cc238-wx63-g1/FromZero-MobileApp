@@ -52,7 +52,7 @@ class MenuFragment : Fragment() {
     private fun replaceFragment(fragment: Fragment) {
         val transaction = parentFragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)
-        transaction.replace(R.id.fragmentContainer, fragment)
+        transaction.replace(R.id.fragmenContainer, fragment)
         transaction.addToBackStack("principal")
         transaction.commit()
     }

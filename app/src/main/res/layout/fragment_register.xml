@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UI.fragments.RegisterFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/fondo_start"
+        android:layout_width="860dp"
+        android:layout_height="985dp"
+        android:src="@drawable/ic_start_design"
+        android:translationX="-208dp"
+        android:translationY="-630dp" />
+
+    <ImageView
+        android:id="@+id/imageView11"
+        android:layout_width="215dp"
+        android:layout_height="175dp"
+        android:src="@drawable/ic_logo"
+        android:translationX="90dp"
+        android:translationY="40dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/green_fromzero"
+        android:translationX="20dp"
+        android:translationY="350dp"
+        app:boxBackgroundMode="outline">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_line"
+            android:hint="@string/usuario"
+            android:textColor="@color/green_fromzero" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/green_fromzero"
+        android:translationX="20dp"
+        android:translationY="430dp"
+        app:boxBackgroundMode="outline">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_line"
+            android:hint="@string/email"
+            android:singleLine="false"
+            android:textColor="@color/green_fromzero" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/green_fromzero"
+        android:translationX="20dp"
+        android:translationY="510dp"
+        app:boxBackgroundMode="outline"
+        app:passwordToggleEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_line"
+            android:hint="@string/contrase_a"
+            android:singleLine="false"
+            android:textColor="@color/green_fromzero" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/bt_IniciarSesion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/iniciar_sesion"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:translationX="70dp"
+        android:translationY="590dp" />
+
+    <LinearLayout
+        android:id="@+id/ll_Volver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="clip_horizontal|center|end"
+        android:orientation="horizontal"
+        android:translationY="680dp">
+
+        <ImageButton
+            android:id="@+id/imageButton3"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00FFFFFF"
+            android:src="@drawable/ic_arrow_left" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/volver"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+
+</FrameLayout>
