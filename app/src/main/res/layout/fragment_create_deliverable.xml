@@ -77,23 +77,34 @@
         android:id="@+id/textInputLayout4"
         android:layout_width="320dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="50dp"
+        app:hintEnabled="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout2">
 
-        <TextView
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tvDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/fecha_limite"
-            android:padding="12dp"
-            android:background="@android:color/transparent"
-            android:textColor="@android:color/black"
+            android:background="@drawable/border_date_input"
             android:clickable="true"
-            android:focusable="false" />
+            android:focusable="false"
+            android:hint="@string/fecha_limite"
+            android:textColor="@android:color/black" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tvDateTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/fecha_limite_titulo"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/textInputLayout4"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"

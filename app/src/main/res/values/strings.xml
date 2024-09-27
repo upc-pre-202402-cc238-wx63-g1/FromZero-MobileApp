@@ -22,4 +22,5 @@
     <string name="editar">Editar</string>
     <string name="editar_un_entregable">Editar un entregable</string>
     <string name="seleccionar_fecha">Añadir fecha</string>
+    <string name="fecha_limite_titulo">Fecha límite</string>
 </resources>
