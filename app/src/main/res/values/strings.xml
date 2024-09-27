@@ -12,6 +12,10 @@
     <string name="search_fragment">Search Fragment</string>
     <string name="support_fragment">Support Fragment</string>
     <string name="notifications">Notifications</string>
+    <string name="descripcion_del_problema">Descripcion del problema</string>
+    <string name="adjuntar_archivos_opcional">Adjuntar archivos (opcional)</string>
+    <string name="enviar">Enviar</string>
+    <string name="tipo_de_problema">Tipo de Problema</string>
     <string name="titulo">Título</string>
     <string name="descripcion">Descripción</string>
     <string name="crear_un_entregable">Crear un entregable</string>
@@ -23,7 +27,6 @@
     <string name="editar_un_entregable">Editar un entregable</string>
     <string name="seleccionar_fecha">Añadir fecha</string>
     <string name="fecha_limite_titulo">Fecha límite</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="entregables">Entregables</string>
     <string name="description">Plataforma de Comercio Electrónico Geekit</string>
 </resources>

@@ -1,0 +1,7 @@
+<resources>
+    <string-array name="problem_types">
+        <item>Tipo de Problema 1</item>
+        <item>Tipo de Problema 2</item>
+        <item>Tipo de Problema 3</item>
+    </string-array>
+</resources>
