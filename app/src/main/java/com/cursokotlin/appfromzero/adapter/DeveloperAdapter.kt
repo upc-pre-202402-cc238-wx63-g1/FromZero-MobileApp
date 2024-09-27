@@ -17,7 +17,9 @@ class DeveloperAdapter(private val developers: List<Developer>) : RecyclerView.A
         val name: TextView = itemView.findViewById(R.id.tvDeveloperName)
         val flag: ImageView = itemView.findViewById(R.id.ivFlag)
         val rating: RatingBar = itemView.findViewById(R.id.rbDeveloperRating)
+        val resumeTitle: TextView = itemView.findViewById(R.id.tvResumeTitle)
         val summary: TextView = itemView.findViewById(R.id.tvDeveloperSummary)
+        val skillsTitle: TextView = itemView.findViewById(R.id.tvSkillsTitle)
         val skills: TextView = itemView.findViewById(R.id.tvDeveloperSkills)
         val arrow: ImageView = itemView.findViewById(R.id.ivArrow)
     }
@@ -38,11 +40,15 @@ class DeveloperAdapter(private val developers: List<Developer>) : RecyclerView.A
 
         holder.arrow.setOnClickListener {
             if (holder.summary.visibility == View.GONE) {
+                holder.resumeTitle.visibility = View.VISIBLE
                 holder.summary.visibility = View.VISIBLE
+                holder.skillsTitle.visibility = View.VISIBLE
                 holder.skills.visibility = View.VISIBLE
                 holder.arrow.setImageResource(R.drawable.arrow_up)
             } else {
+                holder.resumeTitle.visibility = View.GONE
                 holder.summary.visibility = View.GONE
+                holder.skillsTitle.visibility = View.GONE
                 holder.skills.visibility = View.GONE
                 holder.arrow.setImageResource(R.drawable.arrow_down)
             }

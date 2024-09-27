@@ -10,7 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="128dp">
+        android:layout_height="wrap_content">
 
         <!-- Imagen del desarrollador -->
         <ImageView
@@ -61,28 +61,54 @@
             app:layout_constraintStart_toEndOf="@+id/ivProfilePic"
             app:layout_constraintTop_toBottomOf="@+id/tvDeveloperName" />
 
+        <!-- Subtítulo de Resumen -->
+        <TextView
+            android:id="@+id/tvResumeTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:visibility="gone"
+            android:text="Resume:"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rbDeveloperRating" />
+
         <!-- Resumen (expandible) -->
         <TextView
             android:id="@+id/tvDeveloperSummary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="4dp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rbDeveloperRating"
+            app:layout_constraintTop_toBottomOf="@+id/tvResumeTitle"
             tools:text="Especialista en desarrollo móvil con 5 años de experiencia en Android y iOS." />
+
+        <!-- Subtítulo de Habilidades -->
+        <TextView
+            android:id="@+id/tvSkillsTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            android:text="Skills:"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDeveloperSummary" />
 
         <!-- Habilidades (expandible) -->
         <TextView
             android:id="@+id/tvDeveloperSkills"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvDeveloperSummary"
+            app:layout_constraintTop_toBottomOf="@+id/tvSkillsTitle"
             tools:text="Android, iOS, Kotlin, Swift" />
 
         <!-- Botón de expandir/cerrar -->
