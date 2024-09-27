@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import com.cursokotlin.appfromzero.UI.fragments.DeliverablesFragment
 import com.cursokotlin.appfromzero.UI.fragments.HomeFragment
 import com.cursokotlin.appfromzero.UI.fragments.MenuFragment
 import com.cursokotlin.appfromzero.UI.fragments.MessageFragment
@@ -45,7 +46,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        //Default Bottom Tab Selected
         replaceFragment(HomeFragment())
         bottomNavigation.show(1)
 
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
+            .replace(R.id.fragmenContainer, fragment)
             .commit()
     }
 }

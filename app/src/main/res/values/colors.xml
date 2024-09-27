@@ -7,4 +7,7 @@
     <color name="secondary_title_color">#3554BC</color>
     <color name="primary_text_color">#858585</color>
     <color name="project_card_background">#EFEFEF</color>
+    <color name="green_fromzero">#38B397</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="Cyan">#45B7A8</color>
 </resources>
