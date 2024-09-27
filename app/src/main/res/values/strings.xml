@@ -49,4 +49,8 @@
     <string name="fecha_limite_titulo">Fecha límite</string>
     <string name="entregables">Entregables</string>
     <string name="description">Plataforma de Comercio Electrónico Geekit</string>
+    <string name="destinatario">Destinatario</string>
+    <string name="titulo_de_mensaje">Titulo de mensaje</string>
+    <string name="asunto">Asunto\n</string>
+    <string name="mensaje">Mensaje\n</string>
 </resources>
