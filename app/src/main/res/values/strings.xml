@@ -17,4 +17,6 @@
     <string name="asunto">Asunto</string>
     <string name="mensaje">Mensaje</string>
     <string name="adjunta_archivos">Adjunta archivos</string>
+    <string name="adjuntar_archivos_opcional">Adjuntar archivos (opcional)</string>
+    <string name="enviar">Enviar</string>
 </resources>
