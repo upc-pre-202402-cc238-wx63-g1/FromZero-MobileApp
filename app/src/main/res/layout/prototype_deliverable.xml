@@ -105,6 +105,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
             android:layout_marginTop="32dp"
+            android:layout_marginBottom="20dp"
             android:fontFamily="@font/open_sans_medium"
             android:textSize="14dp"
             android:visibility="gone"
@@ -130,7 +131,7 @@
             app:layout_constraintHorizontal_bias="0.929"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvState"
-            app:layout_constraintVertical_bias="0.513"
+            app:layout_constraintVertical_bias="0.525"
             app:strokeColor="@color/material_dynamic_neutral80"
             app:strokeWidth="1sp"
             tools:text="Eliminar" />
