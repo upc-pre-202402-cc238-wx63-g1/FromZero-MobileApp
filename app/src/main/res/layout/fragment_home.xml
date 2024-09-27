@@ -44,76 +44,148 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView4">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
             android:paddingEnd="35dp"
             android:paddingBottom="30dp"
             tools:ignore="RtlSymmetry">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="30dp"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/ivProfilePhoto"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@drawable/geekit_profile" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sitio_web"
-                    android:textColor="@color/primary_text_color" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="geekitpe.com"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="30dp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ivProfilePhoto"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/geekit_profile" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="10dp"
-                        android:text="Geekit.pe"
-                        android:textSize="25dp" />
+                        android:text="@string/sitio_web"
+                        android:textColor="@color/primary_text_color" />
 
-                    <ImageView
-                        android:id="@+id/ivCountryIcon"
+                    <TextView
+                        android:id="@+id/tvEnterpriseWebSite"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:text="geekitpe.com"
+                        android:textStyle="bold" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tvEntepriseName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingBottom="10dp"
+                            android:text="Geekit.pe"
+                            android:textSize="25dp" />
+
+                        <ImageView
+                            android:id="@+id/ivCountryIcon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Sector"
+                        android:textColor="@color/primary_text_color" />
+
+                    <TextView
+                        android:id="@+id/tvEntepriseSector"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ropa" />
+
+                    <TextView
+                        android:id="@+id/tvEnterpriseRUCTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Razon Social"
+                        android:textColor="@color/primary_text_color"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tvEnterpriseRUC"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="20405979381"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sector"
+                    android:text="@string/resumen"
                     android:textColor="@color/primary_text_color" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvEntepriseDescription"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Ropa" />
+                    android:text="Geekit es tu destino para la moda geek. Nos especializamos en ofrecer una selección única de ropa y accesorios para jóvenes apasionados por la cultura pop, los videojuegos, el cine y los cómics. En Geekit, encontrarás prendas que te permiten expresar tu estilo auténtico y tu amor por tus intereses favoritos."
+                    android:textSize="13dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/resumen"
+                        android:textColor="@color/primary_text_color" />
+
+                    <TextView
+                        android:id="@+id/tvEnterprisePhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="924 830 455"
+                        android:textSize="13dp" />
+                </LinearLayout>
+
+
             </LinearLayout>
+
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/ic_check_circle" />
 
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/icEdit"
             android:layout_width="40dp"
             android:layout_height="51dp"
             android:src="@drawable/ic_edit"
