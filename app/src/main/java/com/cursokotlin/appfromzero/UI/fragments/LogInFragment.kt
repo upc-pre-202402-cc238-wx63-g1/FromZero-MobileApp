@@ -52,7 +52,7 @@ class LogInFragment : Fragment() {
             // Inicia la actividad
             startActivity(intent)
             // Opcionalmente, puedes finalizar la actividad actual si no la necesitas más
-            requireActivity().finish()
+            // requireActivity().finish()
         }
         return rootView
     }
