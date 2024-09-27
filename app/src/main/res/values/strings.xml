@@ -18,4 +18,6 @@
     <string name="fecha_limite">Fecha límite</string>
     <string name="crear">Crear</string>
     <string name="cancelar">Cancelar</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="editar">Editar</string>
 </resources>

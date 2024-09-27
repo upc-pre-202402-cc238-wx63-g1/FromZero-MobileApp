@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -46,6 +47,9 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val ivState = itemView.findViewById<ImageView>(R.id.ivState)
     val ivArrow = itemView.findViewById<ImageView>(R.id.ivArrow)
 
+    val btDelete = itemView.findViewById<Button>(R.id.btDelete)
+    val btEdit = itemView.findViewById<Button>(R.id.btEdit)
+
     var isExpanded = false
 
     fun bind(deliverable: Deliverable) {
@@ -59,23 +63,29 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
         ivState.setImageResource(android.R.drawable.ic_menu_info_details)
         ivArrow.setImageResource(R.drawable.arrow_down)
 
+
         tvDescriptionText.visibility = View.GONE
         tvDescription.visibility = View.GONE
+        btDelete.visibility = View.GONE
+        btEdit.visibility = View.GONE
 
         cvDeliverableCard.setOnClickListener {
             if (isExpanded) {
-                collapseCard(tvDescriptionText, tvDescription)
+                collapseCard()
                 ivArrow.setImageResource(R.drawable.arrow_down)
             } else {
-                expandCard(tvDescriptionText, tvDescription)
+                expandCard()
                 ivArrow.setImageResource(R.drawable.arrow_up)
             }
             isExpanded = !isExpanded
         }
     }
 
-    private fun expandCard(vararg views: View) {
-        views.forEach { it.visibility = View.VISIBLE }
+    private fun expandCard() {
+        tvDescriptionText.visibility = View.VISIBLE
+        tvDescription.visibility = View.VISIBLE
+        btDelete.visibility = View.VISIBLE
+        btEdit.visibility = View.VISIBLE
 
         val initialHeight = cvDeliverableCard.height
         cvDeliverableCard.measure(
@@ -95,10 +105,13 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
         animator.start()
     }
 
-    private fun collapseCard(vararg views: View) {
+    private fun collapseCard() {
         val initialHeight = cvDeliverableCard.height
 
-        views.forEach { it.visibility = View.GONE }
+        tvDescriptionText.visibility = View.GONE
+        tvDescription.visibility = View.GONE
+        btDelete.visibility = View.GONE
+        btEdit.visibility = View.GONE
 
         cvDeliverableCard.measure(
             View.MeasureSpec.makeMeasureSpec(cvDeliverableCard.width, View.MeasureSpec.EXACTLY),

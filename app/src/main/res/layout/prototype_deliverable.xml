@@ -105,15 +105,55 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
             android:layout_marginTop="32dp"
-            android:layout_marginBottom="5dp"
             android:fontFamily="@font/open_sans_medium"
             android:textSize="14dp"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/btEdit"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvState"
             app:layout_constraintVertical_bias="0.157"
             tools:text="Se entregará un prototipo interactivo de la interfaz de usuario de la Plataforma de Comercio Electrónico Geekit. Este prototipo permitirá a los stakeholders visualizar y navegar por las diferentes pantallas y funcionalidades de la aplicación, proporcionando una representación visual de cómo se verá y funcionará la plataforma final" />
+
+        <Button
+            android:id="@+id/btDelete"
+            android:layout_width="154dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="164dp"
+            android:backgroundTint="@color/white"
+            android:text="@string/eliminar"
+            android:textColor="@color/design_default_color_error"
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:cornerRadius="25sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.929"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvState"
+            app:layout_constraintVertical_bias="0.513"
+            app:strokeColor="@color/material_dynamic_neutral80"
+            app:strokeWidth="1sp"
+            tools:text="Eliminar" />
+
+        <Button
+            android:id="@+id/btEdit"
+            android:layout_width="154dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/white"
+            android:text="@string/editar"
+            android:textColor="@color/Cyan"
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:cornerRadius="25sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.122"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvState"
+            app:layout_constraintVertical_bias="0.799"
+            app:strokeColor="@color/material_dynamic_neutral80"
+            app:strokeWidth="1sp"
+            tools:text="Editar" />
 
         <ImageView
             android:id="@+id/ivArrow"
@@ -128,6 +168,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tvDescriptionText"
             app:layout_constraintVertical_bias="0.974"
             app:srcCompat="@drawable/arrow_down" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
