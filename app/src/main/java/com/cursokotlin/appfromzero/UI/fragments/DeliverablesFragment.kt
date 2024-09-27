@@ -59,4 +59,5 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         //deliverables.add(Deliverable("Entregable 3", "Plataforma de Comercio Electrónico Geekit","30/11/2024","Espera","Este entregable consistirá en el código fuente del frontend y backend de la Plataforma de Comercio Electrónico Geekit. Se proporcionará una estructura de directorios organizada, con comentarios claros y limpios en el código para facilitar la comprensión y el mantenimiento futuro."))
         //deliverables.add(Deliverable("Entregable 4", "Plataforma de Comercio Electrónico Geekit","30/11/2024","Espera","Este entregable consistirá en el código fuente del frontend y backend de la Plataforma de Comercio Electrónico Geekit. Se proporcionará una estructura de directorios organizada, con comentarios claros y limpios en el código para facilitar la comprensión y el mantenimiento futuro."))
     }
+
 }

@@ -15,7 +15,7 @@ class EditDeliverableFragment : DialogFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_edit_deliverable, container, false)
 
-        //val deliverableTitle = arguments?.getString("deliverableTitle")
+        val deliverableTitle = arguments?.getString("deliverableTitle")
         setupCancelButton(view)
         return view
     }

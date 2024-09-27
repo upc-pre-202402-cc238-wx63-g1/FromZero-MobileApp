@@ -20,4 +20,6 @@
     <string name="cancelar">Cancelar</string>
     <string name="eliminar">Eliminar</string>
     <string name="editar">Editar</string>
+    <string name="editar_un_entregable">Editar un entregable</string>
+    <string name="seleccionar_fecha">Añadir fecha</string>
 </resources>
