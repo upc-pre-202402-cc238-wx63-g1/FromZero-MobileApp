@@ -33,7 +33,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/ic_line"
             android:hint="@string/usuario"
             android:textColor="@color/green_fromzero" />
@@ -49,7 +49,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/ic_line"
             android:hint="@string/email"
             android:singleLine="false"
@@ -67,9 +67,9 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/ic_line"
-            android:hint="Contraseña"
+            android:hint="@string/contrase_a"
             android:singleLine="false"
             android:textColor="@color/green_fromzero" />
     </com.google.android.material.textfield.TextInputLayout>

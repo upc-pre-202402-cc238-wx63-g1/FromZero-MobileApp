@@ -113,6 +113,7 @@ class RolFragment : Fragment() {
 
 
     }
+
     private fun replaceFragment(fragment: Fragment) {
         val transaction = parentFragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)

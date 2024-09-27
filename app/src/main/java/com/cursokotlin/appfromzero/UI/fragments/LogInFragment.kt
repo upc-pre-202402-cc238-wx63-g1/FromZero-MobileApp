@@ -1,12 +1,15 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.cursokotlin.appfromzero.MainActivity
 import com.cursokotlin.appfromzero.R
 
 // TODO: Rename parameter arguments, choose names that match
@@ -40,6 +43,16 @@ class LogInFragment : Fragment() {
         val tvRegister = rootView.findViewById<TextView>(R.id.tv_CrearCuenta)
         tvRegister.setOnClickListener {
             replaceFragment(RolFragment())
+        }
+
+        val btRegister = rootView.findViewById<Button>(R.id.bt_IniciarSesion)
+        btRegister.setOnClickListener {
+            // Crea un Intent para ir a MainActivity
+            val intent = Intent(requireActivity(), MainActivity::class.java)
+            // Inicia la actividad
+            startActivity(intent)
+            // Opcionalmente, puedes finalizar la actividad actual si no la necesitas más
+            requireActivity().finish()
         }
         return rootView
     }

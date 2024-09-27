@@ -38,13 +38,13 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="match_parent"
             android:background="@drawable/ic_line"
             android:hint="@string/user"
             android:outlineAmbientShadowColor="@color/green_fromzero"
             android:outlineSpotShadowColor="@color/green_fromzero"
             android:textColor="@color/green_fromzero"
-            android:textSize="24sp" />
+            android:textSize="16sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -57,10 +57,10 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="match_parent"
             android:background="@drawable/ic_line"
             android:hint="@string/password"
-            android:textSize="24sp" />
+            android:textSize="16sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
