@@ -19,4 +19,6 @@
     <string name="adjunta_archivos">Adjunta archivos</string>
     <string name="adjuntar_archivos_opcional">Adjuntar archivos (opcional)</string>
     <string name="enviar">Enviar</string>
+    <string name="descripcion_del_problema">Descripcion del problema</string>
+    <string name="tipo_de_problema">Tipo de Problema</string>
 </resources>
