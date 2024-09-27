@@ -24,11 +24,16 @@ class DeliverableAdapter(var deliverables:ArrayList<Deliverable>): Adapter<Deliv
     }
 
     override fun onBindViewHolder(holder: DeliverablePrototype, position: Int) {
-        holder.bind(deliverables.get(position))
+        holder.bind(deliverables[position], this, position)
     }
 
     override fun getItemCount(): Int {
         return deliverables.size
+    }
+
+    fun removeItem(position: Int) {
+        deliverables.removeAt(position)
+        notifyItemRemoved(position)
     }
 
 }
@@ -52,7 +57,7 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var isExpanded = false
 
-    fun bind(deliverable: Deliverable) {
+    fun bind(deliverable: Deliverable, adapter: DeliverableAdapter, position: Int) {
         tvDeliverableName.text = deliverable.title
         tvProjectName.text = deliverable.projectName
         tvDescriptionText.text = deliverable.description
@@ -62,7 +67,6 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
         ivClock.setImageResource(android.R.drawable.ic_menu_recent_history)
         ivState.setImageResource(android.R.drawable.ic_menu_info_details)
         ivArrow.setImageResource(R.drawable.arrow_down)
-
 
         tvDescriptionText.visibility = View.GONE
         tvDescription.visibility = View.GONE
@@ -78,6 +82,10 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 ivArrow.setImageResource(R.drawable.arrow_up)
             }
             isExpanded = !isExpanded
+        }
+
+        btDelete.setOnClickListener {
+            adapter.removeItem(position)
         }
     }
 
@@ -130,3 +138,4 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
         animator.start()
     }
 }
+
