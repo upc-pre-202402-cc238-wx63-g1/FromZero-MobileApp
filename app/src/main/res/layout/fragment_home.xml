@@ -147,12 +147,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/resumen"
-                    android:textColor="@color/primary_text_color" />
+                    android:textColor="@color/primary_text_color"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/tvEntepriseDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:text="Geekit es tu destino para la moda geek. Nos especializamos en ofrecer una selección única de ropa y accesorios para jóvenes apasionados por la cultura pop, los videojuegos, el cine y los cómics. En Geekit, encontrarás prendas que te permiten expresar tu estilo auténtico y tu amor por tus intereses favoritos."
                     android:textSize="13dp" />
 
@@ -164,14 +166,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/resumen"
-                        android:textColor="@color/primary_text_color" />
+                        android:textColor="@color/primary_text_color"
+                        android:visibility="gone"/>
 
                     <TextView
                         android:id="@+id/tvEnterprisePhone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="924 830 455"
-                        android:textSize="13dp" />
+                        android:textSize="13dp"
+                        android:visibility="gone"/>
                 </LinearLayout>
 
 
@@ -180,7 +184,8 @@
             <ImageView
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:src="@drawable/ic_check_circle" />
+                android:src="@drawable/ic_check_circle"
+                android:visibility="gone"/>
 
         </LinearLayout>
 
@@ -190,7 +195,7 @@
             android:layout_height="51dp"
             android:src="@drawable/ic_edit"
             android:translationX="230dp"
-            android:translationY="125dp" />
+            android:translationY="125dp"/>
 
     </androidx.cardview.widget.CardView>
 
