@@ -1,6 +1,7 @@
 package com.cursokotlin.appfromzero.Adapter
 
 import android.animation.ValueAnimator
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,10 +9,12 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.cursokotlin.appfromzero.R
+import com.cursokotlin.appfromzero.UI.fragments.EditDeliverableFragment
 import com.cursokotlin.appfromzero.model.Deliverable
 
 class DeliverableAdapter(var deliverables:ArrayList<Deliverable>): Adapter<DeliverablePrototype>() {
@@ -84,8 +87,21 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
             isExpanded = !isExpanded
         }
 
+
         btDelete.setOnClickListener {
             adapter.removeItem(position)
+        }
+
+        btEdit.setOnClickListener {
+            val fragmentManager = (itemView.context as AppCompatActivity).supportFragmentManager
+            val editDeliverableFragment = EditDeliverableFragment()
+
+
+            //val bundle = Bundle()
+            //bundle.putString("deliverableTitle", deliverable.title)
+           // editDeliverableFragment.arguments = bundle
+
+            editDeliverableFragment.show(fragmentManager, "EditDeliverableFragment")
         }
     }
 

@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:fontFamily="@font/open_sans"
-        android:text="@string/crear_un_entregable"
+        android:text="@string/editar_un_entregable"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -41,7 +41,7 @@
         android:layout_width="280dp"
         android:layout_height="68dp"
         android:layout_marginTop="48dp"
-        android:text="@string/crear"
+        android:text="@string/editar"
         android:textColor="@color/Cyan"
         android:textSize="35sp"
         app:backgroundTint="@android:color/transparent"
@@ -52,7 +52,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout4"
         app:strokeColor="@color/material_dynamic_neutral80"
         app:strokeWidth="2sp"
-        tools:text="Crear" />
+        tools:text="Editar" />
 
     <Button
         android:id="@+id/btCancel"

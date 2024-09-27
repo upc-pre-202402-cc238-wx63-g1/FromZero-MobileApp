@@ -46,8 +46,6 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             dialog.setOnDeliverableCreatedListener(this)
             dialog.show(parentFragmentManager, "AddDeliverableDialog")
         }
-
-
     }
 
     override fun onDeliverableCreated(deliverable: Deliverable) {

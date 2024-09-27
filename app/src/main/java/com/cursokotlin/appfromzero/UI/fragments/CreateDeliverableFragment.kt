@@ -30,7 +30,7 @@ class CreateDeliverableFragment : DialogFragment() {
     }
 
     private fun setupCreateButton(view: View) {
-        val createButton = view.findViewById<Button>(R.id.btCreate)
+        val createButton = view.findViewById<Button>(R.id.btEdit)
         val titleField = view.findViewById<TextInputEditText>(R.id.etTitle)
         val descriptionField = view.findViewById<TextInputEditText>(R.id.etDescription)
         val dateField = view.findViewById<TextInputEditText>(R.id.etDate)
