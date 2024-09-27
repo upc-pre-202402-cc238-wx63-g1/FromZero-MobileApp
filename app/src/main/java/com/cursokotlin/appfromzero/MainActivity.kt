@@ -45,7 +45,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        //Default Bottom Tab Selected
         replaceFragment(HomeFragment())
         bottomNavigation.show(1)
 

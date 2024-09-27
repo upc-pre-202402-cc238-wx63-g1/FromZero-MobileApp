@@ -50,7 +50,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
 
     override fun onDeliverableCreated(deliverable: Deliverable) {
         deliverables.add(deliverable)
-        deliverableAdapter.notifyItemInserted(deliverables.size - 1) // Notifica al adaptador que se ha insertado un nuevo ítem
+        deliverableAdapter.notifyItemInserted(deliverables.size - 1)
     }
 
     private fun loadDeliverables() {
