@@ -33,6 +33,7 @@ class ViewProjectFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_view_project, container, false)
         loadDescription(view)
         return view
+        description(view)
     }
 
     private fun loadDescription(view: View) {
