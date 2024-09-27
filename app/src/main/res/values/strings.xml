@@ -12,13 +12,8 @@
     <string name="search_fragment">Search Fragment</string>
     <string name="support_fragment">Support Fragment</string>
     <string name="notifications">Notifications</string>
-    <string name="destinatario">Destinatario</string>
-    <string name="titulo_de_mensaje">Titulo de mensaje</string>
-    <string name="asunto">Asunto</string>
-    <string name="mensaje">Mensaje</string>
-    <string name="adjunta_archivos">Adjunta archivos</string>
+    <string name="descripcion_del_problema">Descripcion del problema</string>
     <string name="adjuntar_archivos_opcional">Adjuntar archivos (opcional)</string>
     <string name="enviar">Enviar</string>
-    <string name="descripcion_del_problema">Descripcion del problema</string>
     <string name="tipo_de_problema">Tipo de Problema</string>
 </resources>
