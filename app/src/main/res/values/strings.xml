@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">AppFromZero</string>
+    <string name="create_project_fragment">Create Project Fragment</string>
+    <string name="home_fragment">Home Fragment</string>
+    <string name="logout_fragment">Logout Fragment</string>
+    <string name="logout">Logout</string>
+    <string name="support">Support</string>
+    <string name="create_project">Create Project</string>
+    <string name="notificantions">Notificantions</string>
+    <string name="message_fragment">Message Fragment</string>
+    <string name="notification_fragment">Notifications Fragment</string>
+    <string name="search_fragment">Search Fragment</string>
+    <string name="support_fragment">Support Fragment</string>
+    <string name="notifications">Notifications</string>
+    <string name="descripcion_del_problema">Descripcion del problema</string>
+    <string name="adjuntar_archivos_opcional">Adjuntar archivos (opcional)</string>
+    <string name="enviar">Enviar</string>
+    <string name="tipo_de_problema">Tipo de Problema</string>
 </resources>
