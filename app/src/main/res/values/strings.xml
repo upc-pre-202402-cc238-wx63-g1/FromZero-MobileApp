@@ -25,10 +25,10 @@
     <string name="Volver">Volver</string>
     <string name="siguiente"><![CDATA[Siguiente ->]]></string>
     <string name="elige_tu_tipo_de_usuario">Elige tu tipo de usuario</string>
-    <string name="dev">Dev</string>
+    <string name="dev">Desarrollador</string>
     <string name="empresas">Empresas</string>
     <string name="usuario">Usuario</string>
-    <string name="email">Email</string>
+    <string name="email">Correo</string>
     <string name="envia_un_correo_para_cambiar_tu_contrase_a">Envia un correo para cambiar tu contraseña</string>
     <string name="empresa">Empresa</string>
     <string name="contrase_a">Contraseña</string>
