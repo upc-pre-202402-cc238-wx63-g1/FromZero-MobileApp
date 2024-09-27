@@ -31,4 +31,5 @@
     <string name="email">Email</string>
     <string name="envia_un_correo_para_cambiar_tu_contrase_a">Envia un correo para cambiar tu contraseña</string>
     <string name="enviar">Enviar</string>
+    <string name="empresa">Empresa</string>
 </resources>

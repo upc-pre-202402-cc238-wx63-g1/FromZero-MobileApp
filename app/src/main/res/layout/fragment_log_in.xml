@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_volver"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:backgroundTint="@color/green_fromzero"
@@ -63,7 +64,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/bt_IniciarSesion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/iniciar_sesion"
@@ -73,7 +74,7 @@
         android:translationY="520dp" />
 
     <TextView
-        android:id="@+id/textView7"
+        android:id="@+id/tv_OlvidarContra"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/olvidaste_tu_contrase_a"
@@ -84,7 +85,7 @@
         android:translationY="600dp" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/tv_CrearCuenta"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/crear_cuenta"
@@ -95,7 +96,7 @@
         android:translationY="640dp" />
 
     <LinearLayout
-        android:id="@+id/ll_Next"
+        android:id="@+id/ll_Volver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="clip_horizontal|center|end"
@@ -103,20 +104,19 @@
         android:translationY="680dp">
 
         <ImageButton
-            android:id="@+id/imageButton2"
+            android:id="@+id/imageButton3"
             android:layout_width="32dp"
             android:layout_height="wrap_content"
             android:backgroundTint="#00FFFFFF"
             android:src="@drawable/ic_arrow_left" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/textView7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/volver"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold" />
-
     </LinearLayout>
 </FrameLayout>
