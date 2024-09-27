@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
-                android:text="Plataforma de Comercio Electronico Geekit"
+                android:text="Plataforma de Comercio Electrónico Geekit"
                 android:textColor="@color/primary_title_color"
                 android:textStyle="bold" />
 
