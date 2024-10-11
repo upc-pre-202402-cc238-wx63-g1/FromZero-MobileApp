@@ -1,4 +1,4 @@
-package com.cursokotlin.appfromzero.model
+package com.cursokotlin.appfromzero.models
 
 class Deliverable(
     //var id:Int?,

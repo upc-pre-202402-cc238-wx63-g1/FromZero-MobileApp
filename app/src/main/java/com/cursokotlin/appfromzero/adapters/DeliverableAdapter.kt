@@ -1,7 +1,6 @@
-package com.cursokotlin.appfromzero.Adapter
+package com.cursokotlin.appfromzero.adapters
 
 import android.animation.ValueAnimator
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.UI.fragments.EditDeliverableFragment
-import com.cursokotlin.appfromzero.model.Deliverable
+import com.cursokotlin.appfromzero.models.Deliverable
 
 class DeliverableAdapter(var deliverables:ArrayList<Deliverable>): Adapter<DeliverablePrototype>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeliverablePrototype {

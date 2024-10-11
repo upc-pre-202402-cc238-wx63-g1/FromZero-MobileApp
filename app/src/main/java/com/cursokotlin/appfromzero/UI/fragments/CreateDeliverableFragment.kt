@@ -10,7 +10,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.cursokotlin.appfromzero.R
-import com.cursokotlin.appfromzero.model.Deliverable
+import com.cursokotlin.appfromzero.models.Deliverable
 import com.google.android.material.textfield.TextInputEditText
 import java.util.*
 

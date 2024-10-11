@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.ProjectData
-import com.cursokotlin.appfromzero.ProjectDataAdapter
+import com.cursokotlin.appfromzero.adapters.ProjectDataAdapter
 import com.cursokotlin.appfromzero.R
 
 // TODO: Rename parameter arguments, choose names that match

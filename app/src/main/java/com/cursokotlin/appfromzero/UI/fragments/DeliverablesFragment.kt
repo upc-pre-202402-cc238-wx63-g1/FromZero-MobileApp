@@ -10,9 +10,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.cursokotlin.appfromzero.Adapter.DeliverableAdapter
+import com.cursokotlin.appfromzero.adapters.DeliverableAdapter
 import com.cursokotlin.appfromzero.R
-import com.cursokotlin.appfromzero.model.Deliverable
+import com.cursokotlin.appfromzero.models.Deliverable
 
 class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverableCreatedListener {
 

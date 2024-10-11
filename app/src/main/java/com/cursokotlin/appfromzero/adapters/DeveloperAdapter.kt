@@ -1,4 +1,4 @@
-package com.cursokotlin.appfromzero.adapter
+package com.cursokotlin.appfromzero.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +8,7 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
-import com.cursokotlin.appfromzero.model.Developer
+import com.cursokotlin.appfromzero.models.Developer
 
 class DeveloperAdapter(private val developers: List<Developer>) : RecyclerView.Adapter<DeveloperAdapter.DeveloperViewHolder>() {
 

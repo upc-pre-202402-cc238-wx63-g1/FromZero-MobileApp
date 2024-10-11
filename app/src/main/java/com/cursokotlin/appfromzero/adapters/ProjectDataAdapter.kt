@@ -1,4 +1,4 @@
-package com.cursokotlin.appfromzero
+package com.cursokotlin.appfromzero.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import com.cursokotlin.appfromzero.ProjectData
+import com.cursokotlin.appfromzero.R
 
 class ProjectDataAdapter(val projects: List<ProjectData>): Adapter<ProjectDescriptionPrototype>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectDescriptionPrototype {

@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
-import com.cursokotlin.appfromzero.adapter.DeveloperAdapter
-import com.cursokotlin.appfromzero.model.Developer
+import com.cursokotlin.appfromzero.adapters.DeveloperAdapter
+import com.cursokotlin.appfromzero.models.Developer
 
 class SearchFragment : Fragment() {
 
