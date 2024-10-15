@@ -8,12 +8,11 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.cursokotlin.appfromzero.R
-import com.cursokotlin.appfromzero.UI.fragments.EditDeliverableFragment
 import com.cursokotlin.appfromzero.models.Deliverable
 
 class DeliverableAdapter(var deliverables:ArrayList<Deliverable>): Adapter<DeliverablePrototype>() {
@@ -88,20 +87,17 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
 
         btDelete.setOnClickListener {
-            adapter.removeItem(position)
+            val position = adapterPosition
+            println("Posición eliminada: $position")
+            if (position != RecyclerView.NO_POSITION) {
+                adapter.removeItem(position)
+                if (adapter.itemCount == 0) {
+                    Toast.makeText(itemView.context, "No hay entregables", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
-        btEdit.setOnClickListener {
-            val fragmentManager = (itemView.context as AppCompatActivity).supportFragmentManager
-            val editDeliverableFragment = EditDeliverableFragment()
 
-
-            //val bundle = Bundle()
-            //bundle.putString("deliverableTitle", deliverable.title)
-           // editDeliverableFragment.arguments = bundle
-
-            editDeliverableFragment.show(fragmentManager, "EditDeliverableFragment")
-        }
     }
 
     private fun expandCard() {
