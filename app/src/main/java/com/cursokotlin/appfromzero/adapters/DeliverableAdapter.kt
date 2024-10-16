@@ -121,7 +121,7 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
         animator.start()
     }
 
-    private fun collapseCard() {
+    fun collapseCard() {
         val initialHeight = cvDeliverableCard.height
 
         tvDescriptionText.visibility = View.GONE
@@ -144,5 +144,7 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
         animator.duration = 300
         animator.interpolator = AccelerateDecelerateInterpolator()
         animator.start()
+
+
     }
 }

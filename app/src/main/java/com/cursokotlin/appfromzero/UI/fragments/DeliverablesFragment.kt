@@ -12,12 +12,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.adapters.DeliverableAdapter
 import com.cursokotlin.appfromzero.R
+import com.cursokotlin.appfromzero.adapters.DeliverablePrototype
 import com.cursokotlin.appfromzero.models.Deliverable
 
 class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverableCreatedListener, EditDeliverableFragment.OnDeliverableEditedListener {
 
     private var deliverables = ArrayList<Deliverable>()
     private lateinit var deliverableAdapter: DeliverableAdapter
+    private lateinit var rvDeliverables: RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -35,7 +37,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
     }
 
     private fun initView(view: View) {
-        val rvDeliverables = view.findViewById<RecyclerView>(R.id.rvDeliverables)
+        rvDeliverables = view.findViewById(R.id.rvDeliverables)
         deliverableAdapter = DeliverableAdapter(deliverables) { deliverable ->
             val dialog = EditDeliverableFragment()
             val bundle = Bundle().apply {
@@ -60,7 +62,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
     }
 
     override fun onDeliverableCreated(deliverable: Deliverable) {
-        deliverable.id = deliverables.size // Set ID based on position
+        deliverable.id = deliverables.size
         deliverables.add(deliverable)
         deliverableAdapter.notifyItemInserted(deliverables.size - 1)
     }
@@ -70,6 +72,8 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         if (index != -1) {
             deliverables[index] = newDeliverable
             deliverableAdapter.notifyItemChanged(index)
+            val viewHolder = rvDeliverables.findViewHolderForAdapterPosition(index) as? DeliverablePrototype
+            viewHolder?.collapseCard()
         }
     }
 
