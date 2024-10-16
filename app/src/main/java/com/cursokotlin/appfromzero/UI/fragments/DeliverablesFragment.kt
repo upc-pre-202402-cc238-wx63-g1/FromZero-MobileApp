@@ -65,6 +65,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         deliverable.id = deliverables.size
         deliverables.add(deliverable)
         deliverableAdapter.notifyItemInserted(deliverables.size - 1)
+        rvDeliverables.scrollToPosition(deliverables.size - 1)
     }
 
     override fun onDeliverableEdited(newDeliverable: Deliverable) {

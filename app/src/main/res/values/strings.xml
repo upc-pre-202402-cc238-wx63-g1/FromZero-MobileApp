@@ -53,4 +53,6 @@
     <string name="titulo_de_mensaje">Titulo de mensaje</string>
     <string name="asunto">Asunto\n</string>
     <string name="mensaje">Mensaje\n</string>
+    <string name="state_icon">State icon</string>
+    <string name="date_icon">Date icon</string>
 </resources>

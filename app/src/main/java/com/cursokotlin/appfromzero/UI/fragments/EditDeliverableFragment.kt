@@ -1,5 +1,6 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.Deliverable
+import java.util.Calendar
 
 class EditDeliverableFragment : DialogFragment() {
 
@@ -40,18 +42,10 @@ class EditDeliverableFragment : DialogFragment() {
         etDescription.setText(deliverableDescription)
         etDate.setText(deliverableDate)
 
+        setupDatePicker(etDate)
         setupCancelButton(view)
         setupSaveButton(view, deliverableId, etTitle, etDescription, etDate)
         return view
-    }
-
-    override fun onStart() {
-        super.onStart()
-        dialog?.window?.setBackgroundDrawableResource(R.drawable.rounded_dialog_background)
-        dialog?.window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.9).toInt(),
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
     }
 
     private fun setupSaveButton(view: View, deliverableId: Int?, etTitle: EditText, etDescription: EditText, etDate: EditText) {
@@ -75,5 +69,30 @@ class EditDeliverableFragment : DialogFragment() {
         cancelButton.setOnClickListener {
             dismiss()
         }
+    }
+
+    private fun setupDatePicker(dateField: EditText) {
+        dateField.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+                val formattedDate = String.format("%02d/%02d/%d", selectedDay, selectedMonth + 1, selectedYear)
+                dateField.setText(formattedDate)
+            }, year, month, day)
+
+            datePickerDialog.show()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.setBackgroundDrawableResource(R.drawable.rounded_dialog_background)
+        dialog?.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.9).toInt(),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
     }
 }

@@ -83,7 +83,7 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         btDelete.setOnClickListener {
             val position = adapterPosition
-            println("entregable eliminado en la posición $position")
+            println("entregable eliminado en la posicion $position")
             if (position != RecyclerView.NO_POSITION) {
                 adapter.removeItem(position)
                 if (adapter.itemCount == 0) {
@@ -121,7 +121,7 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
         animator.start()
     }
 
-    fun collapseCard() {
+     fun collapseCard() {
         val initialHeight = cvDeliverableCard.height
 
         tvDescriptionText.visibility = View.GONE
@@ -144,7 +144,5 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
         animator.duration = 300
         animator.interpolator = AccelerateDecelerateInterpolator()
         animator.start()
-
-
     }
 }
