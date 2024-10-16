@@ -44,7 +44,14 @@ class CreateDeliverableFragment : DialogFragment() {
             val date = dateField.text.toString()
 
             if (title.isNotEmpty() && description.isNotEmpty() && date.isNotEmpty()) {
-                val newDeliverable = Deliverable(title, "Plataforma de Comercio Electrónico Geekit", date, "Espera", description)
+                val newDeliverable = Deliverable(
+                    id = 0, //id temporal
+                    title = title,
+                    projectName = "Plataforma de Comercio Electrónico Geekit",
+                    date = date,
+                    state = "Espera",
+                    description = description
+                )
                 listener?.onDeliverableCreated(newDeliverable)
                 dismiss()
             } else {
@@ -69,8 +76,8 @@ class CreateDeliverableFragment : DialogFragment() {
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
+            //formatear la fecha
             val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-                // Formatear la fecha seleccionada
                 val formattedDate = String.format("%02d/%02d/%d", selectedDay, selectedMonth + 1, selectedYear)
                 dateField.text = formattedDate
             }, year, month, day)

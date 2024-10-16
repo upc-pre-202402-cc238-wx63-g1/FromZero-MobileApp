@@ -14,7 +14,7 @@ import com.cursokotlin.appfromzero.adapters.DeliverableAdapter
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.Deliverable
 
-class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverableCreatedListener {
+class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverableCreatedListener, EditDeliverableFragment.OnDeliverableEditedListener {
 
     private var deliverables = ArrayList<Deliverable>()
     private lateinit var deliverableAdapter: DeliverableAdapter
@@ -36,7 +36,18 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
 
     private fun initView(view: View) {
         val rvDeliverables = view.findViewById<RecyclerView>(R.id.rvDeliverables)
-        deliverableAdapter = DeliverableAdapter(deliverables)
+        deliverableAdapter = DeliverableAdapter(deliverables) { deliverable ->
+            val dialog = EditDeliverableFragment()
+            val bundle = Bundle().apply {
+                putInt("deliverableId", deliverable.id)
+                putString("deliverableTitle", deliverable.title)
+                putString("deliverableDescription", deliverable.description)
+                putString("deliverableDate", deliverable.date)
+            }
+            dialog.arguments = bundle
+            dialog.setOnDeliverableEditedListener(this@DeliverablesFragment)
+            dialog.show(parentFragmentManager, "EditDeliverableDialog")
+        }
         rvDeliverables.adapter = deliverableAdapter
         rvDeliverables.layoutManager = LinearLayoutManager(requireContext())
 
@@ -49,15 +60,23 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
     }
 
     override fun onDeliverableCreated(deliverable: Deliverable) {
+        deliverable.id = deliverables.size // Set ID based on position
         deliverables.add(deliverable)
         deliverableAdapter.notifyItemInserted(deliverables.size - 1)
     }
 
-    private fun loadDeliverables() {
-        deliverables.add(Deliverable("Entregable 1", "Plataforma de Comercio Electrónico Geekit","24/09/2024","Espera","Este entregable consistirá en un documento detallado que describe los requisitos funcionales y no funcionales de la Plataforma de Comercio Electrónico Geekit. Incluirá casos de uso, diagramas de flujo, requisitos de usuario, requisitos de sistema y cualquier otra información relevante para guiar el desarrollo del software."))
-        deliverables.add(Deliverable("Entregable 2", "Plataforma de Comercio Electrónico Geekit","31/10/2024","Espera","Se entregará un prototipo interactivo de la interfaz de usuario de la Plataforma de Comercio Electrónico Geekit. Este prototipo permitirá a los stakeholders visualizar y navegar por las diferentes pantallas y funcionalidades de la aplicación, proporcionando una representación visual de cómo se verá y funcionará la plataforma final."))
-        deliverables.add(Deliverable("Entregable 3", "Plataforma de Comercio Electrónico Geekit","30/11/2024","Espera","Este entregable consistirá en el código fuente del frontend y backend de la Plataforma de Comercio Electrónico Geekit. Se proporcionará una estructura de directorios organizada, con comentarios claros y limpios en el código para facilitar la comprensión y el mantenimiento futuro."))
-        deliverables.add(Deliverable("Entregable 4", "Plataforma de Comercio Electrónico Geekit","30/11/2024","Espera","Este entregable consistirá en el código fuente del frontend y backend de la Plataforma de Comercio Electrónico Geekit. Se proporcionará una estructura de directorios organizada, con comentarios claros y limpios en el código para facilitar la comprensión y el mantenimiento futuro."))
+    override fun onDeliverableEdited(newDeliverable: Deliverable) {
+        val index = deliverables.indexOfFirst { it.id == newDeliverable.id }
+        if (index != -1) {
+            deliverables[index] = newDeliverable
+            deliverableAdapter.notifyItemChanged(index)
+        }
     }
 
+    private fun loadDeliverables() {
+        deliverables.add(Deliverable(1, "Entregable 1", "Plataforma de Comercio Electrónico Geekit", "24/09/2024", "Espera", "Este entregable consistirá en un documento detallado que describe los requisitos funcionales y no funcionales de la Plataforma de Comercio Electrónico Geekit. Incluirá casos de uso, diagramas de flujo, requisitos de usuario, requisitos de sistema y cualquier otra información relevante para guiar el desarrollo del software."))
+        deliverables.add(Deliverable(2, "Entregable 2", "Plataforma de Comercio Electrónico Geekit", "31/10/2024", "Espera", "Se entregará un prototipo interactivo de la interfaz de usuario de la Plataforma de Comercio Electrónico Geekit. Este prototipo permitirá a los stakeholders visualizar y navegar por las diferentes pantallas y funcionalidades de la aplicación, proporcionando una representación visual de cómo se verá y funcionará la plataforma final."))
+        deliverables.add(Deliverable(3, "Entregable 3", "Plataforma de Comercio Electrónico Geekit", "30/11/2024", "Espera", "Este entregable consistirá en el código fuente del frontend y backend de la Plataforma de Comercio Electrónico Geekit. Se proporcionará una estructura de directorios organizada, con comentarios claros y limpios en el código para facilitar la comprensión y el mantenimiento futuro."))
+        deliverables.add(Deliverable(4, "Entregable 4", "Plataforma de Comercio Electrónico Geekit", "30/11/2024", "Espera", "Este entregable consistirá en el código fuente del frontend y backend de la Plataforma de Comercio Electrónico Geekit. Se proporcionará una estructura de directorios organizada, con comentarios claros y limpios en el código para facilitar la comprensión y el mantenimiento futuro."))
+    }
 }

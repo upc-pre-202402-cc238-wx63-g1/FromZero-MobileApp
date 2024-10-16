@@ -11,32 +11,28 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.Deliverable
 
-class DeliverableAdapter(var deliverables:ArrayList<Deliverable>): Adapter<DeliverablePrototype>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeliverablePrototype {
-        val view= LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.prototype_deliverable,parent,false)
+class DeliverableAdapter(var deliverables: ArrayList<Deliverable>, private val onItemClick: (Deliverable) -> Unit) : RecyclerView.Adapter<DeliverablePrototype>() {
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeliverablePrototype {
+        val view = LayoutInflater
+            .from(parent.context)
+            .inflate(R.layout.prototype_deliverable, parent, false)
         return DeliverablePrototype(view)
     }
 
     override fun onBindViewHolder(holder: DeliverablePrototype, position: Int) {
-        holder.bind(deliverables[position], this, position)
+        holder.bind(deliverables[position], this, position, onItemClick)
     }
 
-    override fun getItemCount(): Int {
-        return deliverables.size
-    }
+    override fun getItemCount(): Int = deliverables.size
 
     fun removeItem(position: Int) {
         deliverables.removeAt(position)
         notifyItemRemoved(position)
     }
-
 }
 
 class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -58,7 +54,7 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var isExpanded = false
 
-    fun bind(deliverable: Deliverable, adapter: DeliverableAdapter, position: Int) {
+    fun bind(deliverable: Deliverable, adapter: DeliverableAdapter, position: Int, onItemClick: (Deliverable) -> Unit) {
         tvDeliverableName.text = deliverable.title
         tvProjectName.text = deliverable.projectName
         tvDescriptionText.text = deliverable.description
@@ -85,10 +81,9 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
             isExpanded = !isExpanded
         }
 
-
         btDelete.setOnClickListener {
             val position = adapterPosition
-            println("Posición eliminada: $position")
+            println("entregable eliminado en la posición $position")
             if (position != RecyclerView.NO_POSITION) {
                 adapter.removeItem(position)
                 if (adapter.itemCount == 0) {
@@ -97,7 +92,9 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
             }
         }
 
-
+        btEdit.setOnClickListener {
+            onItemClick(deliverable)
+        }
     }
 
     private fun expandCard() {
@@ -149,4 +146,3 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
         animator.start()
     }
 }
-
