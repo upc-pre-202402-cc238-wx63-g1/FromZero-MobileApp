@@ -55,4 +55,8 @@
     <string name="mensaje">Mensaje\n</string>
     <string name="state_icon">State icon</string>
     <string name="date_icon">Date icon</string>
+    <string name="no_hay_entregables">No hay entregables</string>
+    <string name="sigue_el_avance_de_tu_proyecto">Sigue el avance de tu proyecto</string>
+    <string name="report_icon">report icon</string>
+    <string name="add_deliverable_icon">add deliverable icon</string>
 </resources>
