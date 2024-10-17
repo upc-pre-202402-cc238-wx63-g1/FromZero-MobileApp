@@ -34,7 +34,7 @@ class MenuFragment : Fragment() {
         }
 
         btnCreateProject.setOnClickListener {
-            replaceFragment(ViewProjectFragment())
+            replaceFragment(CreateProjectFragment())
         }
 
         btnSupport.setOnClickListener {

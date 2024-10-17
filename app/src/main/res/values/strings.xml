@@ -53,4 +53,10 @@
     <string name="titulo_de_mensaje">Titulo de mensaje</string>
     <string name="asunto">Asunto\n</string>
     <string name="mensaje">Mensaje\n</string>
+    <string name="Create_proyect">Crear un nuevo proyecto</string>
+    <string name="Title">Titulo</string>
+    <string name="tecnologias_lenguajes">Tecnologías/Lenguajes</string>
+    <string name="tecnologias_frameworks">Tecnologías/Frameworks</string>
+    <string name="presupuesto">Presupuesto</string>
+    <string name="procesos_metodologias">Procesos y Metodologías de Desarrollo</string>
 </resources>
