@@ -11,18 +11,9 @@ import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.Project
 import com.google.android.material.textfield.TextInputEditText
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CreateProjectFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CreateProjectFragment : Fragment() {
+
+    private var isDeveloper: Boolean = true // Valor inicial (puedes cambiarlo según tu lógica)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,36 +29,50 @@ class CreateProjectFragment : Fragment() {
         val etPresupuesto = view.findViewById<TextInputEditText>(R.id.etPresupuesto)
         val etProcesos = view.findViewById<TextInputEditText>(R.id.etProcesos)
 
+        // Cambiar el texto del botón según el valor de isDeveloper
+        if (isDeveloper) {
+            btCreateProject.text = "Postular"
+        } else {
+            btCreateProject.text = "Crear Proyecto"
+        }
+
         btCreateProject.setOnClickListener {
-            try {
-                val title = etTitle.text.toString()
-                val description = etDescription.text.toString()
-                val languages = etLanguages.text.toString()
-                val frameworks = etFrameworks.text.toString()
-                val presupuesto = etPresupuesto.text.toString()
-                val procesos = etProcesos.text.toString()
+            if (isDeveloper) {
 
-                if (title.isEmpty() || description.isEmpty() || languages.isEmpty() || frameworks.isEmpty() || presupuesto.isEmpty() || procesos.isEmpty()) {
-                    throw IllegalArgumentException("Todos los campos tienen que estar llenos")
+                // Lógica adicional si es developer
+            } else {
+                // Ejecuta la función original
+                try {
+                    val title = etTitle.text.toString()
+                    val description = etDescription.text.toString()
+                    val languages = etLanguages.text.toString()
+                    val frameworks = etFrameworks.text.toString()
+                    val presupuesto = etPresupuesto.text.toString()
+                    val procesos = etProcesos.text.toString()
+
+                    if (title.isEmpty() || description.isEmpty() || languages.isEmpty() ||
+                        frameworks.isEmpty() || presupuesto.isEmpty() || procesos.isEmpty()
+                    ) {
+                        throw IllegalArgumentException("Todos los campos tienen que estar llenos")
+                    }
+
+                    val project = Project(
+                        title = title,
+                        description = description,
+                        technologies = languages,
+                        frameworks = frameworks,
+                        budget = presupuesto,
+                        processes = procesos
+                    )
+                    Toast.makeText(context, "Proyecto creado correctamente", Toast.LENGTH_SHORT).show()
+                    // Usa la instancia del proyecto según sea necesario
+
+                } catch (e: IllegalArgumentException) {
+                    Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
                 }
-
-                val project = Project(
-                    title = title,
-                    description = description,
-                    technologies = languages,
-                    frameworks = frameworks,
-                    budget = presupuesto,
-                    processes = procesos
-                )
-                Toast.makeText(context, "Proyecto creado correctamente", Toast.LENGTH_SHORT).show()
-                // Use the project instance as needed
-
-            } catch (e: IllegalArgumentException) {
-                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
             }
         }
 
         return view
-}
-
+    }
 }
