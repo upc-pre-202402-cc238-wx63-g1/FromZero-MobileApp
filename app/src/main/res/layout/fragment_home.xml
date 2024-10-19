@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/flContainer"
@@ -61,7 +60,7 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="154dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -82,12 +81,36 @@
                             android:text="@string/sitio_web"
                             android:textColor="@color/primary_text_color" />
 
-                        <TextView
-                            android:id="@+id/tvEnterpriseWebSite"
+                        <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="geekitpe.com"
-                            android:textStyle="bold" />
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/tvEnterpriseWebSite"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="geekitpe.com"
+                                android:textStyle="bold" />
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etEnterpriseWebsite"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="geekitpe.com"
+                                android:textColor="@color/primary_text_color"
+                                android:textSize="16sp"
+                                android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/ivEditProfileWebSite"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="5dp"
+                                android:src="@drawable/ic_edit"
+                                android:visibility="gone" />
+
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
@@ -109,6 +132,7 @@
                                 android:textSize="25dp" />
 
                             <ImageView
+
                                 android:id="@+id/ivCountryIcon"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
@@ -120,11 +144,34 @@
                             android:text="Sector"
                             android:textColor="@color/primary_text_color" />
 
-                        <TextView
-                            android:id="@+id/tvEnterpriseSector"
+                        <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Ropa" />
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:id="@+id/tvEnterpriseSector"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Ropa" />
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etEnterpriseSector"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tecnología"
+                                android:textColor="@color/primary_text_color"
+                                android:textSize="16sp"
+                                android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/ivEditProfileSector"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:layout_marginStart="5dp"
+                                android:src="@drawable/ic_edit"
+                                android:visibility="gone" />
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/tvEnterpriseRUCTitle"
@@ -147,21 +194,41 @@
                     android:visibility="gone"
                     android:id="@+id/llExtending"
                     android:layout_width="match_parent"
-                    android:layout_height="269dp"
+                    android:layout_height="280dp"
                     android:layout_marginTop="20dp"
                     android:orientation="vertical">
 
-                    <TextView
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/resumen"
+                            android:textColor="@color/primary_text_color" />
+
+                        <ImageView
+                            android:id="@+id/ivEditProfileDescription"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="5dp"
+                            android:src="@drawable/ic_edit" />
+                    </LinearLayout>
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:visibility="gone"
+                        android:id="@+id/etEnterpriseDescription"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/resumen"
+                        android:text="Geekit es tu destino para la moda geek. Nos especializamos en ofrecer una selección única de ropa y accesorios para jóvenes apasionados por la cultura pop, los videojuegos, el cine y los cómics. En Geekit, encontrarás prendas que te permiten expresar tu estilo auténtico y tu amor por tus intereses favoritos."
+                        android:textSize="16sp"
                         android:textColor="@color/primary_text_color" />
 
                     <TextView
                         android:id="@+id/tvEnterpriseDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:text="Geekit es tu destino para la moda geek. Nos especializamos en ofrecer una selección única de ropa y accesorios para jóvenes apasionados por la cultura pop, los videojuegos, el cine y los cómics. En Geekit, encontrarás prendas que te permiten expresar tu estilo auténtico y tu amor por tus intereses favoritos."
                         android:textSize="13dp" />
 
@@ -173,13 +240,35 @@
                         android:text="Teléfono"
                         android:textColor="@color/primary_text_color" />
 
-                    <TextView
-                        android:id="@+id/tvEnterprisePhone"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="924 830 455"
-                        android:textSize="13dp" />
+                        android:layout_gravity="center">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:visibility="gone"
+                            android:id="@+id/etEnterprisePhone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="924 830 455"
+                            android:textSize="16sp"
+                            android:textColor="@color/primary_text_color" />
+
+                        <TextView
+                            android:id="@+id/tvEnterprisePhone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="924 830 455"
+                            android:textSize="13dp" />
+
+                        <ImageView
+                            android:id="@+id/ivEditProfilePhone"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="5dp"
+                            android:src="@drawable/ic_edit" />
+                    </LinearLayout>
 
                     <ImageView
                         android:id="@+id/ivConfirmEditProfile"
@@ -199,18 +288,18 @@
                 android:layout_height="51dp"
                 android:src="@drawable/ic_edit"
                 android:translationX="230dp"
-                android:translationY="125dp"/>
+                android:translationY="125dp" />
 
         </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvProjects"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
             android:layout_marginTop="15dp"
-            app:layout_constraintTop_toBottomOf="@+id/cvHomeProfile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="300dp" />
+            app:layout_constraintTop_toBottomOf="@+id/cvHomeProfile" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
