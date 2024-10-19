@@ -2,10 +2,10 @@ package com.cursokotlin.appfromzero.models
 
 class Enterprise (
     val name: String,
-    val website: String,
-    val pictureUrl: String,
-    val description: String,
-    val field: String,
-    val socialRazon: String,
-    val cellphone: String
+    var website: String,
+    var pictureUrl: String,
+    var description: String,
+    var field: String,
+    var socialRazon: String,
+    var cellphone: String
 )

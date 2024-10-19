@@ -51,7 +51,7 @@ class HomeFragment : Fragment() {
     private lateinit var ivEditProfilePhone: ImageView
     private lateinit var etEnterprisePhone: TextInputEditText
 
-    private lateinit var ivConfirmEditProfile: TextView
+    private lateinit var ivConfirmEditProfile: ImageView
 
     // Home Enterprise Profile Components
     private lateinit var ivProfile: ImageView
@@ -77,6 +77,7 @@ class HomeFragment : Fragment() {
         // Inicializar componentes
         ivEditProfile = view.findViewById(R.id.ivEditProfile)
         llExtending = view.findViewById(R.id.llExtending)
+        ivConfirmEditProfile = view.findViewById(R.id.ivConfirmEditProfile)
 
         // Fetch data from the API
         fetchData()
@@ -108,8 +109,9 @@ class HomeFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         adapter = ProjectCardAdapter(projectList, object : ProjectCardAdapter.OnItemClickListener {
-            override fun onItemClick(projectCard: ProjectCard){
-                Toast.makeText(context, "Clic en: ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+            override fun onItemClick(projectCard: ProjectCard) {
+                Toast.makeText(context, "Clic en: ${projectCard.projectName}", Toast.LENGTH_SHORT)
+                    .show()
             }
         })
 
@@ -118,12 +120,12 @@ class HomeFragment : Fragment() {
         return view
     }
 
-    private fun fetchData(){
+    private fun fetchData() {
         // This function will handle data fetching from the API REST in the future
         loadMockData()
     }
 
-    private fun loadMockData(){
+    private fun loadMockData() {
         enterprise = Enterprise(
             "Geekit.pe",
             "geekitpe.com",
@@ -135,16 +137,46 @@ class HomeFragment : Fragment() {
         )
 
         projectList = listOf(
-            ProjectCard("Proyecto A", 5, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
-            ProjectCard("Proyecto B", 3, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
-            ProjectCard("Proyecto C", 10, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
-            ProjectCard("Proyecto E", 7, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
-            ProjectCard("Proyecto F", 6, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
-            ProjectCard("Proyecto G", 0, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg")
+            ProjectCard(
+                "Proyecto A",
+                5,
+                "Geekit.pe",
+                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"
+            ),
+            ProjectCard(
+                "Proyecto B",
+                3,
+                "Geekit.pe",
+                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"
+            ),
+            ProjectCard(
+                "Proyecto C",
+                10,
+                "Geekit.pe",
+                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"
+            ),
+            ProjectCard(
+                "Proyecto E",
+                7,
+                "Geekit.pe",
+                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"
+            ),
+            ProjectCard(
+                "Proyecto F",
+                6,
+                "Geekit.pe",
+                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"
+            ),
+            ProjectCard(
+                "Proyecto G",
+                0,
+                "Geekit.pe",
+                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"
+            )
         )
     }
 
-    private fun  initComponent(view: View){
+    private fun initComponent(view: View) {
         ivProfile = view.findViewById(R.id.ivProfilePhoto)
 
         tvEnterpriseWebsite = view.findViewById(R.id.tvEnterpriseWebSite)
@@ -172,7 +204,11 @@ class HomeFragment : Fragment() {
         bindDataToViews()
     }
 
-    private fun setupEditToggle(editButton: ImageView, textView: TextView, editText: TextInputEditText) {
+    private fun setupEditToggle(
+        editButton: ImageView,
+        textView: TextView,
+        editText: TextInputEditText
+    ) {
         editButton.setOnClickListener {
             if (textView.visibility == View.VISIBLE) {
                 textView.visibility = View.GONE
@@ -201,7 +237,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUpClickListener() {
-        ivEditProfile.setOnClickListener{
+        ivEditProfile.setOnClickListener {
             if (llExtending.visibility == View.GONE) {
                 recyclerView.visibility = View.GONE
                 ivEditProfile.visibility = View.GONE
@@ -216,9 +252,33 @@ class HomeFragment : Fragment() {
                 recyclerView.visibility = View.VISIBLE
             }
         }
+
+        ivConfirmEditProfile.setOnClickListener {
+            // Save the changes to the API
+            // Save the changes to the local database
+            // Update the UI
+            updateProfile()
+            bindDataToViews()
+            animateViewVisibility(llExtending, View.GONE)
+            ivEditProfile.visibility = View.VISIBLE
+            ivEditProfileSector.visibility = View.GONE
+            ivEditProfileWebSite.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        }
     }
 
-    private fun animateViewVisibility(view: View, visibility: Int, onAnimationEnd: (() -> Unit)? = null) {
+    private fun updateProfile() {
+        enterprise.website = etEnterpriseWebsite.text.toString()
+        enterprise.field = etEnterpriseSector.text.toString()
+        enterprise.description = etEnterpriseDescription.text.toString()
+        enterprise.cellphone = etEnterprisePhone.text.toString()
+    }
+
+    private fun animateViewVisibility(
+        view: View,
+        visibility: Int,
+        onAnimationEnd: (() -> Unit)? = null
+    ) {
         if (visibility == View.VISIBLE) {
             view.alpha = 0f
             view.visibility = View.VISIBLE
