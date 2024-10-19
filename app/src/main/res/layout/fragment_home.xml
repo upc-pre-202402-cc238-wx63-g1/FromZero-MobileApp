@@ -29,6 +29,7 @@
             android:layout_width="185dp"
             android:layout_height="133dp"
             android:layout_marginTop="80dp"
+            android:contentDescription="@string/from_zero_logo"
             android:src="@drawable/logobn_fromzero"
             app:layout_constraintEnd_toEndOf="@+id/imageView2"
             app:layout_constraintStart_toStartOf="@+id/imageView2"
@@ -100,7 +101,7 @@
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:id="@+id/tvEntepriseName"
+                                android:id="@+id/tvEnterpriseName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:paddingBottom="10dp"
@@ -120,7 +121,7 @@
                             android:textColor="@color/primary_text_color" />
 
                         <TextView
-                            android:id="@+id/tvEntepriseSector"
+                            android:id="@+id/tvEnterpriseSector"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Ropa" />
@@ -157,7 +158,7 @@
                         android:textColor="@color/primary_text_color" />
 
                     <TextView
-                        android:id="@+id/tvEntepriseDescription"
+                        android:id="@+id/tvEnterpriseDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
 

@@ -15,7 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
+import com.cursokotlin.appfromzero.models.Enterprise
 import com.cursokotlin.appfromzero.models.ProjectCard
+import com.squareup.picasso.Picasso
 import org.w3c.dom.Text
 
 
@@ -31,6 +33,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class HomeFragment : Fragment() {
 
+    private lateinit var enterprise: Enterprise
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ProjectCardAdapter
     private lateinit var projectList: List<ProjectCard>
@@ -64,6 +67,11 @@ class HomeFragment : Fragment() {
         ivEditProfile = view.findViewById(R.id.ivEditProfile)
         llExtending = view.findViewById(R.id.llExtending)
 
+        // Fetch data from the API
+        fetchData()
+
+        initComponent(view)
+
         val flContainer: FrameLayout = view.findViewById(R.id.flContainer)
 
         // Configurar el click listener
@@ -82,15 +90,6 @@ class HomeFragment : Fragment() {
         recyclerView = view.findViewById(R.id.rvProjects)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        projectList = listOf(
-            ProjectCard("Proyecto A", 5, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
-            ProjectCard("Proyecto B", 3, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
-            ProjectCard("Proyecto C", 10, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
-            ProjectCard("Proyecto E", 7, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
-            ProjectCard("Proyecto F", 6, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
-            ProjectCard("Proyecto G", 0, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg")
-        )
-
         adapter = ProjectCardAdapter(projectList, object : ProjectCardAdapter.OnItemClickListener {
             override fun onItemClick(projectCard: ProjectCard){
                 Toast.makeText(context, "Clic en: ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
@@ -100,6 +99,58 @@ class HomeFragment : Fragment() {
         recyclerView.adapter = adapter
 
         return view
+    }
+
+    private fun fetchData(){
+        // This function will handle data fetching from the API REST in the future
+        loadMockData()
+    }
+
+    private fun loadMockData(){
+        enterprise = Enterprise(
+            "Geekit.pe",
+            "geekitpe.com",
+            "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
+            "Geekit es tu destino para la moda geek. Nos especializamos en ofrecer una selección única de ropa y accesorios para jóvenes apasionados por la cultura pop, los videojuegos, el cine y los cómics. En Geekit, encontrarás prendas que te permiten expresar tu estilo auténtico y tu amor por tus intereses favoritos.",
+            "Tecnología",
+            "Geekit.pe",
+            "987654321"
+        )
+
+        projectList = listOf(
+            ProjectCard("Proyecto A", 5, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
+            ProjectCard("Proyecto B", 3, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
+            ProjectCard("Proyecto C", 10, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
+            ProjectCard("Proyecto E", 7, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
+            ProjectCard("Proyecto F", 6, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"),
+            ProjectCard("Proyecto G", 0, "Geekit.pe", "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg")
+        )
+    }
+
+    private fun  initComponent(view: View){
+        ivProfile = view.findViewById(R.id.ivProfilePhoto)
+        tvEnterpriseWebsite = view.findViewById(R.id.tvEnterpriseWebSite)
+        tvEnterpriseName = view.findViewById(R.id.tvEnterpriseName)
+        tvEnterpriseSector = view.findViewById(R.id.tvEnterpriseSector)
+        tvEnterpriseRUC = view.findViewById(R.id.tvEnterpriseRUC)
+        tvEnterpriseDescription = view.findViewById(R.id.tvEnterpriseDescription)
+        tvEnterpriseCellphone = view.findViewById(R.id.tvEnterprisePhone)
+
+        bindDataToViews()
+    }
+
+    private fun bindDataToViews() {
+        Picasso.get()
+            .load(enterprise.pictureUrl)
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
+            .into(ivProfile)
+        tvEnterpriseWebsite.text = enterprise.website
+        tvEnterpriseName.text = enterprise.name
+        tvEnterpriseSector.text = enterprise.field
+        tvEnterpriseRUC.text = enterprise.socialRazon
+        tvEnterpriseDescription.text = enterprise.description
+        tvEnterpriseCellphone.text = enterprise.cellphone
     }
 
     private fun setUpClickListener() {
