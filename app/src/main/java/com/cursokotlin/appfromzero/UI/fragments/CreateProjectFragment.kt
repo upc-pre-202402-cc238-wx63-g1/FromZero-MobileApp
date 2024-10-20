@@ -1,5 +1,6 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -7,13 +8,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.Project
 import com.google.android.material.textfield.TextInputEditText
 
 class CreateProjectFragment : Fragment() {
 
-    private var isDeveloper: Boolean = true // Valor inicial (puedes cambiarlo según tu lógica)
+    private var isDeveloper: Boolean = false
+    private lateinit var createProjectDialog: Dialog
+    private lateinit var applyProjectDialog: Dialog
+    private lateinit var btConfirmCreateProject: Button
+    private lateinit var btnConfirmApplyProject: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,19 +35,22 @@ class CreateProjectFragment : Fragment() {
         val etPresupuesto = view.findViewById<TextInputEditText>(R.id.etPresupuesto)
         val etProcesos = view.findViewById<TextInputEditText>(R.id.etProcesos)
 
-        // Cambiar el texto del botón según el valor de isDeveloper
-        if (isDeveloper) {
-            btCreateProject.text = "Postular"
-        } else {
-            btCreateProject.text = "Crear Proyecto"
-        }
+        // Inicializa los diálogos ANTES de asignar los botones
+        setupCreateProjectDialog()
+        setupApplyProjectDialog()
+
+        // Cambiar texto del botón según si es developer
+        btCreateProject.text = if (isDeveloper) "Postular" else "Crear Proyecto"
 
         btCreateProject.setOnClickListener {
             if (isDeveloper) {
+                applyProjectDialog.show()
 
-                // Lógica adicional si es developer
+                btnConfirmApplyProject.setOnClickListener {
+                    Toast.makeText(context, "Postulación enviada", Toast.LENGTH_SHORT).show()
+                    applyProjectDialog.dismiss()
+                }
             } else {
-                // Ejecuta la función original
                 try {
                     val title = etTitle.text.toString()
                     val description = etDescription.text.toString()
@@ -56,16 +65,23 @@ class CreateProjectFragment : Fragment() {
                         throw IllegalArgumentException("Todos los campos tienen que estar llenos")
                     }
 
-                    val project = Project(
-                        title = title,
-                        description = description,
-                        technologies = languages,
-                        frameworks = frameworks,
-                        budget = presupuesto,
-                        processes = procesos
-                    )
-                    Toast.makeText(context, "Proyecto creado correctamente", Toast.LENGTH_SHORT).show()
-                    // Usa la instancia del proyecto según sea necesario
+                    createProjectDialog.show()
+
+                    btConfirmCreateProject.setOnClickListener {
+                        val project = Project(
+                            title = title,
+                            description = description,
+                            technologies = languages,
+                            frameworks = frameworks,
+                            budget = presupuesto,
+                            processes = procesos
+                        )
+
+                        Toast.makeText(
+                            context, "Proyecto creado correctamente", Toast.LENGTH_SHORT
+                        ).show()
+                        createProjectDialog.dismiss()
+                    }
 
                 } catch (e: IllegalArgumentException) {
                     Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
@@ -74,5 +90,35 @@ class CreateProjectFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun setupCreateProjectDialog() {
+        createProjectDialog = Dialog(requireContext())
+        createProjectDialog.setContentView(R.layout.create_project_dialog)
+        createProjectDialog.window?.setBackgroundDrawable(
+            ContextCompat.getDrawable(requireContext(), R.drawable.rounded_dialog_background)
+        )
+        createProjectDialog.window?.setLayout(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        createProjectDialog.setCancelable(true)
+
+        btConfirmCreateProject = createProjectDialog.findViewById(R.id.btn_aceptar)
+    }
+
+    private fun setupApplyProjectDialog() {
+        applyProjectDialog = Dialog(requireContext())
+        applyProjectDialog.setContentView(R.layout.apply_project_dialog)
+        applyProjectDialog.window?.setBackgroundDrawable(
+            ContextCompat.getDrawable(requireContext(), R.drawable.rounded_dialog_background)
+        )
+        applyProjectDialog.window?.setLayout(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        applyProjectDialog.setCancelable(true)
+
+        btnConfirmApplyProject = applyProjectDialog.findViewById(R.id.btn_postular)
     }
 }
