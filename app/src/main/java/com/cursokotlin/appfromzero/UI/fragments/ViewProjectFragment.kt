@@ -1,27 +1,26 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.ProjectData
 import com.cursokotlin.appfromzero.adapters.ProjectDataAdapter
 import com.cursokotlin.appfromzero.R
+import com.cursokotlin.appfromzero.models.Project
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [ViewProjectFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class ViewProjectFragment : Fragment() {
+    private var isDeveloper: Boolean = false
+    private lateinit var applyProjectDialog: Dialog
+    private lateinit var btnConfirmApplyProject: Button
     lateinit var projectData: List<ProjectData>
     lateinit var projectDataAdapter: ProjectDataAdapter
     override fun onCreateView(
@@ -31,8 +30,44 @@ class ViewProjectFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_view_project, container, false)
+        val tvProjectName = view.findViewById<TextView>(R.id.tvProjectName)
+        val btDeliverables = view.findViewById<Button>(R.id.btDeliverables)
+        // Inicializa los diálogos ANTES de asignar los botones
+        setupApplyProjectDialog()
         loadDescription(view)
+
+        // Cambiar texto del botón según si es developer
+        btDeliverables.text = if (isDeveloper) "Postular" else "Entregables"
+
+        btDeliverables.setOnClickListener {
+            if (isDeveloper) {
+
+                applyProjectDialog.show()
+
+                btnConfirmApplyProject.setOnClickListener {
+                    Toast.makeText(context, "Postulación enviada", Toast.LENGTH_SHORT).show()
+                    applyProjectDialog.dismiss()
+                }
+            } else {
+
+            }
+        }
         return view
+    }
+
+    private fun setupApplyProjectDialog() {
+        applyProjectDialog = Dialog(requireContext())
+        applyProjectDialog.setContentView(R.layout.apply_project_dialog)
+        applyProjectDialog.window?.setBackgroundDrawable(
+            ContextCompat.getDrawable(requireContext(), R.drawable.rounded_dialog_background)
+        )
+        applyProjectDialog.window?.setLayout(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        applyProjectDialog.setCancelable(true)
+
+        btnConfirmApplyProject = applyProjectDialog.findViewById(R.id.btn_postular)
     }
 
     private fun loadDescription(view: View) {
@@ -60,5 +95,14 @@ class ViewProjectFragment : Fragment() {
         rvProject.layoutManager = LinearLayoutManager(context)
         rvProject.adapter = projectDataAdapter
 
+    }
+
+    // Common method to replace fragment
+    private fun replaceFragment(fragment: Fragment) {
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.setReorderingAllowed(true)
+        transaction.replace(R.id.fragmenContainer, fragment)
+        transaction.addToBackStack("principal")
+        transaction.commit()
     }
 }

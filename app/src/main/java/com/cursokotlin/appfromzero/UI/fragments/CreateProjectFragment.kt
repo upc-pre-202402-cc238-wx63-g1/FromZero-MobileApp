@@ -15,11 +15,8 @@ import com.google.android.material.textfield.TextInputEditText
 
 class CreateProjectFragment : Fragment() {
 
-    private var isDeveloper: Boolean = false
     private lateinit var createProjectDialog: Dialog
-    private lateinit var applyProjectDialog: Dialog
     private lateinit var btConfirmCreateProject: Button
-    private lateinit var btnConfirmApplyProject: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,55 +34,42 @@ class CreateProjectFragment : Fragment() {
 
         // Inicializa los diálogos ANTES de asignar los botones
         setupCreateProjectDialog()
-        setupApplyProjectDialog()
-
-        // Cambiar texto del botón según si es developer
-        btCreateProject.text = if (isDeveloper) "Postular" else "Crear Proyecto"
 
         btCreateProject.setOnClickListener {
-            if (isDeveloper) {
-                applyProjectDialog.show()
+            try {
+                val title = etTitle.text.toString()
+                val description = etDescription.text.toString()
+                val languages = etLanguages.text.toString()
+                val frameworks = etFrameworks.text.toString()
+                val presupuesto = etPresupuesto.text.toString()
+                val procesos = etProcesos.text.toString()
 
-                btnConfirmApplyProject.setOnClickListener {
-                    Toast.makeText(context, "Postulación enviada", Toast.LENGTH_SHORT).show()
-                    applyProjectDialog.dismiss()
+                if (title.isEmpty() || description.isEmpty() || languages.isEmpty() ||
+                    frameworks.isEmpty() || presupuesto.isEmpty() || procesos.isEmpty()
+                ) {
+                    throw IllegalArgumentException("Todos los campos tienen que estar llenos")
                 }
-            } else {
-                try {
-                    val title = etTitle.text.toString()
-                    val description = etDescription.text.toString()
-                    val languages = etLanguages.text.toString()
-                    val frameworks = etFrameworks.text.toString()
-                    val presupuesto = etPresupuesto.text.toString()
-                    val procesos = etProcesos.text.toString()
 
-                    if (title.isEmpty() || description.isEmpty() || languages.isEmpty() ||
-                        frameworks.isEmpty() || presupuesto.isEmpty() || procesos.isEmpty()
-                    ) {
-                        throw IllegalArgumentException("Todos los campos tienen que estar llenos")
-                    }
+                createProjectDialog.show()
 
-                    createProjectDialog.show()
+                btConfirmCreateProject.setOnClickListener {
+                    val project = Project(
+                        title = title,
+                        description = description,
+                        technologies = languages,
+                        frameworks = frameworks,
+                        budget = presupuesto,
+                        processes = procesos
+                    )
 
-                    btConfirmCreateProject.setOnClickListener {
-                        val project = Project(
-                            title = title,
-                            description = description,
-                            technologies = languages,
-                            frameworks = frameworks,
-                            budget = presupuesto,
-                            processes = procesos
-                        )
-
-                        Toast.makeText(
-                            context, "Proyecto creado correctamente", Toast.LENGTH_SHORT
-                        ).show()
-                        createProjectDialog.dismiss()
-                    }
-
-                } catch (e: IllegalArgumentException) {
-                    Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context, "Proyecto creado correctamente", Toast.LENGTH_SHORT
+                    ).show()
+                    createProjectDialog.dismiss()
                 }
+
+            } catch (e: IllegalArgumentException) {
+                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -105,20 +89,5 @@ class CreateProjectFragment : Fragment() {
         createProjectDialog.setCancelable(true)
 
         btConfirmCreateProject = createProjectDialog.findViewById(R.id.btn_aceptar)
-    }
-
-    private fun setupApplyProjectDialog() {
-        applyProjectDialog = Dialog(requireContext())
-        applyProjectDialog.setContentView(R.layout.apply_project_dialog)
-        applyProjectDialog.window?.setBackgroundDrawable(
-            ContextCompat.getDrawable(requireContext(), R.drawable.rounded_dialog_background)
-        )
-        applyProjectDialog.window?.setLayout(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        applyProjectDialog.setCancelable(true)
-
-        btnConfirmApplyProject = applyProjectDialog.findViewById(R.id.btn_postular)
     }
 }
