@@ -29,7 +29,7 @@
             android:layout_height="101dp"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="Encuentra al desarrollador ideal"
+            android:text="@string/encuentra_al_desarrollador_ideal"
             android:textColor="#FFFFFF"
             android:textSize="34sp"
             app:layout_constraintEnd_toEndOf="parent"
