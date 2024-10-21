@@ -1,5 +1,9 @@
 package com.cursokotlin.appfromzero.adapters
 
+import android.graphics.Typeface
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +32,16 @@ class ProjectAdapter(private val projects: List<Project>) : RecyclerView.Adapter
         val project = projects[position]
         holder.projectPic.setImageResource(project.pictureLogo)
         holder.title.text = project.title
-        holder.description.text = project.description
+
+        val descriptionPrefix = "Descripción:"
+        val spannableDescription = SpannableString("$descriptionPrefix\n${project.description}")
+        spannableDescription.setSpan(
+            StyleSpan(Typeface.BOLD),
+            0,
+            descriptionPrefix.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        holder.description.text = spannableDescription
         holder.website.text = project.website
 
         holder.arrow.setOnClickListener {
