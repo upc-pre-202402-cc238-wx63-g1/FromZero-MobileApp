@@ -53,4 +53,8 @@
     <string name="titulo_de_mensaje">Titulo de mensaje</string>
     <string name="asunto">Asunto\n</string>
     <string name="mensaje">Mensaje\n</string>
+    <string name="resume">Resume:</string>
+    <string name="geekit_pe">Geekit.pe</string>
+    <string name="plataforma_de_comercio_nelectr_nico_geekit">Plataforma de Comercio Electrónico Geekit</string>
+    <string name="skills">Skills:</string>
 </resources>
