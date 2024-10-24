@@ -19,10 +19,10 @@
 
             <TextView
                 android:id="@+id/tvCreateProject"
-                android:layout_marginVertical="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
+                android:layout_marginVertical="20dp"
                 android:layout_weight="1"
                 android:text="@string/Create_proyect"
                 android:textAlignment="center"
@@ -161,10 +161,10 @@
 
             <Button
                 android:id="@+id/btCreateProject"
-                android:layout_marginBottom="120dp"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="120dp"
                 android:backgroundTint="#FFFFFF"
                 android:elevation="12dp"
                 android:text="@string/crear"
@@ -175,7 +175,6 @@
         </LinearLayout>
 
     </ScrollView>
-
 
 
 </LinearLayout>
