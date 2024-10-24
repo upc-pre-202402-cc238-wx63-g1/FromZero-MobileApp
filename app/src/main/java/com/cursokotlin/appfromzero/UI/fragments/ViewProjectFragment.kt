@@ -49,7 +49,8 @@ class ViewProjectFragment : Fragment() {
                     applyProjectDialog.dismiss()
                 }
             } else {
-
+                // Navigate to DeliverablesFragment
+                replaceFragment(DeliverablesFragment())
             }
         }
         return view
@@ -117,4 +118,6 @@ class ViewProjectFragment : Fragment() {
         transaction.addToBackStack("principal")
         transaction.commit()
     }
+
+
 }

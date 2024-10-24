@@ -6,301 +6,619 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clHomeEnterprise"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
-        tools:context="UI.fragments.HomeFragment">
+        android:fillViewport="true">
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-80dp"
-            android:src="@drawable/image_background_home"
-            android:translationY="-5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clHomeUI"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF"
+            tools:context="UI.fragments.HomeFragment">
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="185dp"
-            android:layout_height="133dp"
-            android:layout_marginTop="80dp"
-            android:contentDescription="@string/from_zero_logo"
-            android:src="@drawable/logobn_fromzero"
-            app:layout_constraintEnd_toEndOf="@+id/imageView2"
-            app:layout_constraintStart_toStartOf="@+id/imageView2"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cvHomeProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:background="@color/white"
-            app:cardCornerRadius="35dp"
-            app:contentPaddingBottom="15dp"
-            app:contentPaddingLeft="45dp"
-            app:contentPaddingRight="15dp"
-            app:contentPaddingTop="35dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView4">
-
-            <LinearLayout
+            <ImageView
+                android:id="@+id/imageView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingEnd="35dp"
-                android:paddingBottom="30dp"
-                tools:ignore="RtlSymmetry">
+                android:layout_marginTop="-80dp"
+                android:src="@drawable/image_background_home"
+                android:translationY="-5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="185dp"
+                android:layout_height="133dp"
+                android:layout_marginTop="80dp"
+                android:contentDescription="@string/from_zero_logo"
+                android:src="@drawable/logobn_fromzero"
+                app:layout_constraintEnd_toEndOf="@+id/imageView2"
+                app:layout_constraintStart_toStartOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvHomeEnterpriseProfile"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:background="@color/white"
+                app:cardCornerRadius="35dp"
+                app:contentPaddingBottom="15dp"
+                app:contentPaddingLeft="45dp"
+                app:contentPaddingRight="15dp"
+                app:contentPaddingTop="35dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView4">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="154dp">
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingEnd="35dp"
+                    android:paddingBottom="30dp"
+                    tools:ignore="RtlSymmetry">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="30dp"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/ivProfilePhoto"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:src="@drawable/geekit_profile" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/sitio_web"
-                            android:textColor="@color/primary_text_color" />
+                        android:layout_height="154dp">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/tvEnterpriseWebSite"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="geekitpe.com"
-                                android:textStyle="bold" />
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etEnterpriseWebsite"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="geekitpe.com"
-                                android:textColor="@color/primary_text_color"
-                                android:textSize="16sp"
-                                android:visibility="gone" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="30dp"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
                             <ImageView
-                                android:id="@+id/ivEditProfileWebSite"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="5dp"
-                                android:src="@drawable/ic_edit"
-                                android:visibility="gone" />
+                                android:id="@+id/ivProfilePhoto"
+                                android:layout_width="100dp"
+                                android:layout_height="100dp"
+                                android:src="@drawable/geekit_profile" />
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/sitio_web"
+                                android:textColor="@color/primary_text_color" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/tvEnterpriseWebSite"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="geekitpe.com"
+                                    android:textStyle="bold" />
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etEnterpriseWebsite"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="geekitpe.com"
+                                    android:textColor="@color/primary_text_color"
+                                    android:textSize="16sp"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/ivEditProfileWebSite"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="5dp"
+                                    android:src="@drawable/ic_edit"
+                                    android:visibility="gone" />
+
+                            </LinearLayout>
                         </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/tvEnterpriseName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingBottom="10dp"
+                                    android:text="Geekit.pe"
+                                    android:textSize="25dp" />
+
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Sector"
+                                android:textColor="@color/primary_text_color" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/tvEnterpriseSector"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Ropa" />
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/etEnterpriseSector"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Tecnología"
+                                    android:textColor="@color/primary_text_color"
+                                    android:textSize="16sp"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/ivEditProfileSector"
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginStart="5dp"
+                                    android:src="@drawable/ic_edit"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tvEnterpriseRUCTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:text="Razon Social"
+                                android:textColor="@color/primary_text_color" />
+
+                            <TextView
+                                android:id="@+id/tvEnterpriseRUC"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="20405979381" />
+                        </LinearLayout>
+
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/tvEnterpriseName"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:paddingBottom="10dp"
-                                android:text="Geekit.pe"
-                                android:textSize="25dp" />
-
-                            <ImageView
-
-                                android:id="@+id/ivCountryIcon"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Sector"
-                            android:textColor="@color/primary_text_color" />
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <TextView
-                                android:id="@+id/tvEnterpriseSector"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Ropa" />
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/etEnterpriseSector"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Tecnología"
-                                android:textColor="@color/primary_text_color"
-                                android:textSize="16sp"
-                                android:visibility="gone" />
-
-                            <ImageView
-                                android:id="@+id/ivEditProfileSector"
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:layout_gravity="center"
-                                android:layout_marginStart="5dp"
-                                android:src="@drawable/ic_edit"
-                                android:visibility="gone" />
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/tvEnterpriseRUCTitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="Razon Social"
-                            android:textColor="@color/primary_text_color" />
-
-                        <TextView
-                            android:id="@+id/tvEnterpriseRUC"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="20405979381" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:visibility="gone"
-                    android:id="@+id/llExtending"
-                    android:layout_width="match_parent"
-                    android:layout_height="280dp"
-                    android:layout_marginTop="20dp"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/resumen"
-                            android:textColor="@color/primary_text_color" />
-
-                        <ImageView
-                            android:id="@+id/ivEditProfileDescription"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginStart="5dp"
-                            android:src="@drawable/ic_edit" />
-                    </LinearLayout>
-
-                    <com.google.android.material.textfield.TextInputEditText
                         android:visibility="gone"
-                        android:id="@+id/etEnterpriseDescription"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Geekit es tu destino para la moda geek. Nos especializamos en ofrecer una selección única de ropa y accesorios para jóvenes apasionados por la cultura pop, los videojuegos, el cine y los cómics. En Geekit, encontrarás prendas que te permiten expresar tu estilo auténtico y tu amor por tus intereses favoritos."
-                        android:textSize="16sp"
-                        android:textColor="@color/primary_text_color" />
-
-                    <TextView
-                        android:id="@+id/tvEnterpriseDescription"
+                        android:id="@+id/llExtending"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Geekit es tu destino para la moda geek. Nos especializamos en ofrecer una selección única de ropa y accesorios para jóvenes apasionados por la cultura pop, los videojuegos, el cine y los cómics. En Geekit, encontrarás prendas que te permiten expresar tu estilo auténtico y tu amor por tus intereses favoritos."
-                        android:textSize="13dp" />
+                        android:layout_height="280dp"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
-                        android:text="Teléfono"
-                        android:textColor="@color/primary_text_color" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/resumen"
+                                android:textColor="@color/primary_text_color" />
+
+                            <ImageView
+                                android:id="@+id/ivEditProfileDescription"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginStart="5dp"
+                                android:src="@drawable/ic_edit" />
+                        </LinearLayout>
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:visibility="gone"
-                            android:id="@+id/etEnterprisePhone"
+                            android:id="@+id/etEnterpriseDescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="924 830 455"
+                            android:text="Geekit es tu destino para la moda geek. Nos especializamos en ofrecer una selección única de ropa y accesorios para jóvenes apasionados por la cultura pop, los videojuegos, el cine y los cómics. En Geekit, encontrarás prendas que te permiten expresar tu estilo auténtico y tu amor por tus intereses favoritos."
                             android:textSize="16sp"
                             android:textColor="@color/primary_text_color" />
 
                         <TextView
-                            android:id="@+id/tvEnterprisePhone"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/tvEnterpriseDescription"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="924 830 455"
+                            android:text="Geekit es tu destino para la moda geek. Nos especializamos en ofrecer una selección única de ropa y accesorios para jóvenes apasionados por la cultura pop, los videojuegos, el cine y los cómics. En Geekit, encontrarás prendas que te permiten expresar tu estilo auténtico y tu amor por tus intereses favoritos."
                             android:textSize="13dp" />
 
-                        <ImageView
-                            android:id="@+id/ivEditProfilePhone"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginStart="5dp"
-                            android:src="@drawable/ic_edit" />
-                    </LinearLayout>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center"
+                            android:text="Teléfono"
+                            android:textColor="@color/primary_text_color" />
 
-                    <ImageView
-                        android:id="@+id/ivConfirmEditProfile"
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="13dp"
-                        android:src="@drawable/ic_check_circle" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:visibility="gone"
+                                android:id="@+id/etEnterprisePhone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="924 830 455"
+                                android:textSize="16sp"
+                                android:textColor="@color/primary_text_color" />
+
+                            <TextView
+                                android:id="@+id/tvEnterprisePhone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="924 830 455"
+                                android:textSize="13dp" />
+
+                            <ImageView
+                                android:id="@+id/ivEditProfilePhone"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginStart="5dp"
+                                android:src="@drawable/ic_edit" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/ivConfirmEditProfile"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="13dp"
+                            android:src="@drawable/ic_check_circle" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
+                <ImageView
+                    android:id="@+id/ivEditProfile"
+                    android:layout_width="40dp"
+                    android:layout_height="51dp"
+                    android:src="@drawable/ic_edit"
+                    android:translationX="230dp"
+                    android:translationY="125dp" />
 
-            <ImageView
-                android:id="@+id/ivEditProfile"
-                android:layout_width="40dp"
-                android:layout_height="51dp"
-                android:src="@drawable/ic_edit"
-                android:translationX="230dp"
-                android:translationY="125dp" />
+            </androidx.cardview.widget.CardView>
 
-        </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:visibility="gone"
+                android:id="@+id/cvHomeDeveloperProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:background="@color/white"
+                app:cardCornerRadius="35dp"
+                app:contentPaddingBottom="15dp"
+                app:contentPaddingLeft="45dp"
+                app:contentPaddingRight="15dp"
+                app:contentPaddingTop="35dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView4">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvProjects"
-            android:layout_width="wrap_content"
-            android:layout_height="300dp"
-            android:layout_marginTop="15dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cvHomeProfile" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingEnd="35dp"
+                    android:paddingBottom="30dp"
+                    tools:ignore="RtlSymmetry">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <LinearLayout
+                        android:layout_width="292dp"
+                        android:layout_height="154dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="30dp"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+                                <ImageView
+                                    android:id="@+id/ivProfileDevPhoto"
+                                    android:layout_width="100dp"
+                                    android:layout_height="100dp"
+                                    android:layout_marginEnd="25dp"
+                                    android:src="@drawable/sample_profile" />
+
+                                <LinearLayout
+                                    android:layout_width="166dp"
+                                    android:layout_height="100dp"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="start"
+                                        android:gravity="center">
+
+                                        <TextView
+                                            android:id="@+id/tvDevName"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:paddingBottom="10dp"
+                                            android:text="Juan Perez"
+                                            android:textSize="20dp"
+                                            android:textStyle="bold" />
+
+                                        <ImageView
+                                            android:id="@+id/ivCountryIcon"
+                                            android:layout_width="15dp"
+                                            android:layout_height="15dp"
+                                            android:src="@drawable/sample_flag" />
+                                    </LinearLayout>
+
+
+                                    <RatingBar
+                                        android:id="@+id/ratingBar"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:isIndicator="false"
+                                        android:numStars="5"
+                                        android:rating="2.5"
+                                        android:theme="@style/Widget.AppCompat.RatingBar.Small" />
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content" />
+
+                                </LinearLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/especialidades"
+                                    android:textColor="@color/primary_text_color" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:id="@+id/tvDevSpecialties"
+                                        android:layout_width="230dp"
+                                        android:layout_height="wrap_content"
+                                        android:text="HTML5,CSS3, Javascript, Node.js, Express, MongoDB, MySQL"
+                                        android:textStyle="bold" />
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/etDevSpecialties"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="HTML5,CSS3, Javascript, Node.js, Express, MongoDB, MySQL"
+                                        android:textColor="@color/primary_text_color"
+                                        android:textSize="16sp"
+                                        android:visibility="gone" />
+                                    <ImageView
+                                        android:visibility="gone"
+                                        android:id="@+id/ivEditProfileDevSpecialties"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_marginStart="5dp"
+                                        android:src="@drawable/ic_edit" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:id="@+id/llExtendingDeveloper"
+                        android:layout_width="match_parent"
+                        android:layout_height="280dp"
+                        android:layout_marginTop="20dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/resumen"
+                                android:textColor="@color/primary_text_color" />
+
+                            <ImageView
+                                android:id="@+id/ivEditProfileDevDescription"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginStart="5dp"
+                                android:src="@drawable/ic_edit" />
+                        </LinearLayout>
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:visibility="gone"
+                            android:id="@+id/etDeveloperDescription"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Juan es un desarrollador web con más de 5 años de experiencia en la creación de sitios web y aplicaciones móviles. Apasionado por la tecnología y el diseño, se especializa en el desarrollo frontend y backend, utilizando tecnologías como HTML, CSS, JavaScript, React y Node.js."
+                            android:textSize="16sp"
+                            android:textColor="@color/primary_text_color" />
+
+                        <TextView
+                            android:id="@+id/tvDeveloperDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Juan es un desarrollador web con más de 5 años de experiencia en la creación de sitios web y aplicaciones móviles. Apasionado por la tecnología y el diseño, se especializa en el desarrollo frontend y backend, utilizando tecnologías como HTML, CSS, JavaScript, React y Node.js."
+                            android:textSize="13dp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+
+                                    android:text="Teléfono"
+                                    android:textColor="@color/primary_text_color" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:visibility="gone"
+                                        android:id="@+id/etDeveloperPhone"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="924 830 455"
+                                        android:textSize="16sp"
+                                        android:textColor="@color/primary_text_color" />
+
+                                    <TextView
+                                        android:id="@+id/tvDeveloperPhone"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="924 830 455"
+                                        android:textSize="13dp" />
+
+                                    <ImageView
+                                        android:id="@+id/ivEditDevProfilePhone"
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_marginStart="5dp"
+                                        android:src="@drawable/ic_edit" />
+                                </LinearLayout>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:text="Correo"
+                                    android:textColor="@color/primary_text_color" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:visibility="gone"
+                                        android:id="@+id/etDeveloperEmail"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="juan.perez@example.com"
+                                        android:textSize="16sp"
+                                        android:textColor="@color/primary_text_color" />
+
+                                    <TextView
+                                        android:id="@+id/tvDeveloperMail"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="juan.perez@example.com"
+                                        android:textSize="13dp" />
+
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:layout_marginTop="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="Proyectos Realizados:     "
+                                android:textColor="@color/primary_text_color" />
+
+                            <TextView
+                                android:id="@+id/tvDeveloperProjects"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="5"
+                                android:textSize="25dp"
+                                android:textStyle="bold"/>
+
+                        </LinearLayout>
+                        <ImageView
+                            android:id="@+id/ivConfirmEditDevProfile"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="13dp"
+                            android:src="@drawable/ic_check_circle" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/ivEditDevProfile"
+                    android:layout_width="40dp"
+                    android:layout_height="51dp"
+                    android:src="@drawable/ic_edit"
+                    android:translationX="230dp"
+                    android:translationY="125dp" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:paddingTop="20dp"
+                android:clipToPadding="false"
+                android:id="@+id/rvProjects"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="MissingConstraints" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvCardEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                app:layout_constraintTop_toBottomOf="@+id/rvProjects"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </FrameLayout>
