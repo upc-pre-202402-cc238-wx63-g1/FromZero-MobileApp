@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -14,30 +13,44 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvNoDeliverables"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No hay entregables"
-                android:visibility="gone"
-                android:layout_gravity="center"
-                />
+                android:orientation="vertical"
+                android:background="@drawable/background_gradient_2">
 
-            <!-- tools:lisitem permite una vista previa del prototype en el recycle view-->
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/report_icon"
+                    android:paddingTop="50dp"
+                    app:srcCompat="@drawable/report" />
+
+                <TextView
+                    android:id="@+id/tvProyectProgress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="25dp"
+                    android:text="@string/sigue_el_avance_de_tu_proyecto"
+                    android:textAlignment="center"
+                    android:textColor="@color/project_card_background"
+                    android:textSize="34sp" />
+            </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvDeliverables"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="1dp"
-                android:layout_marginEnd="1dp"
-
-                />
+                android:layout_marginEnd="1dp" />
 
             <ImageView
                 android:id="@+id/ivAddDeliverable"
@@ -46,8 +59,8 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="50dp"
-                android:src="@android:drawable/ic_menu_add"
-                />
+                android:contentDescription="@string/add_deliverable_icon"
+                android:src="@android:drawable/ic_menu_add" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
