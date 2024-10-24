@@ -1,5 +1,6 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.cursokotlin.appfromzero.AuthActivity
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.HomeViewModel
 
@@ -58,7 +60,9 @@ class MenuFragment : Fragment() {
         }
 
         btnLogout.setOnClickListener {
-            replaceFragment(LogoutFragment())
+            val intent = Intent(requireContext(), AuthActivity::class.java)
+            startActivity(intent)
+            requireActivity().finish()
         }
     }
 
