@@ -1,6 +1,7 @@
 package com.cursokotlin.appfromzero.UI.fragments
 import android.animation.ObjectAnimator
 import android.animation.AnimatorSet
+import android.content.Intent
 import android.view.animation.DecelerateInterpolator
 import android.graphics.Color
 import android.graphics.Rect
@@ -15,6 +16,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import com.cursokotlin.appfromzero.MainActivity
 import com.cursokotlin.appfromzero.R
 
 /**
@@ -106,8 +108,16 @@ class RolFragment : Fragment() {
         }
 
         val btNext = rootView.findViewById<Button>(R.id.bt_Next)
+
         btNext.setOnClickListener {
-            replaceFragment(RegisterFragment())
+            val intent = Intent(requireActivity(), MainActivity::class.java)
+            if(empresaSelected){
+                intent.putExtra("userRole", "empresa") // Rol de empresa
+            } else if(devSelected){
+                intent.putExtra("userRole", "desarrollador") // Rol de desarrollador
+            }
+            startActivity(intent)
+            requireActivity().finish()
         }
         return rootView
 

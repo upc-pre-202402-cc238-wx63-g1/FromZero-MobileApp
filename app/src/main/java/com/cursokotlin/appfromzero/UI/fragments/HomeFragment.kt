@@ -12,11 +12,14 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
 import com.cursokotlin.appfromzero.models.Enterprise
+import com.cursokotlin.appfromzero.models.HomeViewModel
 import com.cursokotlin.appfromzero.models.ProjectCard
 import com.cursokotlin.appfromzero.models.ProjectState
 import com.google.android.material.textfield.TextInputEditText
@@ -36,10 +39,14 @@ private const val ARG_PARAM2 = "param2"
  */
 class HomeFragment : Fragment() {
 
+    // Seleccion de Rol
+    private val homeViewModel: HomeViewModel by activityViewModels()
+
     private lateinit var enterprise: Enterprise
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ProjectCardAdapter
     private lateinit var projectList: List<ProjectCard>
+
 
     // Home Edit Profile Components
     private lateinit var ivEditProfile: ImageView
@@ -65,7 +72,7 @@ class HomeFragment : Fragment() {
 
     // Home Enterprise Extending Components layout
     private lateinit var llExtending: LinearLayout
-
+    private lateinit var clHomeEnterprise: ConstraintLayout
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
@@ -74,6 +81,19 @@ class HomeFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
+
+        homeViewModel.userRole.observe(viewLifecycleOwner) { role->
+            when(role) {
+                "empresa" -> {
+                    clHomeEnterprise = view.findViewById(R.id.clHomeEnterprise)
+                    clHomeEnterprise.visibility = View.VISIBLE
+                }
+                "desarrollador" -> {
+                    clHomeEnterprise = view.findViewById(R.id.clHomeEnterprise)
+                    clHomeEnterprise.visibility = View.GONE
+                }
+            }
+        }
 
         // Inicializar componentes
         ivEditProfile = view.findViewById(R.id.ivEditProfile)

@@ -45,12 +45,12 @@ class LogInFragment : Fragment() {
             replaceFragment(RolFragment())
         }
 
-        val btRegister = rootView.findViewById<Button>(R.id.bt_IniciarSesion)
-        btRegister.setOnClickListener {
+        val btLogIn = rootView.findViewById<Button>(R.id.bt_IniciarSesion)
+        btLogIn.setOnClickListener {
             // Crea un Intent para ir a MainActivity
-            val intent = Intent(requireActivity(), MainActivity::class.java)
+            //val intent = Intent(requireActivity(), MainActivity::class.java)
             // Inicia la actividad
-            startActivity(intent)
+            //startActivity(intent)
             // Opcionalmente, puedes finalizar la actividad actual si no la necesitas más
             // requireActivity().finish()
         }

@@ -2,6 +2,7 @@ package com.cursokotlin.appfromzero
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -12,9 +13,13 @@ import com.cursokotlin.appfromzero.UI.fragments.MenuFragment
 import com.cursokotlin.appfromzero.UI.fragments.MessageFragment
 import com.cursokotlin.appfromzero.UI.fragments.SearchFragment
 import com.cursokotlin.appfromzero.UI.fragments.SearchProjectFragment
+import com.cursokotlin.appfromzero.models.HomeViewModel
 import com.qamar.curvedbottomnaviagtion.CurvedBottomNavigation
 
 class MainActivity : AppCompatActivity() {
+
+    private val homeViewModel: HomeViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -24,6 +29,11 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        //Validacion del rol
+        val userRole = intent.getStringExtra("userRole")
+        homeViewModel.userRole.value = userRole
+
         val bottomNavigation = findViewById<CurvedBottomNavigation>(R.id.bottomNavigation)
         bottomNavigation.add(
             CurvedBottomNavigation.Model(1, "Home", R.drawable.ic_home)
@@ -39,12 +49,22 @@ class MainActivity : AppCompatActivity() {
         )
 
         bottomNavigation.setOnClickMenuListener {
-            when(it.id){
-                1 -> {replaceFragment(HomeFragment())}
+            when (it.id) {
+                1 -> {
+                    replaceFragment(HomeFragment())
+                }
                 //2 -> {replaceFragment(SearchProjectFragment())} //para vista devs busca de proyectos
-                2 -> {replaceFragment(SearchFragment())}
-                3 -> {replaceFragment(MessageFragment())}
-                4 -> {replaceFragment(MenuFragment())}
+                2 -> {
+                    replaceFragment(SearchFragment())
+                }
+
+                3 -> {
+                    replaceFragment(MessageFragment())
+                }
+
+                4 -> {
+                    replaceFragment(MenuFragment())
+                }
             }
         }
 
@@ -52,6 +72,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.show(1)
 
     }
+
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager
             .beginTransaction()

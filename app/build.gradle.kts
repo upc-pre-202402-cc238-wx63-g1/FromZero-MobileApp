@@ -40,6 +40,7 @@ android {
 
 dependencies {
     implementation ("com.squareup.picasso:picasso:2.8")
+    implementation ("androidx.fragment:fragment-ktx:1.8.3")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.cursokotlin.appfromzero.R
+import com.cursokotlin.appfromzero.models.HomeViewModel
 
 
 /**
@@ -16,10 +18,24 @@ import com.cursokotlin.appfromzero.R
  */
 class MenuFragment : Fragment() {
 
+    private val homeViewModel: HomeViewModel by activityViewModels()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        homeViewModel.userRole.observe(viewLifecycleOwner){ role ->
+            when(role) {
+                "empresa" -> {
+
+                }
+                "desarrollador" -> {
+
+                }
+            }
+        }
+
         // Inflate the layout for this fragment
         val rootView: View = inflater.inflate(R.layout.fragment_menu, container, false)
 
