@@ -1,8 +1,11 @@
 package com.cursokotlin.appfromzero.models
 
-data class Project (
+class Project (
     val title: String,
     val description: String,
-    val pictureLogo: Int,
-    val website :String
-)
+    val technologies: String,
+    val frameworks: String,
+    val budget: String,
+    val processes: String
+    )
+

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="16dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¿Estas seguro de que quieres crear este proyecto?"
+                android:textAlignment="center"
+                android:textColor="@color/Cyan"
+                android:textSize="30sp" />
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_alert" />
+
+            <Button
+                android:id="@+id/btn_aceptar"
+                android:layout_width="260dp"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                app:cornerRadius="25sp"
+                android:backgroundTint="@color/white"
+
+
+                android:text="Aceptar"
+                android:textColor="@color/Cyan"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                app:strokeWidth="2sp"
+                app:strokeColor="@color/Cyan" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
