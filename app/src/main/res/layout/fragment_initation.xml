@@ -10,10 +10,10 @@
         android:id="@+id/fondo_start"
         android:layout_width="860dp"
         android:layout_height="985dp"
+        android:layout_marginTop="10dp"
         android:src="@drawable/ic_start_design"
         android:translationX="-210dp"
-        android:translationY="-250dp"
-        android:layout_marginTop="10dp"/>
+        android:translationY="-250dp" />
 
     <ImageView
         android:id="@+id/imageView11"
