@@ -10,15 +10,20 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.ProjectData
 import com.cursokotlin.appfromzero.adapters.ProjectDataAdapter
 import com.cursokotlin.appfromzero.R
+import com.cursokotlin.appfromzero.models.HomeViewModel
 import com.cursokotlin.appfromzero.models.Project
 
 class ViewProjectFragment : Fragment() {
-    private var isDeveloper: Boolean = false
+    private val homeViewModel: HomeViewModel by activityViewModels()
+
+    private var isDeveloper: Boolean = true
+
     private lateinit var applyProjectDialog: Dialog
     private lateinit var btnConfirmApplyProject: Button
     lateinit var projectData: List<ProjectData>
@@ -32,6 +37,11 @@ class ViewProjectFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_view_project, container, false)
         val tvProjectName = view.findViewById<TextView>(R.id.tvProjectName)
         val btDeliverables = view.findViewById<Button>(R.id.btDeliverables)
+
+        homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
+            isDeveloper = role == "desarrollador"
+        }
+
         // Inicializa los diálogos ANTES de asignar los botones
         setupApplyProjectDialog()
         loadDescription(view)

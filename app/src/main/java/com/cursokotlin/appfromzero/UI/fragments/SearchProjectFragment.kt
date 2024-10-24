@@ -12,7 +12,7 @@ import com.cursokotlin.appfromzero.adapters.ProjectAdapter
 import com.cursokotlin.appfromzero.models.Project
 
 
-class SearchProjectFragment : Fragment() {
+class SearchProjectFragment : Fragment(), ProjectAdapter.OnItemClickListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -57,8 +57,20 @@ class SearchProjectFragment : Fragment() {
             )
         )
 
-        recyclerView.adapter = ProjectAdapter(projects)
+        recyclerView.adapter = ProjectAdapter(projects, this)
 
         return view
+    }
+
+    override fun onItemClick(project: Project) {
+        replaceFragment(ViewProjectFragment())
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.setReorderingAllowed(true)
+        transaction.replace(R.id.fragmenContainer, fragment)
+        transaction.addToBackStack("principal")
+        transaction.commit()
     }
 }
