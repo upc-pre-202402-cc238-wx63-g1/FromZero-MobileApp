@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.cursokotlin.appfromzero.MainActivity
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.Deliverable
 
@@ -18,6 +19,8 @@ class DeliverableAdapter(
     var deliverables: ArrayList<Deliverable>,
     private val onItemClick: (Deliverable) -> Unit
 ) : RecyclerView.Adapter<DeliverablePrototype>() {
+
+    var userRole: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeliverablePrototype {
         val view = LayoutInflater
@@ -27,7 +30,7 @@ class DeliverableAdapter(
     }
 
     override fun onBindViewHolder(holder: DeliverablePrototype, position: Int) {
-        holder.bind(deliverables[position], this, position, onItemClick)
+        holder.bind(deliverables[position], this, userRole, position, onItemClick)
     }
 
     override fun getItemCount(): Int = deliverables.size
@@ -56,10 +59,12 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
     val btEdit = itemView.findViewById<Button>(R.id.btEdit)
 
     var isExpanded = false
+    var userRole: String? = null
 
     fun bind(
         deliverable: Deliverable,
         adapter: DeliverableAdapter,
+        role: String?,
         position: Int,
         onItemClick: (Deliverable) -> Unit
     ) {
@@ -77,6 +82,8 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
         tvDescription.visibility = View.GONE
         btDelete.visibility = View.GONE
         btEdit.visibility = View.GONE
+
+        userRole = role
 
         cvDeliverableCard.setOnClickListener {
             if (isExpanded) {
@@ -109,8 +116,11 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private fun expandCard() {
         tvDescriptionText.visibility = View.VISIBLE
         tvDescription.visibility = View.VISIBLE
-        btDelete.visibility = View.VISIBLE
-        btEdit.visibility = View.VISIBLE
+
+        if (userRole != "desarrollador") {
+            btDelete.visibility = View.VISIBLE
+            btEdit.visibility = View.VISIBLE
+        }
 
         val initialHeight = cvDeliverableCard.height
         cvDeliverableCard.measure(
