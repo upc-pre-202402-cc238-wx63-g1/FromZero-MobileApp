@@ -5,15 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.cursokotlin.appfromzero.adapters.DeliverableAdapter
 import com.cursokotlin.appfromzero.R
+import com.cursokotlin.appfromzero.adapters.DeliverableAdapter
 import com.cursokotlin.appfromzero.adapters.DeliverablePrototype
 import com.cursokotlin.appfromzero.models.Deliverable
+import com.cursokotlin.appfromzero.models.HomeViewModel
 
 class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverableCreatedListener,
     EditDeliverableFragment.OnDeliverableEditedListener {
@@ -21,6 +24,9 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
     private var deliverables = ArrayList<Deliverable>()
     private lateinit var deliverableAdapter: DeliverableAdapter
     private lateinit var rvDeliverables: RecyclerView
+    private lateinit var ivAddDeliverable: ImageView
+    private lateinit var cvCardEmpty: CardView
+    private val homeViewModel: HomeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -32,8 +38,25 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        loadDeliverables()
+
         initView(view)
+
+
+        homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
+            when (role) {
+                "desarrollador" -> {
+
+                    ivAddDeliverable.visibility = View.GONE
+                    cvCardEmpty.visibility = View.VISIBLE
+                    val adapter = rvDeliverables.adapter as? DeliverableAdapter
+                    if (adapter != null) {
+                        adapter.userRole = role
+                    }
+                }
+            }
+        }
+
+        loadDeliverables()
         return view
     }
 
@@ -54,7 +77,8 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         rvDeliverables.adapter = deliverableAdapter
         rvDeliverables.layoutManager = LinearLayoutManager(requireContext())
 
-        val ivAddDeliverable = view.findViewById<ImageView>(R.id.ivAddDeliverable)
+        ivAddDeliverable = view.findViewById(R.id.ivAddDeliverable)
+        cvCardEmpty = view.findViewById(R.id.cvCardEmpty)
         ivAddDeliverable.setOnClickListener {
             val dialog = CreateDeliverableFragment()
             dialog.setOnDeliverableCreatedListener(this)
