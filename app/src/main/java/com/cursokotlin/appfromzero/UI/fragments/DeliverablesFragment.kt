@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -24,6 +25,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
     private lateinit var deliverableAdapter: DeliverableAdapter
     private lateinit var rvDeliverables: RecyclerView
     private lateinit var ivAddDeliverable: ImageView
+    private lateinit var cvCardEmpty: CardView
     private val homeViewModel: HomeViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -45,6 +47,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
                 "desarrollador" -> {
 
                     ivAddDeliverable.visibility = View.GONE
+                    cvCardEmpty.visibility = View.VISIBLE
                     val adapter = rvDeliverables.adapter as? DeliverableAdapter
                     if (adapter != null) {
                         adapter.userRole = role
@@ -75,6 +78,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         rvDeliverables.layoutManager = LinearLayoutManager(requireContext())
 
         ivAddDeliverable = view.findViewById(R.id.ivAddDeliverable)
+        cvCardEmpty = view.findViewById(R.id.cvCardEmpty)
         ivAddDeliverable.setOnClickListener {
             val dialog = CreateDeliverableFragment()
             dialog.setOnDeliverableCreatedListener(this)

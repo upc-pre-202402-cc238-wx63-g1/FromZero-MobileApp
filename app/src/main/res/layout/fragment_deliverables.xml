@@ -61,6 +61,16 @@
                 android:layout_marginBottom="50dp"
                 android:contentDescription="@string/add_deliverable_icon"
                 android:src="@android:drawable/ic_menu_add" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvCardEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/rvDeliverables"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
