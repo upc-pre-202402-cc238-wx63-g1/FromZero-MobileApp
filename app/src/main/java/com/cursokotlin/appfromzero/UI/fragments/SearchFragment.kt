@@ -11,7 +11,7 @@ import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.DeveloperAdapter
 import com.cursokotlin.appfromzero.models.Developer
 
-class   SearchFragment : Fragment() {
+class SearchFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,9 +26,30 @@ class   SearchFragment : Fragment() {
 
         // Sample data
         val developers = listOf(
-            Developer("Juan Pérez", 4.5f, R.drawable.sample_profile, R.drawable.sample_flag, "Especialista en desarrollo móvil con 5 años de experiencia en Android y iOS.", "Android, iOS, Kotlin, Swift"),
-            Developer("Ana Gómez", 4.0f, R.drawable.sample_profile, R.drawable.sample_flag, "Desarrolladora full-stack con experiencia en Java y JavaScript.", "Java, JavaScript, React, Spring"),
-            Developer("Carlos Ruiz", 4.8f, R.drawable.sample_profile, R.drawable.sample_flag, "Ingeniero de software con enfoque en inteligencia artificial.", "Python, TensorFlow, Keras, PyTorch")
+            Developer(
+                "Juan Pérez",
+                4.5f,
+                R.drawable.sample_profile,
+                R.drawable.sample_flag,
+                "Especialista en desarrollo móvil con 5 años de experiencia en Android y iOS.",
+                "Android, iOS, Kotlin, Swift"
+            ),
+            Developer(
+                "Ana Gómez",
+                4.0f,
+                R.drawable.sample_profile,
+                R.drawable.sample_flag,
+                "Desarrolladora full-stack con experiencia en Java y JavaScript.",
+                "Java, JavaScript, React, Spring"
+            ),
+            Developer(
+                "Carlos Ruiz",
+                4.8f,
+                R.drawable.sample_profile,
+                R.drawable.sample_flag,
+                "Ingeniero de software con enfoque en inteligencia artificial.",
+                "Python, TensorFlow, Keras, PyTorch"
+            )
         )
 
         // Set adapter

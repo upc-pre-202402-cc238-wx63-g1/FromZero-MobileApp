@@ -22,7 +22,7 @@ class RegisterFragment : Fragment() {
         // Inflate the layout for this fragment
         val rootView: View = inflater.inflate(R.layout.fragment_register, container, false)
         val llVolver = rootView.findViewById<LinearLayout>(R.id.ll_Volver)
-        llVolver.setOnClickListener{
+        llVolver.setOnClickListener {
             replaceFragment(LogInFragment())
         }
 
@@ -32,6 +32,7 @@ class RegisterFragment : Fragment() {
         }
         return rootView
     }
+
     private fun replaceFragment(fragment: Fragment) {
         val transaction = parentFragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)

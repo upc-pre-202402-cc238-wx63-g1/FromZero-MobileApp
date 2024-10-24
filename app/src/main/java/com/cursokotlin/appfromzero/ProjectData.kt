@@ -1,6 +1,6 @@
 package com.cursokotlin.appfromzero
 
-class ProjectData (
+class ProjectData(
     val title: String,
     val description: String
 )

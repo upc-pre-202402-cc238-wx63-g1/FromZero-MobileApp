@@ -25,11 +25,12 @@ class MenuFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        homeViewModel.userRole.observe(viewLifecycleOwner){ role ->
-            when(role) {
+        homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
+            when (role) {
                 "empresa" -> {
 
                 }
+
                 "desarrollador" -> {
 
                 }

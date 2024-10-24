@@ -25,7 +25,8 @@ class ProjectCardAdapter(
     inner class ProjectViewHolder(itemView: View) : ViewHolder(itemView) {
         private val tvProjectTitle: TextView = itemView.findViewById(R.id.tvProjectTitle)
         private val tvNumCandidates: TextView = itemView.findViewById(R.id.tvNumCandidates)
-        private val ivProfileEnterprisePhoto: ImageView = itemView.findViewById(R.id.ivProfileEnterprisePhoto)
+        private val ivProfileEnterprisePhoto: ImageView =
+            itemView.findViewById(R.id.ivProfileEnterprisePhoto)
         private val tvEnterpriseName: TextView = itemView.findViewById(R.id.tvEnterpriseName)
         private val llProgress: LinearLayout = itemView.findViewById(R.id.llProgress)
         private val tvProgressNumber: TextView = itemView.findViewById(R.id.tvProgressNumber)
@@ -45,6 +46,7 @@ class ProjectCardAdapter(
                 ProjectState.BUSQUEDA_DEVELOPER -> {
                     tvNumCandidates.text = "Postulante: ${project.numPostulantes}"
                 }
+
                 ProjectState.EN_PROGRESO -> {
                     tvNumCandidates.visibility = View.GONE
                     llProgress.visibility = View.VISIBLE
@@ -52,6 +54,7 @@ class ProjectCardAdapter(
                     tvProgressNumber.text = "${project.projectProgress}%"
                     pbProjectProgress.progress = project.projectProgress
                 }
+
                 ProjectState.FINALIZADO -> {
                     tvNumCandidates.text = "Proyecto finalizado"
                 }
@@ -62,7 +65,8 @@ class ProjectCardAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.prototype_project_card, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.prototype_project_card, parent, false)
         return ProjectViewHolder(view)
     }
 

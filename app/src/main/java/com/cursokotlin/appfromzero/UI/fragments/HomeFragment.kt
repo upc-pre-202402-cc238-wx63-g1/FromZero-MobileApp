@@ -82,12 +82,13 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        homeViewModel.userRole.observe(viewLifecycleOwner) { role->
-            when(role) {
+        homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
+            when (role) {
                 "empresa" -> {
                     clHomeEnterprise = view.findViewById(R.id.clHomeEnterprise)
                     clHomeEnterprise.visibility = View.VISIBLE
                 }
+
                 "desarrollador" -> {
                     clHomeEnterprise = view.findViewById(R.id.clHomeEnterprise)
                     clHomeEnterprise.visibility = View.GONE
@@ -303,8 +304,18 @@ class HomeFragment : Fragment() {
     }
 
     private fun resetEditMode() {
-        val editTextViews = listOf(etEnterpriseWebsite, etEnterpriseSector, etEnterpriseDescription, etEnterprisePhone)
-        val textViews = listOf(tvEnterpriseWebsite, tvEnterpriseSector, tvEnterpriseDescription, tvEnterpriseCellphone)
+        val editTextViews = listOf(
+            etEnterpriseWebsite,
+            etEnterpriseSector,
+            etEnterpriseDescription,
+            etEnterprisePhone
+        )
+        val textViews = listOf(
+            tvEnterpriseWebsite,
+            tvEnterpriseSector,
+            tvEnterpriseDescription,
+            tvEnterpriseCellphone
+        )
 
         for (i in editTextViews.indices) {
             editTextViews[i].visibility = View.GONE

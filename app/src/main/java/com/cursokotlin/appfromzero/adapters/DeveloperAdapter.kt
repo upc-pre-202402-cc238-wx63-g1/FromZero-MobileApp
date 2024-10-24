@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.Developer
 
-class DeveloperAdapter(private val developers: List<Developer>) : RecyclerView.Adapter<DeveloperAdapter.DeveloperViewHolder>() {
+class DeveloperAdapter(private val developers: List<Developer>) :
+    RecyclerView.Adapter<DeveloperAdapter.DeveloperViewHolder>() {
 
     class DeveloperViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profilePic: ImageView = itemView.findViewById(R.id.ivProfilePic)
@@ -25,7 +26,8 @@ class DeveloperAdapter(private val developers: List<Developer>) : RecyclerView.A
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeveloperViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.prototype_search_developer, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.prototype_search_developer, parent, false)
         return DeveloperViewHolder(view)
     }
 

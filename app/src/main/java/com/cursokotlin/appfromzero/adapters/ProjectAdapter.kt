@@ -13,18 +13,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.Project
 
-class ProjectAdapter(private val projects: List<Project>) : RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() {
+class ProjectAdapter(private val projects: List<Project>) :
+    RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() {
 
     class ProjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val projectPic: ImageView = itemView.findViewById(R.id.ivLogo)
         val title: TextView = itemView.findViewById(R.id.tvPlatformName)
         val description: TextView = itemView.findViewById(R.id.tvDescriptionProject)
-        val website:TextView = itemView.findViewById(R.id.tvWebsite)
+        val website: TextView = itemView.findViewById(R.id.tvWebsite)
         val arrow: ImageView = itemView.findViewById(R.id.ivArrow)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProjectViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.prototype_search_projects, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.prototype_search_projects, parent, false)
         return ProjectViewHolder(view)
     }
 

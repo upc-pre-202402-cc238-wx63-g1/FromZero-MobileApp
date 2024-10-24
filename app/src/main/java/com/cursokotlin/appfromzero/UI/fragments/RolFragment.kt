@@ -1,4 +1,5 @@
 package com.cursokotlin.appfromzero.UI.fragments
+
 import android.animation.ObjectAnimator
 import android.animation.AnimatorSet
 import android.content.Intent
@@ -103,7 +104,7 @@ class RolFragment : Fragment() {
 
 
         val llVolver = rootView.findViewById<LinearLayout>(R.id.ll_Volver)
-        llVolver.setOnClickListener{
+        llVolver.setOnClickListener {
             replaceFragment(LogInFragment())
         }
 
@@ -111,9 +112,9 @@ class RolFragment : Fragment() {
 
         btNext.setOnClickListener {
             val intent = Intent(requireActivity(), MainActivity::class.java)
-            if(empresaSelected){
+            if (empresaSelected) {
                 intent.putExtra("userRole", "empresa") // Rol de empresa
-            } else if(devSelected){
+            } else if (devSelected) {
                 intent.putExtra("userRole", "desarrollador") // Rol de desarrollador
             }
             startActivity(intent)
@@ -134,8 +135,18 @@ class RolFragment : Fragment() {
 
     // Función para aplicar animación de zoom
     private fun applyZoomAnimation(targetView: View, isZoomIn: Boolean) {
-        val scaleX = ObjectAnimator.ofFloat(targetView, "scaleX", if (isZoomIn) 1.0f else 1.2f, if (isZoomIn) 1.2f else 1.0f)
-        val scaleY = ObjectAnimator.ofFloat(targetView, "scaleY", if (isZoomIn) 1.0f else 1.2f, if (isZoomIn) 1.2f else 1.0f)
+        val scaleX = ObjectAnimator.ofFloat(
+            targetView,
+            "scaleX",
+            if (isZoomIn) 1.0f else 1.2f,
+            if (isZoomIn) 1.2f else 1.0f
+        )
+        val scaleY = ObjectAnimator.ofFloat(
+            targetView,
+            "scaleY",
+            if (isZoomIn) 1.0f else 1.2f,
+            if (isZoomIn) 1.2f else 1.0f
+        )
 
         val animatorSet = AnimatorSet()
         animatorSet.playTogether(scaleX, scaleY)

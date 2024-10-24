@@ -23,11 +23,12 @@ class InitationFragment : Fragment() {
         // Inflate the layout for this fragment
         val rootView: View = inflater.inflate(R.layout.fragment_initation, container, false)
         val llNext = rootView.findViewById<LinearLayout>(R.id.ll_Next)
-        llNext.setOnClickListener{
+        llNext.setOnClickListener {
             replaceFragment(LogInFragment())
         }
         return rootView
     }
+
     private fun replaceFragment(fragment: Fragment) {
         val transaction = parentFragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)

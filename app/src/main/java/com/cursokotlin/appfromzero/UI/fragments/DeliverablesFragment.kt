@@ -15,7 +15,8 @@ import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.DeliverablePrototype
 import com.cursokotlin.appfromzero.models.Deliverable
 
-class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverableCreatedListener, EditDeliverableFragment.OnDeliverableEditedListener {
+class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverableCreatedListener,
+    EditDeliverableFragment.OnDeliverableEditedListener {
 
     private var deliverables = ArrayList<Deliverable>()
     private lateinit var deliverableAdapter: DeliverableAdapter
@@ -73,15 +74,52 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         if (index != -1) {
             deliverables[index] = newDeliverable
             deliverableAdapter.notifyItemChanged(index)
-            val viewHolder = rvDeliverables.findViewHolderForAdapterPosition(index) as? DeliverablePrototype
+            val viewHolder =
+                rvDeliverables.findViewHolderForAdapterPosition(index) as? DeliverablePrototype
             viewHolder?.collapseCard()
         }
     }
 
     private fun loadDeliverables() {
-        deliverables.add(Deliverable(1, "Entregable 1", "Plataforma de Comercio Electrónico Geekit", "24/09/2024", "Espera", "Este entregable consistirá en un documento detallado que describe los requisitos funcionales y no funcionales de la Plataforma de Comercio Electrónico Geekit. Incluirá casos de uso, diagramas de flujo, requisitos de usuario, requisitos de sistema y cualquier otra información relevante para guiar el desarrollo del software."))
-        deliverables.add(Deliverable(2, "Entregable 2", "Plataforma de Comercio Electrónico Geekit", "31/10/2024", "Espera", "Se entregará un prototipo interactivo de la interfaz de usuario de la Plataforma de Comercio Electrónico Geekit. Este prototipo permitirá a los stakeholders visualizar y navegar por las diferentes pantallas y funcionalidades de la aplicación, proporcionando una representación visual de cómo se verá y funcionará la plataforma final."))
-        deliverables.add(Deliverable(3, "Entregable 3", "Plataforma de Comercio Electrónico Geekit", "30/11/2024", "Espera", "Este entregable consistirá en el código fuente del frontend y backend de la Plataforma de Comercio Electrónico Geekit. Se proporcionará una estructura de directorios organizada, con comentarios claros y limpios en el código para facilitar la comprensión y el mantenimiento futuro."))
-        deliverables.add(Deliverable(4, "Entregable 4", "Plataforma de Comercio Electrónico Geekit", "30/11/2024", "Espera", "Este entregable consistirá en el código fuente del frontend y backend de la Plataforma de Comercio Electrónico Geekit. Se proporcionará una estructura de directorios organizada, con comentarios claros y limpios en el código para facilitar la comprensión y el mantenimiento futuro."))
+        deliverables.add(
+            Deliverable(
+                1,
+                "Entregable 1",
+                "Plataforma de Comercio Electrónico Geekit",
+                "24/09/2024",
+                "Espera",
+                "Este entregable consistirá en un documento detallado que describe los requisitos funcionales y no funcionales de la Plataforma de Comercio Electrónico Geekit. Incluirá casos de uso, diagramas de flujo, requisitos de usuario, requisitos de sistema y cualquier otra información relevante para guiar el desarrollo del software."
+            )
+        )
+        deliverables.add(
+            Deliverable(
+                2,
+                "Entregable 2",
+                "Plataforma de Comercio Electrónico Geekit",
+                "31/10/2024",
+                "Espera",
+                "Se entregará un prototipo interactivo de la interfaz de usuario de la Plataforma de Comercio Electrónico Geekit. Este prototipo permitirá a los stakeholders visualizar y navegar por las diferentes pantallas y funcionalidades de la aplicación, proporcionando una representación visual de cómo se verá y funcionará la plataforma final."
+            )
+        )
+        deliverables.add(
+            Deliverable(
+                3,
+                "Entregable 3",
+                "Plataforma de Comercio Electrónico Geekit",
+                "30/11/2024",
+                "Espera",
+                "Este entregable consistirá en el código fuente del frontend y backend de la Plataforma de Comercio Electrónico Geekit. Se proporcionará una estructura de directorios organizada, con comentarios claros y limpios en el código para facilitar la comprensión y el mantenimiento futuro."
+            )
+        )
+        deliverables.add(
+            Deliverable(
+                4,
+                "Entregable 4",
+                "Plataforma de Comercio Electrónico Geekit",
+                "30/11/2024",
+                "Espera",
+                "Este entregable consistirá en el código fuente del frontend y backend de la Plataforma de Comercio Electrónico Geekit. Se proporcionará una estructura de directorios organizada, con comentarios claros y limpios en el código para facilitar la comprensión y el mantenimiento futuro."
+            )
+        )
     }
 }

@@ -14,7 +14,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.Deliverable
 
-class DeliverableAdapter(var deliverables: ArrayList<Deliverable>, private val onItemClick: (Deliverable) -> Unit) : RecyclerView.Adapter<DeliverablePrototype>() {
+class DeliverableAdapter(
+    var deliverables: ArrayList<Deliverable>,
+    private val onItemClick: (Deliverable) -> Unit
+) : RecyclerView.Adapter<DeliverablePrototype>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeliverablePrototype {
         val view = LayoutInflater
@@ -54,7 +57,12 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var isExpanded = false
 
-    fun bind(deliverable: Deliverable, adapter: DeliverableAdapter, position: Int, onItemClick: (Deliverable) -> Unit) {
+    fun bind(
+        deliverable: Deliverable,
+        adapter: DeliverableAdapter,
+        position: Int,
+        onItemClick: (Deliverable) -> Unit
+    ) {
         tvDeliverableName.text = deliverable.title
         tvProjectName.text = deliverable.projectName
         tvDescriptionText.text = deliverable.description
@@ -87,7 +95,8 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
             if (position != RecyclerView.NO_POSITION) {
                 adapter.removeItem(position)
                 if (adapter.itemCount == 0) {
-                    Toast.makeText(itemView.context, "No hay entregables", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(itemView.context, "No hay entregables", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
@@ -121,7 +130,7 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
         animator.start()
     }
 
-     fun collapseCard() {
+    fun collapseCard() {
         val initialHeight = cvDeliverableCard.height
 
         tvDescriptionText.visibility = View.GONE

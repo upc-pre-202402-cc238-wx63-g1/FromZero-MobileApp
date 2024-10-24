@@ -55,7 +55,8 @@ class CreateDeliverableFragment : DialogFragment() {
                 listener?.onDeliverableCreated(newDeliverable)
                 dismiss()
             } else {
-                Toast.makeText(context, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Por favor, completa todos los campos", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
@@ -77,10 +78,12 @@ class CreateDeliverableFragment : DialogFragment() {
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
             //formatear la fecha
-            val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-                val formattedDate = String.format("%02d/%02d/%d", selectedDay, selectedMonth + 1, selectedYear)
-                dateField.text = formattedDate
-            }, year, month, day)
+            val datePickerDialog =
+                DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+                    val formattedDate =
+                        String.format("%02d/%02d/%d", selectedDay, selectedMonth + 1, selectedYear)
+                    dateField.text = formattedDate
+                }, year, month, day)
 
             datePickerDialog.show()
         }

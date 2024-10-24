@@ -48,7 +48,13 @@ class EditDeliverableFragment : DialogFragment() {
         return view
     }
 
-    private fun setupSaveButton(view: View, deliverableId: Int?, etTitle: EditText, etDescription: EditText, etDate: EditText) {
+    private fun setupSaveButton(
+        view: View,
+        deliverableId: Int?,
+        etTitle: EditText,
+        etDescription: EditText,
+        etDate: EditText
+    ) {
         val saveButton = view.findViewById<Button>(R.id.btEdit)
         saveButton.setOnClickListener {
             val newDeliverable = Deliverable(
@@ -78,10 +84,12 @@ class EditDeliverableFragment : DialogFragment() {
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-            val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-                val formattedDate = String.format("%02d/%02d/%d", selectedDay, selectedMonth + 1, selectedYear)
-                dateField.setText(formattedDate)
-            }, year, month, day)
+            val datePickerDialog =
+                DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+                    val formattedDate =
+                        String.format("%02d/%02d/%d", selectedDay, selectedMonth + 1, selectedYear)
+                    dateField.setText(formattedDate)
+                }, year, month, day)
 
             datePickerDialog.show()
         }

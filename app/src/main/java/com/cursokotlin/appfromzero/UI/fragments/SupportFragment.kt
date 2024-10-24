@@ -26,8 +26,13 @@ class SupportFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_support, container, false)
 
         val problemTypes = resources.getStringArray(R.array.problem_types)
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, problemTypes)
-        val autoCompleteTextView = view.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView)
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            problemTypes
+        )
+        val autoCompleteTextView =
+            view.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView)
         autoCompleteTextView.setAdapter(adapter)
 
         val fileAttachmentArea = view.findViewById<MaterialCardView>(R.id.fileAttachmentArea)
@@ -45,7 +50,11 @@ class SupportFragment : Fragment() {
         if (requestCode == PICK_FILE_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             selectedFileUri = data?.data
             selectedFileUri?.let {
-                Toast.makeText(requireContext(), "Archivo seleccionado: ${it.path}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Archivo seleccionado: ${it.path}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
