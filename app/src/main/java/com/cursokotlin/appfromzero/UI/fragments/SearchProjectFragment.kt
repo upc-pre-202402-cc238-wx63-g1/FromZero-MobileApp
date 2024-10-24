@@ -34,7 +34,7 @@ class SearchProjectFragment : Fragment() {
                 "La Aplicación Móvil de Entrenamiento Personalizado es un proyecto destinado a crear una aplicación móvil que permita a los usuarios " +
                         "realizar rutinas de entrenamiento personalizadas, con ejercicios y recomendaciones adaptadas a sus objetivos y necesidades. " +
                         "La aplicación debe ofrecer una interfaz amigable, un diseño atractivo y funcionalidades que faciliten la creación y seguimiento de rutinas de entrenamiento."
-                , R.drawable.geekit_profile,"FitApp"),
+                , R.drawable.geekit_profile ,"FitApp"),
             Project("Plataforma de Gestión de Proyectos",
                 "La Plataforma de Gestión de Proyectos es un proyecto destinado a crear una plataforma web que permita a las empresas gestionar sus proyectos de manera eficiente y colaborativa. " +
                         "La plataforma debe ofrecer herramientas para la planificación, seguimiento y control de proyectos, así como la gestión de recursos, tareas y comunicaciones entre los miembros del equipo."

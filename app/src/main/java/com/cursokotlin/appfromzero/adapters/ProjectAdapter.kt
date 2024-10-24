@@ -30,7 +30,7 @@ class ProjectAdapter(private val projects: List<Project>) : RecyclerView.Adapter
 
     override fun onBindViewHolder(holder: ProjectViewHolder, position: Int) {
         val project = projects[position]
-        holder.projectPic.setImageResource(project.pictureLogo)
+        project.pictureLogo?.let { holder.projectPic.setImageResource(it) }
         holder.title.text = project.title
 
         val descriptionPrefix = "Descripción:"

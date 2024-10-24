@@ -11,7 +11,7 @@ import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.DeveloperAdapter
 import com.cursokotlin.appfromzero.models.Developer
 
-class SearchFragment : Fragment() {
+class   SearchFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
