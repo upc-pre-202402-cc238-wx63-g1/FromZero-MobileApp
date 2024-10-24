@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
+import com.cursokotlin.appfromzero.models.Developer
 import com.cursokotlin.appfromzero.models.Enterprise
 import com.cursokotlin.appfromzero.models.HomeViewModel
 import com.cursokotlin.appfromzero.models.ProjectCard
@@ -42,11 +43,12 @@ class HomeFragment : Fragment() {
     // Seleccion de Rol
     private val homeViewModel: HomeViewModel by activityViewModels()
 
+    // Enterprise Home Components
     private lateinit var enterprise: Enterprise
+    private lateinit var developer: Developer
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ProjectCardAdapter
     private lateinit var projectList: List<ProjectCard>
-
 
     // Home Edit Profile Components
     private lateinit var ivEditProfile: ImageView
@@ -58,7 +60,6 @@ class HomeFragment : Fragment() {
     private lateinit var etEnterpriseDescription: TextInputEditText
     private lateinit var ivEditProfilePhone: ImageView
     private lateinit var etEnterprisePhone: TextInputEditText
-
     private lateinit var ivConfirmEditProfile: ImageView
 
     // Home Enterprise Profile Components
@@ -85,8 +86,8 @@ class HomeFragment : Fragment() {
         homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
             when (role) {
                 "empresa" -> {
-                    clHomeEnterprise = view.findViewById(R.id.clHomeEnterprise)
-                    clHomeEnterprise.visibility = View.VISIBLE
+                    initEnterpriseView(view)
+                    setupRecyclerView(view)
                 }
 
                 "desarrollador" -> {
@@ -96,16 +97,32 @@ class HomeFragment : Fragment() {
             }
         }
 
-        // Inicializar componentes
-        ivEditProfile = view.findViewById(R.id.ivEditProfile)
-        llExtending = view.findViewById(R.id.llExtending)
-        ivConfirmEditProfile = view.findViewById(R.id.ivConfirmEditProfile)
 
         // Fetch data from the API
+
+
+
+
+
+        return view
+    }
+
+    private fun initEnterpriseView(view: View){
+        clHomeEnterprise = view.findViewById(R.id.clHomeEnterprise)
+        clHomeEnterprise.visibility = View.VISIBLE
+
         fetchData()
 
-        initComponent(view)
+        initEnterpriseComponent(view)
 
+        setUpClickListener(view)
+
+        setupTouchListener(view)
+    }
+
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun setupTouchListener(view: View) {
         val flContainer: FrameLayout = view.findViewById(R.id.flContainer)
         val cvHomeProfile: CardView = view.findViewById(R.id.cvHomeProfile)
 
@@ -123,10 +140,9 @@ class HomeFragment : Fragment() {
 
         // Prevent touch events inside the CardView from propagating to the FrameLayout
         cvHomeProfile.setOnTouchListener { _, _ -> true }
+    }
 
-        // Configurar el click listener
-        setUpClickListener()
-
+    private fun setupRecyclerView(view: View) {
         recyclerView = view.findViewById(R.id.rvProjects)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
@@ -138,8 +154,6 @@ class HomeFragment : Fragment() {
         })
 
         recyclerView.adapter = adapter
-
-        return view
     }
 
     private fun fetchData() {
@@ -156,6 +170,15 @@ class HomeFragment : Fragment() {
             "Tecnología",
             "Geekit.pe",
             "987654321"
+        )
+
+        developer = Developer(
+            "Juan Pérez",
+            4.5f,
+            R.drawable.sample_profile,
+            R.drawable.sample_flag,
+            "Especialista en desarrollo móvil con 5 años de experiencia en Android y iOS.",
+            "Android, iOS, Kotlin, Swift"
         )
 
         projectList = listOf(
@@ -210,7 +233,7 @@ class HomeFragment : Fragment() {
         )
     }
 
-    private fun initComponent(view: View) {
+    private fun initEnterpriseComponent(view: View) {
         ivProfile = view.findViewById(R.id.ivProfilePhoto)
 
         tvEnterpriseWebsite = view.findViewById(R.id.tvEnterpriseWebSite)
@@ -230,12 +253,36 @@ class HomeFragment : Fragment() {
         ivEditProfileDescription = view.findViewById(R.id.ivEditProfileDescription)
         ivEditProfilePhone = view.findViewById(R.id.ivEditProfilePhone)
 
+        ivEditProfile = view.findViewById(R.id.ivEditProfile)
+        llExtending = view.findViewById(R.id.llExtending)
+        ivConfirmEditProfile = view.findViewById(R.id.ivConfirmEditProfile)
+
         setupEditToggle(ivEditProfileWebSite, tvEnterpriseWebsite, etEnterpriseWebsite)
         setupEditToggle(ivEditProfileSector, tvEnterpriseSector, etEnterpriseSector)
         setupEditToggle(ivEditProfileDescription, tvEnterpriseDescription, etEnterpriseDescription)
         setupEditToggle(ivEditProfilePhone, tvEnterpriseCellphone, etEnterprisePhone)
 
         bindDataToViews()
+    }
+
+    private fun initDeveloperComponent(view: View){
+        ivProfile = view.findViewById(R.id.ivProfilePhoto)
+
+
+    }
+
+    private fun bindDataToViews() {
+        Picasso.get()
+            .load(enterprise.pictureUrl)
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
+            .into(ivProfile)
+        tvEnterpriseWebsite.text = enterprise.website
+        tvEnterpriseName.text = enterprise.name
+        tvEnterpriseSector.text = enterprise.field
+        tvEnterpriseRUC.text = enterprise.socialRazon
+        tvEnterpriseDescription.text = enterprise.description
+        tvEnterpriseCellphone.text = enterprise.cellphone
     }
 
     private fun setupEditToggle(
@@ -256,21 +303,8 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun bindDataToViews() {
-        Picasso.get()
-            .load(enterprise.pictureUrl)
-            .placeholder(R.drawable.placeholder)
-            .error(R.drawable.placeholder)
-            .into(ivProfile)
-        tvEnterpriseWebsite.text = enterprise.website
-        tvEnterpriseName.text = enterprise.name
-        tvEnterpriseSector.text = enterprise.field
-        tvEnterpriseRUC.text = enterprise.socialRazon
-        tvEnterpriseDescription.text = enterprise.description
-        tvEnterpriseCellphone.text = enterprise.cellphone
-    }
 
-    private fun setUpClickListener() {
+    private fun setUpClickListener(view: View) {
         ivEditProfile.setOnClickListener {
             if (llExtending.visibility == View.GONE) {
                 recyclerView.visibility = View.GONE
