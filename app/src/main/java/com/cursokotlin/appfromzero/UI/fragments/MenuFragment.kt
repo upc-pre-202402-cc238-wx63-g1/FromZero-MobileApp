@@ -5,17 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.HomeViewModel
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [MenuFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MenuFragment : Fragment() {
 
     private val homeViewModel: HomeViewModel by activityViewModels()
@@ -24,35 +19,38 @@ class MenuFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
-            when (role) {
-                "empresa" -> {
-
-                }
-
-                "desarrollador" -> {
-
-                }
-            }
-        }
-
         // Inflate the layout for this fragment
         val rootView: View = inflater.inflate(R.layout.fragment_menu, container, false)
 
+        // Inicializar los botones y aplicar lógica de visibilidad según el rol del usuario
+        initializeUI(rootView)
+
+        return rootView
+    }
+
+    // Encapsula la inicialización y configuración del UI
+    private fun initializeUI(rootView: View) {
+        val lyCreateProject = rootView.findViewById<LinearLayout>(R.id.ly_createProject)
         val btnNotifications = rootView.findViewById<ImageButton>(R.id.btnNotifications)
         val btnCreateProject = rootView.findViewById<ImageButton>(R.id.btnCreateProject)
         val btnSupport = rootView.findViewById<ImageButton>(R.id.btnSupport)
         val btnLogout = rootView.findViewById<ImageButton>(R.id.btnLogout)
 
-        // Set click listeners for each button, passing the corresponding fragment to replaceFragment method
+        // Observar el rol del usuario para manipular la UI
+        homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
+            if (role == "desarrollador") {
+                // Eliminar el LinearLayout si el rol es desarrollador
+                (lyCreateProject.parent as? ViewGroup)?.removeView(lyCreateProject)
+            }
+        }
+
+        // Establecer listeners para los botones
         btnNotifications.setOnClickListener {
             replaceFragment(NotificationFragment())
         }
 
         btnCreateProject.setOnClickListener {
             replaceFragment(CreateProjectFragment())
-//            replaceFragment(ViewProjectFragment())
         }
 
         btnSupport.setOnClickListener {
@@ -62,11 +60,9 @@ class MenuFragment : Fragment() {
         btnLogout.setOnClickListener {
             replaceFragment(LogoutFragment())
         }
-
-        return rootView
     }
 
-    // Common method to replace fragment
+    // Método común para reemplazar fragmentos
     private fun replaceFragment(fragment: Fragment) {
         val transaction = parentFragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)
