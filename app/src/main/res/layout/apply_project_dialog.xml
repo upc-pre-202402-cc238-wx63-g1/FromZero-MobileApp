@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="16dp">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -42,7 +43,7 @@
                 android:textSize="30sp"
                 android:textStyle="bold"
                 app:strokeWidth="2sp"
-                app:strokeColor="@color/Cyan"/>
+                app:strokeColor="@color/Cyan" />
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
