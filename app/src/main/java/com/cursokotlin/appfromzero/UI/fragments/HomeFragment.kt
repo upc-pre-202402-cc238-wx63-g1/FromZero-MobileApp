@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,6 +35,7 @@ import org.w3c.dom.Text
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
+
 /**
  * A simple [Fragment] subclass.
  * Use the [HomeFragment.newInstance] factory method to
@@ -46,11 +49,14 @@ class HomeFragment : Fragment() {
     // Enterprise Home Components
     private lateinit var enterprise: Enterprise
     private lateinit var developer: Developer
+
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ProjectCardAdapter
     private lateinit var projectList: List<ProjectCard>
 
     // Home Edit Profile Components
+    private lateinit var cvHomeEnterpriseProfile: CardView
+
     private lateinit var ivEditProfile: ImageView
     private lateinit var ivEditProfileWebSite: ImageView
     private lateinit var etEnterpriseWebsite: TextInputEditText
@@ -73,7 +79,29 @@ class HomeFragment : Fragment() {
 
     // Home Enterprise Extending Components layout
     private lateinit var llExtending: LinearLayout
-    private lateinit var clHomeEnterprise: ConstraintLayout
+
+    // Home Developer Profile Components
+    private lateinit var cvHomeDeveloperProfile: CardView
+
+    private lateinit var ivProfileDevPhoto: ImageView
+    private lateinit var tvDevName: TextView
+    private lateinit var ratingBar: RatingBar
+
+    private lateinit var tvDevSpecialties: TextView
+    private lateinit var etDevSpecialties: TextInputEditText
+    private lateinit var ivEditDevSpecialties: ImageView
+    private lateinit var tvDevDescription: TextView
+    private lateinit var etDevDescription: TextInputEditText
+    private lateinit var ivEditDevDescription: ImageView
+    private lateinit var tvCellphone: TextView
+    private lateinit var etCellphone: TextInputEditText
+    private lateinit var ivEditDevCellphone: ImageView
+    private lateinit var tvEmail: TextView
+    private lateinit var etEmail: TextInputEditText
+    private lateinit var tvDeveloperProjects: TextView
+
+    private lateinit var llDevExtending: LinearLayout
+    private lateinit var ivConfirmEditDevProfile: ImageView
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
@@ -83,16 +111,20 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+
         homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
             when (role) {
                 "empresa" -> {
                     initEnterpriseView(view)
                     setupRecyclerView(view)
+                    setRecyclerViewContraints(view, R.id.cvHomeEnterpriseProfile)
                 }
 
                 "desarrollador" -> {
-                    clHomeEnterprise = view.findViewById(R.id.clHomeEnterprise)
-                    clHomeEnterprise.visibility = View.GONE
+                    initDeveloperView(view)
+                    setupRecyclerView(view)
+                    setRecyclerViewContraints(view, R.id.cvHomeDeveloperProfile)
+
                 }
             }
         }
@@ -107,9 +139,19 @@ class HomeFragment : Fragment() {
         return view
     }
 
+    private fun setRecyclerViewContraints(view: View, cvHomeEnterpriseProfile: Int) {
+        val recyclerView = view.findViewById<RecyclerView>(R.id.rvProjects)
+        val constraintLayout = view.findViewById<ConstraintLayout>(R.id.clHomeUI) // Asegúrate de que el ID sea correcto
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintLayout)
+
+        constraintSet.connect(recyclerView.id, ConstraintSet.TOP, cvHomeEnterpriseProfile, ConstraintSet.BOTTOM, 15)
+        constraintSet.applyTo(constraintLayout)
+    }
+
     private fun initEnterpriseView(view: View){
-        clHomeEnterprise = view.findViewById(R.id.clHomeEnterprise)
-        clHomeEnterprise.visibility = View.VISIBLE
+        cvHomeEnterpriseProfile = view.findViewById(R.id.cvHomeEnterpriseProfile)
+        cvHomeEnterpriseProfile.visibility = View.VISIBLE
 
         fetchData()
 
@@ -120,11 +162,20 @@ class HomeFragment : Fragment() {
         setupTouchListener(view)
     }
 
+    private fun initDeveloperView(view: View){
+        cvHomeDeveloperProfile = view.findViewById(R.id.cvHomeDeveloperProfile)
+        cvHomeDeveloperProfile.visibility = View.VISIBLE
+
+        fetchData()
+
+        initDeveloperComponent(view)
+    }
+
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupTouchListener(view: View) {
         val flContainer: FrameLayout = view.findViewById(R.id.flContainer)
-        val cvHomeProfile: CardView = view.findViewById(R.id.cvHomeProfile)
+        val cvHomeProfile: CardView = view.findViewById(R.id.cvHomeEnterpriseProfile)
 
         // Configure the touch listener for the FrameLayout
         flContainer.setOnTouchListener { _, _ ->
@@ -262,27 +313,66 @@ class HomeFragment : Fragment() {
         setupEditToggle(ivEditProfileDescription, tvEnterpriseDescription, etEnterpriseDescription)
         setupEditToggle(ivEditProfilePhone, tvEnterpriseCellphone, etEnterprisePhone)
 
-        bindDataToViews()
+        bindDataToViews(role = "empresa")
     }
 
-    private fun initDeveloperComponent(view: View){
-        ivProfile = view.findViewById(R.id.ivProfilePhoto)
+    private fun initDeveloperComponent(view: View) {
+        cvHomeDeveloperProfile = view.findViewById(R.id.cvHomeDeveloperProfile)
+        ivProfileDevPhoto = view.findViewById(R.id.ivProfileDevPhoto)
+        tvDevName = view.findViewById(R.id.tvDevName)
+        ratingBar = view.findViewById(R.id.ratingBar)
+        tvDevSpecialties = view.findViewById(R.id.tvDevSpecialties)
+        etDevSpecialties = view.findViewById(R.id.etDevSpecialties)
+        ivEditDevSpecialties = view.findViewById(R.id.ivEditProfileDevSpecialties)
+        tvDevDescription = view.findViewById(R.id.tvDeveloperDescription)
+        etDevDescription = view.findViewById(R.id.etDeveloperDescription)
+        ivEditDevDescription = view.findViewById(R.id.ivEditProfileDevDescription)
+        tvCellphone = view.findViewById(R.id.tvDeveloperPhone)
+        etCellphone = view.findViewById(R.id.etDeveloperPhone)
+        ivEditDevCellphone = view.findViewById(R.id.ivEditDevProfilePhone)
+        tvEmail = view.findViewById(R.id.tvDeveloperMail)
+        etEmail = view.findViewById(R.id.etDeveloperEmail)
+        tvDeveloperProjects = view.findViewById(R.id.tvDeveloperProjects)
 
+        llDevExtending = view.findViewById(R.id.llExtendingDeveloper)
+        ivConfirmEditDevProfile = view.findViewById(R.id.ivConfirmEditDevProfile)
 
+        setupEditToggle(ivEditDevSpecialties, tvDevSpecialties, etDevSpecialties)
+        setupEditToggle(ivEditDevDescription, tvDevDescription, etDevDescription)
+        setupEditToggle(ivEditDevCellphone, tvCellphone, etCellphone)
+
+        bindDataToViews(role = "desarrollador")
     }
 
-    private fun bindDataToViews() {
-        Picasso.get()
-            .load(enterprise.pictureUrl)
-            .placeholder(R.drawable.placeholder)
-            .error(R.drawable.placeholder)
-            .into(ivProfile)
-        tvEnterpriseWebsite.text = enterprise.website
-        tvEnterpriseName.text = enterprise.name
-        tvEnterpriseSector.text = enterprise.field
-        tvEnterpriseRUC.text = enterprise.socialRazon
-        tvEnterpriseDescription.text = enterprise.description
-        tvEnterpriseCellphone.text = enterprise.cellphone
+    private fun bindDataToViews(role: String) {
+        when (role) {
+            "empresa" -> {
+                Picasso.get()
+                    .load(enterprise.pictureUrl)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.placeholder)
+                    .into(ivProfile)
+                tvEnterpriseWebsite.text = enterprise.website
+                tvEnterpriseName.text = enterprise.name
+                tvEnterpriseSector.text = enterprise.field
+                tvEnterpriseRUC.text = enterprise.socialRazon
+                tvEnterpriseDescription.text = enterprise.description
+                tvEnterpriseCellphone.text = enterprise.cellphone
+            }
+            "desarrollador" -> {
+                Picasso.get()
+                    .load(developer.profilePic)
+                    .placeholder(R.drawable.placeholder)
+                    .error(R.drawable.sample_profile)
+                    .into(ivProfileDevPhoto)
+                tvDevName.text = developer.name
+                ratingBar.rating = developer.rating
+                tvDevSpecialties.text = developer.skills
+                tvDevDescription.text = developer.summary
+                tvCellphone.text = developer.phone
+                tvEmail.text = developer.email
+            }
+        }
     }
 
     private fun setupEditToggle(
@@ -326,7 +416,7 @@ class HomeFragment : Fragment() {
             // Save the changes to the local database
             // Update the UI
             updateProfile()
-            bindDataToViews()
+            bindDataToViews(role = "empresa")
             animateViewVisibility(llExtending, View.GONE)
             ivEditProfile.visibility = View.VISIBLE
             ivEditProfileSector.visibility = View.GONE
