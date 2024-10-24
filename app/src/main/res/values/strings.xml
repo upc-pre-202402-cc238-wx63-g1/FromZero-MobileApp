@@ -53,4 +53,5 @@
     <string name="titulo_de_mensaje">Titulo de mensaje</string>
     <string name="asunto">Asunto\n</string>
     <string name="mensaje">Mensaje\n</string>
+    <string name="from_zero_logo">From Zero Logo</string>
 </resources>
