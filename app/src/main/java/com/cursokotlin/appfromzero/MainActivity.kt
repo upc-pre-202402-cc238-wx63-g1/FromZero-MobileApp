@@ -11,6 +11,7 @@ import com.cursokotlin.appfromzero.UI.fragments.HomeFragment
 import com.cursokotlin.appfromzero.UI.fragments.MenuFragment
 import com.cursokotlin.appfromzero.UI.fragments.MessageFragment
 import com.cursokotlin.appfromzero.UI.fragments.SearchFragment
+import com.cursokotlin.appfromzero.UI.fragments.SearchProjectFragment
 import com.qamar.curvedbottomnaviagtion.CurvedBottomNavigation
 
 class MainActivity : AppCompatActivity() {
@@ -40,7 +41,8 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.setOnClickMenuListener {
             when(it.id){
                 1 -> {replaceFragment(HomeFragment())}
-                2 -> {replaceFragment(SearchFragment())}
+                2 -> {replaceFragment(SearchProjectFragment())} //para vista devs busca de proyectos
+                //2 -> {replaceFragment(SearchFragment())}
                 3 -> {replaceFragment(MessageFragment())}
                 4 -> {replaceFragment(MenuFragment())}
             }
