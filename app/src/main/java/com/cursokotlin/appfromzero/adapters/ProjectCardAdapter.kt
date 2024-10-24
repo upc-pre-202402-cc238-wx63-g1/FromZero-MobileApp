@@ -5,12 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.ProjectCard
+import com.cursokotlin.appfromzero.models.ProjectState
 import com.squareup.picasso.Picasso
+import org.w3c.dom.Text
 
 
 class ProjectCardAdapter(
@@ -23,15 +27,35 @@ class ProjectCardAdapter(
         private val tvNumCandidates: TextView = itemView.findViewById(R.id.tvNumCandidates)
         private val ivProfileEnterprisePhoto: ImageView = itemView.findViewById(R.id.ivProfileEnterprisePhoto)
         private val tvEnterpriseName: TextView = itemView.findViewById(R.id.tvEnterpriseName)
+        private val llProgress: LinearLayout = itemView.findViewById(R.id.llProgress)
+        private val tvProgressNumber: TextView = itemView.findViewById(R.id.tvProgressNumber)
+        private val pbProjectProgress: ProgressBar = itemView.findViewById(R.id.pbProjectProgress)
+
 
         fun bind(project: ProjectCard) {
             tvProjectTitle.text = project.projectName
-            tvNumCandidates.text = "Postulante: ${project.numPostulantes}"
+            // tvNumCandidates.text = "Postulante: ${project.numPostulantes}"
             tvEnterpriseName.text = project.enterpriseName
 
             Picasso.get()
                 .load(project.pictureUrl)
                 .into(ivProfileEnterprisePhoto)
+
+            when (project.projectState) {
+                ProjectState.BUSQUEDA_DEVELOPER -> {
+                    tvNumCandidates.text = "Postulante: ${project.numPostulantes}"
+                }
+                ProjectState.EN_PROGRESO -> {
+                    tvNumCandidates.visibility = View.GONE
+                    llProgress.visibility = View.VISIBLE
+                    pbProjectProgress.visibility = View.VISIBLE
+                    tvProgressNumber.text = "${project.projectProgress}%"
+                    pbProjectProgress.progress = project.projectProgress
+                }
+                ProjectState.FINALIZADO -> {
+                    tvNumCandidates.text = "Proyecto finalizado"
+                }
+            }
 
             itemView.setOnClickListener { clickListener.onItemClick(project) }  // Manejo de clic
         }
