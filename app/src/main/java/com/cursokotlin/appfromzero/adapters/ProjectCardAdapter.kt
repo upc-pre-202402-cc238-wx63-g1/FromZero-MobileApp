@@ -25,8 +25,7 @@ class ProjectCardAdapter(
     inner class ProjectViewHolder(itemView: View) : ViewHolder(itemView) {
         private val tvProjectTitle: TextView = itemView.findViewById(R.id.tvProjectTitle)
         private val tvNumCandidates: TextView = itemView.findViewById(R.id.tvNumCandidates)
-        private val ivProfileEnterprisePhoto: ImageView =
-            itemView.findViewById(R.id.ivProfileEnterprisePhoto)
+        private val ivProfileEnterprisePhoto: ImageView = itemView.findViewById(R.id.ivProfileEnterprisePhoto)
         private val tvEnterpriseName: TextView = itemView.findViewById(R.id.tvEnterpriseName)
         private val llProgress: LinearLayout = itemView.findViewById(R.id.llProgress)
         private val tvProgressNumber: TextView = itemView.findViewById(R.id.tvProgressNumber)
@@ -80,5 +79,6 @@ class ProjectCardAdapter(
 
     interface OnItemClickListener {
         fun onItemClick(projectCard: ProjectCard)
+
     }
 }

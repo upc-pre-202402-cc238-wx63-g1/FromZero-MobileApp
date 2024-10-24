@@ -199,8 +199,17 @@ class HomeFragment : Fragment() {
 
         adapter = ProjectCardAdapter(projectList, object : ProjectCardAdapter.OnItemClickListener {
             override fun onItemClick(projectCard: ProjectCard) {
-                Toast.makeText(context, "Clic en: ${projectCard.projectName}", Toast.LENGTH_SHORT)
-                    .show()
+                when(projectCard.projectState){
+                    ProjectState.BUSQUEDA_DEVELOPER -> {
+                        Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+                    }
+                    ProjectState.EN_PROGRESO -> {
+                        replaceFragment(ViewProjectFragment())
+                    }
+                    ProjectState.FINALIZADO -> {
+                        Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         })
 
@@ -477,5 +486,13 @@ class HomeFragment : Fragment() {
                     onAnimationEnd?.invoke()
                 }
         }
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        val transaction = parentFragmentManager.beginTransaction()
+        transaction.setReorderingAllowed(true)
+        transaction.replace(R.id.fragmenContainer, fragment)
+        transaction.addToBackStack("principal")
+        transaction.commit()
     }
 }
