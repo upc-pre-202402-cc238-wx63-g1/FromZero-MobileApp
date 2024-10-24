@@ -18,6 +18,7 @@ import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
 import com.cursokotlin.appfromzero.models.Enterprise
 import com.cursokotlin.appfromzero.models.ProjectCard
+import com.cursokotlin.appfromzero.models.ProjectState
 import com.google.android.material.textfield.TextInputEditText
 import com.squareup.picasso.Picasso
 import org.w3c.dom.Text
@@ -141,37 +142,49 @@ class HomeFragment : Fragment() {
                 "Proyecto A",
                 5,
                 "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"
+                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
+                ProjectState.BUSQUEDA_DEVELOPER,
+                0,
             ),
             ProjectCard(
                 "Proyecto B",
-                3,
+                0,
                 "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"
+                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
+                ProjectState.EN_PROGRESO,
+                30,
             ),
             ProjectCard(
                 "Proyecto C",
                 10,
                 "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"
+                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
+                ProjectState.EN_PROGRESO,
+                0,
             ),
             ProjectCard(
                 "Proyecto E",
                 7,
                 "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"
+                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
+                ProjectState.EN_PROGRESO,
+                70,
             ),
             ProjectCard(
                 "Proyecto F",
                 6,
                 "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"
+                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
+                ProjectState.BUSQUEDA_DEVELOPER,
+                0,
             ),
             ProjectCard(
                 "Proyecto G",
                 0,
                 "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg"
+                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
+                ProjectState.BUSQUEDA_DEVELOPER,
+                0,
             )
         )
     }
@@ -264,6 +277,18 @@ class HomeFragment : Fragment() {
             ivEditProfileSector.visibility = View.GONE
             ivEditProfileWebSite.visibility = View.GONE
             recyclerView.visibility = View.VISIBLE
+
+            resetEditMode()
+        }
+    }
+
+    private fun resetEditMode() {
+        val editTextViews = listOf(etEnterpriseWebsite, etEnterpriseSector, etEnterpriseDescription, etEnterprisePhone)
+        val textViews = listOf(tvEnterpriseWebsite, tvEnterpriseSector, tvEnterpriseDescription, tvEnterpriseCellphone)
+
+        for (i in editTextViews.indices) {
+            editTextViews[i].visibility = View.GONE
+            textViews[i].visibility = View.VISIBLE
         }
     }
 
