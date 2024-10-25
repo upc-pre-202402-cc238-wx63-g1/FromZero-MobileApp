@@ -17,12 +17,11 @@ import com.cursokotlin.appfromzero.ProjectData
 import com.cursokotlin.appfromzero.adapters.ProjectDataAdapter
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.HomeViewModel
-import com.cursokotlin.appfromzero.models.Project
 
 class ViewProjectFragment : Fragment() {
     private val homeViewModel: HomeViewModel by activityViewModels()
 
-    private var isDeveloper: Boolean = true
+    private var isWorking: Boolean = false
 
     private lateinit var applyProjectDialog: Dialog
     private lateinit var btnConfirmApplyProject: Button
@@ -38,8 +37,8 @@ class ViewProjectFragment : Fragment() {
         val tvProjectName = view.findViewById<TextView>(R.id.tvProjectName)
         val btDeliverables = view.findViewById<Button>(R.id.btDeliverables)
 
-        homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
-            isDeveloper = role == "desarrollador"
+        arguments?.let {
+            isWorking = it.getBoolean("isWorking", false)
         }
 
         // Inicializa los diálogos ANTES de asignar los botones
@@ -47,10 +46,13 @@ class ViewProjectFragment : Fragment() {
         loadDescription(view)
 
         // Cambiar texto del botón según si es developer
-        btDeliverables.text = if (isDeveloper) "Postular" else "Entregables"
+        btDeliverables.text = if (isWorking) "Entregables" else "Postular"
 
         btDeliverables.setOnClickListener {
-            if (isDeveloper) {
+            if (isWorking) {
+                // Navigate to DeliverablesFragment
+                replaceFragment(DeliverablesFragment())
+            } else {
 
                 applyProjectDialog.show()
 
@@ -58,9 +60,6 @@ class ViewProjectFragment : Fragment() {
                     Toast.makeText(context, "Postulación enviada", Toast.LENGTH_SHORT).show()
                     applyProjectDialog.dismiss()
                 }
-            } else {
-                // Navigate to DeliverablesFragment
-                replaceFragment(DeliverablesFragment())
             }
         }
         return view
