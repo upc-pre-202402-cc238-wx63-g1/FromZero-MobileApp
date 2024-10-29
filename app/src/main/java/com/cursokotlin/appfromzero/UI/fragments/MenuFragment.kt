@@ -1,3 +1,4 @@
+// MenuFragment.kt
 package com.cursokotlin.appfromzero.UI.fragments
 
 import android.content.Intent
@@ -40,7 +41,7 @@ class MenuFragment : Fragment() {
 
         // Observar el rol del usuario para manipular la UI
         homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
-            if (role == "desarrollador") {
+            if (role == "ROLE_DEVELOPER") {
                 // Eliminar el LinearLayout si el rol es desarrollador
                 (lyCreateProject.parent as? ViewGroup)?.removeView(lyCreateProject)
             }

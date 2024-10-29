@@ -114,13 +114,13 @@ class HomeFragment : Fragment() {
 
         homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
             when (role) {
-                "empresa" -> {
+                "ROLE_ENTERPRISE" -> {
                     initEnterpriseView(view)
                     setupRecyclerView(view)
                     setRecyclerViewContraints(view, R.id.cvHomeEnterpriseProfile)
                 }
 
-                "desarrollador" -> {
+                "ROLE_DEVELOPER" -> {
                     initDeveloperView(view)
                     setupRecyclerView(view)
                     setRecyclerViewContraints(view, R.id.cvHomeDeveloperProfile)
