@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.cursokotlin.appfromzero.R
@@ -53,11 +54,24 @@ class RegisterFragment : Fragment() {
             if (userRole == "ROLE_DEVELOPER") {
                 val firstName = rootView.findViewById<EditText>(R.id.etFirstName).text.toString()
                 val lastName = rootView.findViewById<EditText>(R.id.etLastName).text.toString()
-                performDeveloperRegister(username, password, firstName, lastName)
+                if (username.isNotEmpty() && password.isNotEmpty() && firstName.isNotEmpty() && lastName.isNotEmpty()) {
+                    performDeveloperRegister(username, password, firstName, lastName)
+                } else {
+                    Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+                }
             } else if (userRole == "ROLE_ENTERPRISE") {
                 val enterpriseName = rootView.findViewById<EditText>(R.id.etEnterpriseName).text.toString()
-                performEnterpriseRegister(username, password, enterpriseName)
+                if (username.isNotEmpty() && password.isNotEmpty() && enterpriseName.isNotEmpty()) {
+                    performEnterpriseRegister(username, password, enterpriseName)
+                } else {
+                    Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+                }
             }
+        }
+
+        val btBack = rootView.findViewById<LinearLayout>(R.id.bt_Back)
+        btBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
         }
 
         return rootView
@@ -68,6 +82,7 @@ class RegisterFragment : Fragment() {
         authenticationRepository.registerDeveloper(request).enqueue(object : Callback<RegisterResponse> {
             override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
                 if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "Creación de cuenta exitosa", Toast.LENGTH_SHORT).show()
                     navigateToLoginFragment()
                 } else {
                     Toast.makeText(requireContext(), "Registration failed", Toast.LENGTH_SHORT).show()
@@ -85,6 +100,7 @@ class RegisterFragment : Fragment() {
         authenticationRepository.registerEnterprise(request).enqueue(object : Callback<RegisterResponse> {
             override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
                 if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "Creación de cuenta exitosa", Toast.LENGTH_SHORT).show()
                     navigateToLoginFragment()
                 } else {
                     Toast.makeText(requireContext(), "Registration failed", Toast.LENGTH_SHORT).show()

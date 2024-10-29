@@ -126,7 +126,7 @@
         android:translationY="590dp" />
 
     <LinearLayout
-        android:id="@+id/ll_Volver"
+        android:id="@+id/bt_Back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="clip_horizontal|center|end"

@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.cursokotlin.appfromzero.R
@@ -26,6 +27,10 @@ class RolFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val rootView: View = inflater.inflate(R.layout.fragment_rol, container, false)
+
+        // Resetear las variables de selección
+        devSelected = false
+        empresaSelected = false
 
         val tv_Empresa = rootView.findViewById<TextView>(R.id.tv_Empresa)
         val tv_Dev = rootView.findViewById<TextView>(R.id.tv_Dev)
@@ -83,15 +88,19 @@ class RolFragment : Fragment() {
 
         val btNext = rootView.findViewById<Button>(R.id.bt_Next)
         btNext.setOnClickListener {
-            val registerFragment = RegisterFragment()
-            val bundle = Bundle()
-            if (empresaSelected) {
-                bundle.putString("userRole", "ROLE_ENTERPRISE")
-            } else if (devSelected) {
-                bundle.putString("userRole", "ROLE_DEVELOPER")
+            if (empresaSelected || devSelected) {
+                val registerFragment = RegisterFragment()
+                val bundle = Bundle()
+                if (empresaSelected) {
+                    bundle.putString("userRole", "ROLE_ENTERPRISE")
+                } else if (devSelected) {
+                    bundle.putString("userRole", "ROLE_DEVELOPER")
+                }
+                registerFragment.arguments = bundle
+                replaceFragment(registerFragment)
+            } else {
+                Toast.makeText(requireContext(), "Por favor, seleccione un rol", Toast.LENGTH_SHORT).show()
             }
-            registerFragment.arguments = bundle
-            replaceFragment(registerFragment)
         }
         return rootView
     }
