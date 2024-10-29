@@ -1,5 +1,6 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,25 +10,29 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.cursokotlin.appfromzero.MainActivity
 import com.cursokotlin.appfromzero.R
+import com.cursokotlin.appfromzero.common.Resource
+import com.cursokotlin.appfromzero.common.UIState
+import com.cursokotlin.appfromzero.data.remote.RetrofitClient
+import com.cursokotlin.appfromzero.data.repository.authentication.AuthenticationRepository
+import com.cursokotlin.appfromzero.models.authentication.AuthenticationRequest
+import com.cursokotlin.appfromzero.models.authentication.AuthenticationResponse
+import com.google.android.material.textfield.TextInputEditText
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [LogInFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LogInFragment : Fragment() {
+
+    private val authenticationRepository = AuthenticationRepository(RetrofitClient.authenticationService)
+    private var uiState: UIState<AuthenticationResponse> = UIState()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val rootView: View = inflater.inflate(R.layout.fragment_log_in, container, false)
 
         val llNext = rootView.findViewById<LinearLayout>(R.id.ll_Volver)
@@ -47,14 +52,70 @@ class LogInFragment : Fragment() {
 
         val btLogIn = rootView.findViewById<Button>(R.id.bt_IniciarSesion)
         btLogIn.setOnClickListener {
-            // Crea un Intent para ir a MainActivity
-            //val intent = Intent(requireActivity(), MainActivity::class.java)
-            // Inicia la actividad
-            //startActivity(intent)
-            // Opcionalmente, puedes finalizar la actividad actual si no la necesitas más
-            // requireActivity().finish()
+            val username = rootView.findViewById<TextInputEditText>(R.id.user).text.toString()
+            val password = rootView.findViewById<TextInputEditText>(R.id.password).text.toString()
+            performLogin(username, password)
         }
+
         return rootView
+    }
+
+    private fun performLogin(username: String, password: String) {
+        uiState = UIState(isLoading = true)
+        val request = AuthenticationRequest(username, password)
+        authenticationRepository.signIn(request).enqueue(object : Callback<AuthenticationResponse?> {
+            override fun onResponse(call: Call<AuthenticationResponse?>, response: Response<AuthenticationResponse?>) {
+                val resource = if (response.isSuccessful) {
+                    Resource.Success(response.body())
+                } else {
+                    Resource.Error("Login fallido")
+                }
+                handleLoginResponse(resource)
+            }
+
+            override fun onFailure(call: Call<AuthenticationResponse?>, t: Throwable) {
+                val resource = Resource.Error<AuthenticationResponse>("Error: ${t.message}")
+                handleLoginResponse(resource)
+            }
+        })
+    }
+
+    private fun handleLoginResponse(resource: Resource<AuthenticationResponse>) {
+        uiState = UIState(isLoading = false)
+        when (resource) {
+            is Resource.Success -> {
+                val userRoles = resource.data?.roles
+                val userId = resource.data?.id ?: 0L
+                val token = resource.data?.token ?: ""
+                if (!userRoles.isNullOrEmpty()) {
+                    val userRole = userRoles[0]
+                    saveUserData(userId, token, userRole)
+                    navigateToMainActivity(userRole)
+                } else {
+                    Toast.makeText(requireContext(), "No se encontraron roles", Toast.LENGTH_SHORT).show()
+                }
+            }
+            is Resource.Error -> {
+                Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun saveUserData(userId: Long, token: String, userRole: String) {
+        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            putLong("userId", userId)
+            putString("token", token)
+            putString("userRole", userRole)
+            apply()
+        }
+    }
+
+    private fun navigateToMainActivity(userRole: String?) {
+        val intent = Intent(requireActivity(), MainActivity::class.java)
+        intent.putExtra("userRole", userRole)
+        startActivity(intent)
+        requireActivity().finish()
     }
 
     private fun replaceFragment(fragment: Fragment) {

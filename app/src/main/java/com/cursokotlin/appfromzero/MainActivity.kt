@@ -1,13 +1,14 @@
 package com.cursokotlin.appfromzero
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.cursokotlin.appfromzero.UI.fragments.*
+import com.cursokotlin.appfromzero.common.UIState
 import com.cursokotlin.appfromzero.models.HomeViewModel
 import com.qamar.curvedbottomnaviagtion.CurvedBottomNavigation
 
@@ -15,32 +16,33 @@ class MainActivity : AppCompatActivity() {
 
     private val homeViewModel: HomeViewModel by viewModels()
     private lateinit var bottomNavigation: CurvedBottomNavigation
+    private var uiState: UIState<String> = UIState()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val userId = sharedPreferences.getLong("userId", 0L)
+        val token = sharedPreferences.getString("token", "") ?: ""
+        val userRole = sharedPreferences.getString("userRole", "ROLE_DESCONOCIDO")
 
-        // Validación del rol
-        val userRole = intent.getStringExtra("userRole")
         homeViewModel.userRole.value = userRole
 
-        // Inicialización común de componentes
+        Toast.makeText(this, "Rol de usuario: $userRole", Toast.LENGTH_SHORT).show()
+        Log.d("MainActivity", "Rol de usuario recuperado de SharedPreferences: $userRole")
+        Log.d("MainActivity", "ID de usuario recuperado de SharedPreferences: $userId")
+        Log.d("MainActivity", "Token de usuario recuperado de SharedPreferences: $token")
+
         initializeComponents()
 
-        // Configuración del bottomNavigation según el rol
         when (userRole) {
-            "empresa" -> setupBottomNavigationForEmpresa()
-            "desarrollador" -> setupBottomNavigationForDeveloper()
+            "ROLE_ENTERPRISE" -> setupBottomNavigationForEnterprise()
+            "ROLE_DEVELOPER" -> setupBottomNavigationForDeveloper()
+            else -> Log.w("MainActivity", "Rol de usuario desconocido: $userRole")
         }
 
-        // Establecer fragmento inicial
         replaceFragment(HomeFragment())
         bottomNavigation.show(1)
     }
@@ -65,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupBottomNavigationForEmpresa() {
+    private fun setupBottomNavigationForEnterprise() {
         bottomNavigation.setOnClickMenuListener {
             when (it.id) {
                 1 -> replaceFragment(HomeFragment())

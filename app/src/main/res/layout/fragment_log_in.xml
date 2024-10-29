@@ -8,7 +8,6 @@
     android:backgroundTint="@color/green_fromzero"
     tools:context=".UI.fragments.LogInFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <ImageView
         android:id="@+id/fondo_start"
         android:layout_width="860dp"
@@ -26,23 +25,18 @@
         android:translationY="40dp" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/user"
         android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:foregroundTint="@color/green_fromzero"
-        android:outlineAmbientShadowColor="@color/green_fromzero"
-        android:outlineSpotShadowColor="@color/green_fromzero"
         android:textColorHint="@color/green_fromzero"
-        android:translationX="20dp"
-        android:translationY="370dp">
+        android:layout_marginTop="370dp"
+        android:layout_gravity="center_horizontal">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/user"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/ic_line"
             android:hint="@string/user"
-            android:outlineAmbientShadowColor="@color/green_fromzero"
-            android:outlineSpotShadowColor="@color/green_fromzero"
             android:textColor="@color/green_fromzero"
             android:textSize="16sp" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -56,6 +50,7 @@
         app:passwordToggleEnabled="true">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/ic_line"
