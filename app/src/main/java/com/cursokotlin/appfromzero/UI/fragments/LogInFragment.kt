@@ -35,6 +35,9 @@ class LogInFragment : Fragment() {
     ): View? {
         val rootView: View = inflater.inflate(R.layout.fragment_log_in, container, false)
 
+        // Limpiar token y rol guardados al iniciar la aplicación
+        clearSavedUserData()
+
         val llNext = rootView.findViewById<LinearLayout>(R.id.ll_Volver)
         llNext.setOnClickListener {
             replaceFragment(InitationFragment())
@@ -54,7 +57,11 @@ class LogInFragment : Fragment() {
         btLogIn.setOnClickListener {
             val username = rootView.findViewById<TextInputEditText>(R.id.user).text.toString()
             val password = rootView.findViewById<TextInputEditText>(R.id.password).text.toString()
-            performLogin(username, password)
+            if (username.isNotEmpty() && password.isNotEmpty()) {
+                performLogin(username, password)
+            } else {
+                Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+            }
         }
 
         return rootView
@@ -107,6 +114,16 @@ class LogInFragment : Fragment() {
             putLong("userId", userId)
             putString("token", token)
             putString("userRole", userRole)
+            apply()
+        }
+    }
+
+    private fun clearSavedUserData() {
+        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            remove("userId")
+            remove("token")
+            remove("userRole")
             apply()
         }
     }

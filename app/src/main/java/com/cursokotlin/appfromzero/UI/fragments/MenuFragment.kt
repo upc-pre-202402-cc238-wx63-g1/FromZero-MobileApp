@@ -1,6 +1,6 @@
-// MenuFragment.kt
 package com.cursokotlin.appfromzero.UI.fragments
 
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.cursokotlin.appfromzero.AuthActivity
@@ -39,15 +40,12 @@ class MenuFragment : Fragment() {
         val btnSupport = rootView.findViewById<ImageButton>(R.id.btnSupport)
         val btnLogout = rootView.findViewById<ImageButton>(R.id.btnLogout)
 
-        // Observar el rol del usuario para manipular la UI
         homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
             if (role == "ROLE_DEVELOPER") {
-                // Eliminar el LinearLayout si el rol es desarrollador
                 (lyCreateProject.parent as? ViewGroup)?.removeView(lyCreateProject)
             }
         }
 
-        // Establecer listeners para los botones
         btnNotifications.setOnClickListener {
             replaceFragment(NotificationFragment())
         }
@@ -61,13 +59,41 @@ class MenuFragment : Fragment() {
         }
 
         btnLogout.setOnClickListener {
+            clearSavedToken()
+            if (isUserDataCleared()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Sesión cerrada correctamente.",  //se borran los datos del local stage
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(requireContext(), "Error al eliminar los datos", Toast.LENGTH_SHORT)
+                    .show()
+            }
             val intent = Intent(requireContext(), AuthActivity::class.java)
             startActivity(intent)
             requireActivity().finish()
         }
     }
 
-    // Método común para reemplazar fragmentos
+    private fun clearSavedToken() {
+        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", MODE_PRIVATE)
+        with(sharedPreferences.edit()) {
+            remove("userId")
+            remove("token")
+            remove("userRole")
+            apply()
+        }
+    }
+
+    private fun isUserDataCleared(): Boolean {
+        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", MODE_PRIVATE)
+        val userId = sharedPreferences.getLong("userId", -1)
+        val token = sharedPreferences.getString("token", null)
+        val userRole = sharedPreferences.getString("userRole", null)
+        return userId == -1L && token.isNullOrEmpty() && userRole.isNullOrEmpty()
+    }
+
     private fun replaceFragment(fragment: Fragment) {
         val transaction = parentFragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)
