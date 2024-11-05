@@ -1,6 +1,7 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -20,14 +21,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
+import com.cursokotlin.appfromzero.data.remote.RetrofitClient
+import com.cursokotlin.appfromzero.data.repository.enterprise.EnterpriseRepository
 import com.cursokotlin.appfromzero.models.Developer
 import com.cursokotlin.appfromzero.models.Enterprise
 import com.cursokotlin.appfromzero.models.HomeViewModel
 import com.cursokotlin.appfromzero.models.ProjectCard
 import com.cursokotlin.appfromzero.models.ProjectState
+import com.cursokotlin.appfromzero.models.profile.EnterpriseProfileRequest
+import com.cursokotlin.appfromzero.models.profile.EnterpriseProfileResponse
 import com.google.android.material.textfield.TextInputEditText
 import com.squareup.picasso.Picasso
 import org.w3c.dom.Text
+import retrofit2.Call
+import retrofit2.Response
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -46,8 +53,10 @@ class HomeFragment : Fragment() {
     // Seleccion de Rol
     private val homeViewModel: HomeViewModel by activityViewModels()
 
+    private val enterpriseRepository = EnterpriseRepository(RetrofitClient.enterpriseService)
+
     // Enterprise Home Components
-    private lateinit var enterprise: Enterprise
+    private var enterprise: Enterprise? = null
     private lateinit var developer: Developer
 
     private lateinit var recyclerView: RecyclerView
@@ -111,30 +120,30 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+        // Read data from Shared Preferences
+        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val userRole = sharedPreferences.getString("userRole", null)
+        val userId = sharedPreferences.getLong("userId", 0)
+        val token = sharedPreferences.getString("token", null)
 
-        homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
-            when (role) {
-                "ROLE_ENTERPRISE" -> {
-                    initEnterpriseView(view)
-                    setupRecyclerView(view)
-                    setRecyclerViewContraints(view, R.id.cvHomeEnterpriseProfile)
-                }
+        when (userRole) {
+            "ROLE_ENTERPRISE" -> {
+                initEnterpriseView(view, userId, token, userRole)
+                setupRecyclerView(view)
+                setRecyclerViewContraints(view, R.id.cvHomeEnterpriseProfile)
+            }
 
-                "ROLE_DEVELOPER" -> {
-                    initDeveloperView(view)
-                    setupRecyclerView(view)
-                    setRecyclerViewContraints(view, R.id.cvHomeDeveloperProfile)
+            "ROLE_DEVELOPER" -> {
+                initDeveloperView(view, userId, token, userRole)
+                setupRecyclerView(view)
+                setRecyclerViewContraints(view, R.id.cvHomeDeveloperProfile)
 
-                }
+            }
+
+            else -> {
+                Toast.makeText(requireContext(), "No se encontró el rol del usuario", Toast.LENGTH_SHORT).show()
             }
         }
-
-
-        // Fetch data from the API
-
-
-
-
 
         return view
     }
@@ -149,11 +158,11 @@ class HomeFragment : Fragment() {
         constraintSet.applyTo(constraintLayout)
     }
 
-    private fun initEnterpriseView(view: View){
+    private fun initEnterpriseView(view: View, userId: Long, token: String?, userRole: String) {
         cvHomeEnterpriseProfile = view.findViewById(R.id.cvHomeEnterpriseProfile)
         cvHomeEnterpriseProfile.visibility = View.VISIBLE
 
-        fetchData()
+        fetchData(userId, token, userRole)
 
         initEnterpriseComponent(view)
 
@@ -162,11 +171,11 @@ class HomeFragment : Fragment() {
         setupTouchListener(view)
     }
 
-    private fun initDeveloperView(view: View){
+    private fun initDeveloperView(view: View, userId: Long, token: String?, userRole: String) {
         cvHomeDeveloperProfile = view.findViewById(R.id.cvHomeDeveloperProfile)
         cvHomeDeveloperProfile.visibility = View.VISIBLE
 
-        fetchData()
+        fetchData(userId, token, userRole)
 
         initDeveloperComponent(view)
     }
@@ -216,22 +225,48 @@ class HomeFragment : Fragment() {
         recyclerView.adapter = adapter
     }
 
-    private fun fetchData() {
-        // This function will handle data fetching from the API REST in the future
+    private fun fetchData(userId: Long, token: String?, userRole: String) {
+        if ( token != null){
+            if ( userRole == "ROLE_ENTERPRISE"){
+                val call = enterpriseRepository.getDeveloperByUserId(userId, token)
+                call.enqueue(object : retrofit2.Callback<EnterpriseProfileResponse> {
+                    override fun onResponse(call: Call<EnterpriseProfileResponse>, response: Response<EnterpriseProfileResponse>) {
+                        if (response.isSuccessful) {
+                            val enterpriseData = response.body()
+                            enterprise = Enterprise(
+                                enterpriseData?.enterpriseName ?: "",
+                                enterpriseData?.website ?: "",
+                                enterpriseData?.profileImgUrl ?: "",
+                                enterpriseData?.description ?: "",
+                                enterpriseData?.sector ?: "",
+                                enterpriseData?.ruc ?: "",
+                                enterpriseData?.phone ?: ""
+                            )
+                            bindDataToViews(role = "empresa")
+                        } else {
+                            Toast.makeText(requireContext(), "Error al obtener los datos", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<EnterpriseProfileResponse>, t: Throwable) {
+                        Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            }
+            else if ( userRole == "ROLE_DEVELOPER"){
+                // developerRepository.getDeveloperByUserId(userId, token)
+            }
+            else {
+                Toast.makeText(requireContext(), "No se encontró el rol del usuario", Toast.LENGTH_SHORT).show()
+            }
+
+        } else {
+            Toast.makeText(requireContext(), "No se encontró el token", Toast.LENGTH_SHORT).show()
+        }
         loadMockData()
     }
 
     private fun loadMockData() {
-        enterprise = Enterprise(
-            "Geekit.pe",
-            "geekitpe.com",
-            "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
-            "Geekit es tu destino para la moda geek. Nos especializamos en ofrecer una selección única de ropa y accesorios para jóvenes apasionados por la cultura pop, los videojuegos, el cine y los cómics. En Geekit, encontrarás prendas que te permiten expresar tu estilo auténtico y tu amor por tus intereses favoritos.",
-            "Tecnología",
-            "Geekit.pe",
-            "987654321"
-        )
-
         developer = Developer(
             "Juan Pérez",
             4.5f,
@@ -356,17 +391,19 @@ class HomeFragment : Fragment() {
     private fun bindDataToViews(role: String) {
         when (role) {
             "empresa" -> {
-                Picasso.get()
-                    .load(enterprise.pictureUrl)
-                    .placeholder(R.drawable.placeholder)
-                    .error(R.drawable.placeholder)
-                    .into(ivProfile)
-                tvEnterpriseWebsite.text = enterprise.website
-                tvEnterpriseName.text = enterprise.name
-                tvEnterpriseSector.text = enterprise.field
-                tvEnterpriseRUC.text = enterprise.socialRazon
-                tvEnterpriseDescription.text = enterprise.description
-                tvEnterpriseCellphone.text = enterprise.cellphone
+                enterprise?.let {
+                    Picasso.get()
+                        .load(it.pictureUrl)
+                        .placeholder(R.drawable.placeholder)
+                        .error(R.drawable.placeholder)
+                        .into(ivProfile)
+                    tvEnterpriseWebsite.text = it.website
+                    tvEnterpriseName.text = it.name
+                    tvEnterpriseSector.text = it.field
+                    tvEnterpriseRUC.text = it.socialRazon
+                    tvEnterpriseDescription.text = it.description
+                    tvEnterpriseCellphone.text = it.cellphone
+                }
             }
             "desarrollador" -> {
                 Picasso.get()
@@ -457,10 +494,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun updateProfile() {
-        enterprise.website = etEnterpriseWebsite.text.toString()
-        enterprise.field = etEnterpriseSector.text.toString()
-        enterprise.description = etEnterpriseDescription.text.toString()
-        enterprise.cellphone = etEnterprisePhone.text.toString()
+        enterprise?.let {
+            it.website = etEnterpriseWebsite.text.toString()
+            it.field = etEnterpriseSector.text.toString()
+            it.description = etEnterpriseDescription.text.toString()
+            it.cellphone = etEnterprisePhone.text.toString()
+        }
     }
 
     private fun animateViewVisibility(

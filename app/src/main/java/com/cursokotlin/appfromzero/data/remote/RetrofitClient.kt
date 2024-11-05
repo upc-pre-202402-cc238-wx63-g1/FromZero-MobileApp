@@ -2,6 +2,7 @@ package com.cursokotlin.appfromzero.data.remote
 
 import com.cursokotlin.appfromzero.common.Constants
 import com.cursokotlin.appfromzero.data.remote.authentication.AuthenticationService
+import com.cursokotlin.appfromzero.data.remote.enterprise.EnterpriseService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.Interceptor
@@ -32,6 +33,9 @@ object RetrofitClient {
         retrofit.create(AuthenticationService::class.java)
     }
 
+    val enterpriseService: EnterpriseService by lazy {
+        retrofit.create(EnterpriseService::class.java)
+    }
 
 }
 
