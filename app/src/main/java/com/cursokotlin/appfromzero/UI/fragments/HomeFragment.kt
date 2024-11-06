@@ -3,6 +3,7 @@ package com.cursokotlin.appfromzero.UI.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -23,13 +24,15 @@ import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
 import com.cursokotlin.appfromzero.data.repository.enterprise.EnterpriseRepository
+import com.cursokotlin.appfromzero.data.repository.project.ProjectRepository
 import com.cursokotlin.appfromzero.models.Developer
 import com.cursokotlin.appfromzero.models.Enterprise
 import com.cursokotlin.appfromzero.models.HomeViewModel
 import com.cursokotlin.appfromzero.models.ProjectCard
 import com.cursokotlin.appfromzero.models.ProjectState
-import com.cursokotlin.appfromzero.models.profile.EnterpriseProfileRequest
 import com.cursokotlin.appfromzero.models.profile.EnterpriseProfileResponse
+import com.cursokotlin.appfromzero.models.project.Project
+import com.cursokotlin.appfromzero.models.project.ProjectProfileResponse
 import com.google.android.material.textfield.TextInputEditText
 import com.squareup.picasso.Picasso
 import org.w3c.dom.Text
@@ -54,6 +57,7 @@ class HomeFragment : Fragment() {
     private val homeViewModel: HomeViewModel by activityViewModels()
 
     private val enterpriseRepository = EnterpriseRepository(RetrofitClient.enterpriseService)
+    private val projectRepository = ProjectRepository(RetrofitClient.projectService)
 
     // Enterprise Home Components
     private var enterprise: Enterprise? = null
@@ -61,7 +65,10 @@ class HomeFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ProjectCardAdapter
-    private lateinit var projectList: List<ProjectCard>
+    private var projectList: List<ProjectCard> = emptyList()
+
+
+    private lateinit var projects: List<Project>
 
     // Home Edit Profile Components
     private lateinit var cvHomeEnterpriseProfile: CardView
@@ -120,6 +127,9 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+
+        setupRecyclerView(view)
+
         // Read data from Shared Preferences
         val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val userRole = sharedPreferences.getString("userRole", null)
@@ -129,8 +139,6 @@ class HomeFragment : Fragment() {
         when (userRole) {
             "ROLE_ENTERPRISE" -> {
                 initEnterpriseView(view, userId, token, userRole)
-                setupRecyclerView(view)
-                setRecyclerViewContraints(view, R.id.cvHomeEnterpriseProfile)
             }
 
             "ROLE_DEVELOPER" -> {
@@ -162,8 +170,8 @@ class HomeFragment : Fragment() {
         cvHomeEnterpriseProfile = view.findViewById(R.id.cvHomeEnterpriseProfile)
         cvHomeEnterpriseProfile.visibility = View.VISIBLE
 
-        fetchData(userId, token, userRole)
-
+        fetchData(userId, token, userRole, view)
+        setRecyclerViewContraints(view, R.id.cvHomeEnterpriseProfile)
         initEnterpriseComponent(view)
 
         setUpClickListener(view)
@@ -175,7 +183,7 @@ class HomeFragment : Fragment() {
         cvHomeDeveloperProfile = view.findViewById(R.id.cvHomeDeveloperProfile)
         cvHomeDeveloperProfile.visibility = View.VISIBLE
 
-        fetchData(userId, token, userRole)
+        fetchData(userId, token, userRole, view)
 
         initDeveloperComponent(view)
     }
@@ -206,9 +214,11 @@ class HomeFragment : Fragment() {
         recyclerView = view.findViewById(R.id.rvProjects)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        adapter = ProjectCardAdapter(projectList, object : ProjectCardAdapter.OnItemClickListener {
+        Log.d("SetupRecyclerView", "asdasd" + this.projectList.size)
+
+        adapter = ProjectCardAdapter(this.projectList, object : ProjectCardAdapter.OnItemClickListener {
             override fun onItemClick(projectCard: ProjectCard) {
-                when(projectCard.projectState){
+                when (projectCard.projectState) {
                     ProjectState.BUSQUEDA_DEVELOPER -> {
                         Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
                     }
@@ -223,9 +233,10 @@ class HomeFragment : Fragment() {
         })
 
         recyclerView.adapter = adapter
+        Log.d("SetupRecyclerView", "RecyclerView and Adapter initialized")
     }
 
-    private fun fetchData(userId: Long, token: String?, userRole: String) {
+    private fun fetchData(userId: Long, token: String?, userRole: String, view: View) {
         if ( token != null){
             if ( userRole == "ROLE_ENTERPRISE"){
                 val call = enterpriseRepository.getDeveloperByUserId(userId, token)
@@ -252,6 +263,24 @@ class HomeFragment : Fragment() {
                         Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
                 })
+
+                // Fetch projects
+                val projectCall = projectRepository.getProjectsByEnterpriseUserId(userId, token)
+                projectCall.enqueue(object : retrofit2.Callback<List<Project>> {
+                    override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
+                        if (response.isSuccessful) {
+                            projects = response.body() ?: emptyList()
+                            bindProjectsToViews()
+                            setupRecyclerView(view)
+                        } else {
+                            Toast.makeText(requireContext(), "Error al obtener los proyectos", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Project>>, t: Throwable) {
+                        Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+                })
             }
             else if ( userRole == "ROLE_DEVELOPER"){
                 // developerRepository.getDeveloperByUserId(userId, token)
@@ -263,7 +292,6 @@ class HomeFragment : Fragment() {
         } else {
             Toast.makeText(requireContext(), "No se encontró el token", Toast.LENGTH_SHORT).show()
         }
-        loadMockData()
     }
 
     private fun loadMockData() {
@@ -274,57 +302,6 @@ class HomeFragment : Fragment() {
             R.drawable.sample_flag,
             "Especialista en desarrollo móvil con 5 años de experiencia en Android y iOS.",
             "Android, iOS, Kotlin, Swift"
-        )
-
-        projectList = listOf(
-            ProjectCard(
-                "Proyecto A",
-                5,
-                "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
-                ProjectState.BUSQUEDA_DEVELOPER,
-                0,
-            ),
-            ProjectCard(
-                "Proyecto B",
-                0,
-                "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
-                ProjectState.EN_PROGRESO,
-                30,
-            ),
-            ProjectCard(
-                "Proyecto C",
-                10,
-                "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
-                ProjectState.EN_PROGRESO,
-                0,
-            ),
-            ProjectCard(
-                "Proyecto E",
-                7,
-                "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
-                ProjectState.EN_PROGRESO,
-                70,
-            ),
-            ProjectCard(
-                "Proyecto F",
-                6,
-                "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
-                ProjectState.BUSQUEDA_DEVELOPER,
-                0,
-            ),
-            ProjectCard(
-                "Proyecto G",
-                0,
-                "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
-                ProjectState.BUSQUEDA_DEVELOPER,
-                0,
-            )
         )
     }
 
@@ -420,6 +397,50 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
+    private fun bindProjectsToViews() {
+        Log.d("BindProjects", "Binding ${projects.size} projects to views")
+        this.projectList = projects.map { project ->
+            ProjectCard(
+                projectName = project.name,
+                numPostulantes = project.candidatesList.size,
+                enterpriseName = enterprise?.name ?: "",
+                pictureUrl = enterprise?.pictureUrl ?: "",
+                projectState = when (project.state) {
+                    "En busqueda" -> ProjectState.BUSQUEDA_DEVELOPER
+                    "En progreso" -> ProjectState.EN_PROGRESO
+                    "Finalizado" -> ProjectState.FINALIZADO
+                    else -> ProjectState.BUSQUEDA_DEVELOPER // Default case
+                },
+                projectProgress = project.progress
+            )
+        }
+
+        Log.d("BindProjects", "Project list size: ${projectList.size}")
+
+        if (!::adapter.isInitialized) {
+            adapter = ProjectCardAdapter(this.projectList, object : ProjectCardAdapter.OnItemClickListener {
+                override fun onItemClick(projectCard: ProjectCard) {
+                    when (projectCard.projectState) {
+                        ProjectState.BUSQUEDA_DEVELOPER -> {
+                            Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+                        }
+                        ProjectState.EN_PROGRESO -> {
+                            replaceFragmentViewProject(ViewProjectFragment(), true)
+                        }
+                        ProjectState.FINALIZADO -> {
+                            Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            })
+            recyclerView.adapter = adapter
+        }
+
+        adapter.notifyDataSetChanged()
+    }
+
+
 
     private fun setupEditToggle(
         editButton: ImageView,
