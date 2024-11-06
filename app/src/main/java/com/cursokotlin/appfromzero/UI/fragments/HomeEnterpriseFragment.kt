@@ -153,7 +153,7 @@ class HomeEnterpriseFragment : Fragment() {
                         Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
                     }
                     ProjectState.EN_PROGRESO -> {
-                        replaceFragmentViewProject(ViewProjectFragment(),projectCard, true)
+                        replaceFragmentViewProject(ViewProjectFragment(),projectCard.idProject, true)
                     }
                     ProjectState.FINALIZADO -> {
                         Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
@@ -298,7 +298,7 @@ class HomeEnterpriseFragment : Fragment() {
                             Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
                         }
                         ProjectState.EN_PROGRESO -> {
-                            replaceFragmentViewProject(ViewProjectFragment(),projectCard, true)
+                            replaceFragmentViewProject(ViewProjectFragment(),projectCard.idProject, true)
                         }
                         ProjectState.FINALIZADO -> {
                             Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
@@ -435,15 +435,9 @@ class HomeEnterpriseFragment : Fragment() {
         transaction.commit()
     }
 
-    private fun replaceFragmentViewProject(fragment: Fragment, projectCard: ProjectCard, isWorking: Boolean) {
+    private fun replaceFragmentViewProject(fragment: Fragment, idProject: Long, isWorking: Boolean) {
         val bundle = Bundle().apply {
-            putLong("idProject", projectCard.idProject)
-            putString("projectName", projectCard.projectName)
-            putInt("numPostulantes", projectCard.numPostulantes)
-            putString("enterpriseName", projectCard.enterpriseName)
-            putString("pictureUrl", projectCard.pictureUrl)
-            putString("projectState", projectCard.projectState.name)
-            putInt("projectProgress", projectCard.projectProgress)
+            putLong("idProject", idProject)
             putBoolean("isWorking", isWorking)
         }
         fragment.arguments = bundle
