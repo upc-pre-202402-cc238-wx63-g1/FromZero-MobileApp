@@ -212,6 +212,7 @@ class HomeDeveloperFragment : Fragment() {
     private fun bindProjectsToViews(projects: List<Project>) {
         this.projectList = projects.map { project ->
             ProjectCard(
+                idProject = project.id,
                 projectName = project.name,
                 numPostulantes = project.candidatesList.size,
                 enterpriseName = developer?.name ?: "",

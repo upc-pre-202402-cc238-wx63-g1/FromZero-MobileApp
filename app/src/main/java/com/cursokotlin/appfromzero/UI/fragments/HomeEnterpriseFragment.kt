@@ -153,7 +153,7 @@ class HomeEnterpriseFragment : Fragment() {
                         Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
                     }
                     ProjectState.EN_PROGRESO -> {
-                        replaceFragmentViewProject(ViewProjectFragment(), true)
+                        replaceFragmentViewProject(ViewProjectFragment(),projectCard, true)
                     }
                     ProjectState.FINALIZADO -> {
                         Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
@@ -273,6 +273,7 @@ class HomeEnterpriseFragment : Fragment() {
         Log.d("BindProjects", "Binding ${projects.size} projects to views")
         this.projectList = projects.map { project ->
             ProjectCard(
+                idProject = project.id,
                 projectName = project.name,
                 numPostulantes = project.candidatesList.size,
                 enterpriseName = enterprise?.name ?: "",
@@ -297,7 +298,7 @@ class HomeEnterpriseFragment : Fragment() {
                             Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
                         }
                         ProjectState.EN_PROGRESO -> {
-                            replaceFragmentViewProject(ViewProjectFragment(), true)
+                            replaceFragmentViewProject(ViewProjectFragment(),projectCard, true)
                         }
                         ProjectState.FINALIZADO -> {
                             Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
@@ -434,9 +435,17 @@ class HomeEnterpriseFragment : Fragment() {
         transaction.commit()
     }
 
-    private fun replaceFragmentViewProject(fragment: Fragment, isWorking: Boolean) {
-        val bundle = Bundle()
-        bundle.putBoolean("isWorking", isWorking)
+    private fun replaceFragmentViewProject(fragment: Fragment, projectCard: ProjectCard, isWorking: Boolean) {
+        val bundle = Bundle().apply {
+            putLong("idProject", projectCard.idProject)
+            putString("projectName", projectCard.projectName)
+            putInt("numPostulantes", projectCard.numPostulantes)
+            putString("enterpriseName", projectCard.enterpriseName)
+            putString("pictureUrl", projectCard.pictureUrl)
+            putString("projectState", projectCard.projectState.name)
+            putInt("projectProgress", projectCard.projectProgress)
+            putBoolean("isWorking", isWorking)
+        }
         fragment.arguments = bundle
 
         val transaction = parentFragmentManager.beginTransaction()
