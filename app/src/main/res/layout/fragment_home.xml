@@ -79,8 +79,7 @@
                             <ImageView
                                 android:id="@+id/ivProfilePhoto"
                                 android:layout_width="100dp"
-                                android:layout_height="100dp"
-                                android:src="@drawable/geekit_profile" />
+                                android:layout_height="100dp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -222,8 +221,7 @@
                             android:id="@+id/etEnterpriseDescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Geekit es tu destino para la moda geek. Nos especializamos en ofrecer una selección única de ropa y accesorios para jóvenes apasionados por la cultura pop, los videojuegos, el cine y los cómics. En Geekit, encontrarás prendas que te permiten expresar tu estilo auténtico y tu amor por tus intereses favoritos."
-                            android:textColor="@color/primary_text_color"
+                             android:textColor="@color/primary_text_color"
                             android:textSize="16sp"
                             android:visibility="gone" />
 
@@ -231,7 +229,6 @@
                             android:id="@+id/tvEnterpriseDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Geekit es tu destino para la moda geek. Nos especializamos en ofrecer una selección única de ropa y accesorios para jóvenes apasionados por la cultura pop, los videojuegos, el cine y los cómics. En Geekit, encontrarás prendas que te permiten expresar tu estilo auténtico y tu amor por tus intereses favoritos."
                             android:textSize="13dp" />
 
                         <TextView
@@ -251,7 +248,6 @@
                                 android:id="@+id/etEnterprisePhone"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="924 830 455"
                                 android:textColor="@color/primary_text_color"
                                 android:textSize="16sp"
                                 android:visibility="gone" />
@@ -261,7 +257,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="924 830 455"
                                 android:textSize="13dp" />
 
                             <ImageView
@@ -616,6 +611,34 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="MissingConstraints" />
+
+            <LinearLayout
+                android:id="@+id/emptyView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="MissingConstraints"
+                android:visibility="gone"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Aún no se han creado proyectos"
+                    android:textSize="16sp"
+                    android:textColor="@color/black" />
+
+                <Button
+                    android:id="@+id/btnCreateProject"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Crear Proyecto"
+                    android:layout_marginTop="8dp"/>
+            </LinearLayout>
+
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/cvCardEmpty"

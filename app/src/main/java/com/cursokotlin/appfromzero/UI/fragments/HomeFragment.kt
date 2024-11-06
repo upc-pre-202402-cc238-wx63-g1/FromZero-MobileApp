@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
@@ -64,9 +65,12 @@ class HomeFragment : Fragment() {
     private lateinit var developer: Developer
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var cvCardEmpty: CardView
     private lateinit var adapter: ProjectCardAdapter
     private var projectList: List<ProjectCard> = emptyList()
 
+    private lateinit var emptyView: LinearLayout
+    private lateinit var btnCreateProject: Button
 
     private lateinit var projects: List<Project>
 
@@ -127,6 +131,12 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
+        emptyView = view.findViewById(R.id.emptyView)
+        btnCreateProject = view.findViewById(R.id.btnCreateProject)
+
+        btnCreateProject.setOnClickListener {
+            replaceFragment(CreateProjectFragment())
+        }
 
         setupRecyclerView(view)
 
@@ -329,6 +339,8 @@ class HomeFragment : Fragment() {
         llExtending = view.findViewById(R.id.llExtending)
         ivConfirmEditProfile = view.findViewById(R.id.ivConfirmEditProfile)
 
+        cvCardEmpty = view.findViewById(R.id.cvCardEmpty)
+
         setupEditToggle(ivEditProfileWebSite, tvEnterpriseWebsite, etEnterpriseWebsite)
         setupEditToggle(ivEditProfileSector, tvEnterpriseSector, etEnterpriseSector)
         setupEditToggle(ivEditProfileDescription, tvEnterpriseDescription, etEnterpriseDescription)
@@ -437,9 +449,28 @@ class HomeFragment : Fragment() {
             recyclerView.adapter = adapter
         }
 
-        adapter.notifyDataSetChanged()
+        if (projectList.isEmpty()) {
+            recyclerView.visibility = View.GONE
+            emptyView.visibility = View.VISIBLE
+            setEmptyViewConstraints(requireView(), R.id.cvHomeEnterpriseProfile)
+            cvCardEmpty.visibility = View.GONE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            emptyView.visibility = View.GONE
+            adapter.notifyDataSetChanged()
+        }
     }
 
+    private fun setEmptyViewConstraints(view: View, cvHomeEnterpriseProfile: Int) {
+        val emptyView = view.findViewById<LinearLayout>(R.id.emptyView)
+        val constraintLayout = view.findViewById<ConstraintLayout>(R.id.clHomeUI)
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintLayout)
+
+        // Conecta el emptyView al CardView del perfil de empresa
+        constraintSet.connect(emptyView.id, ConstraintSet.TOP, cvHomeEnterpriseProfile, ConstraintSet.BOTTOM, 15)
+        constraintSet.applyTo(constraintLayout)
+    }
 
 
     private fun setupEditToggle(
