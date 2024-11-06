@@ -13,4 +13,10 @@ interface ProjectService {
         @Path("id") enterpriseId: Long,
         @Header("Authorization") token: String
     ): Call<List<Project>>
+
+    @GET("projects/developer/{id}")
+    fun getProjectsByUserDeveloperId(
+        @Path("id") developerId: Long,
+        @Header("Authorization") token: String
+    ): Call<List<Project>>
 }

@@ -38,12 +38,16 @@ class MainActivity : AppCompatActivity() {
         initializeComponents()
 
         when (userRole) {
-            "ROLE_ENTERPRISE" -> setupBottomNavigationForEnterprise()
-            "ROLE_DEVELOPER" -> setupBottomNavigationForDeveloper()
+            "ROLE_ENTERPRISE" -> {
+                setupBottomNavigationForEnterprise()
+                replaceFragment(HomeEnterpriseFragment())
+            }
+            "ROLE_DEVELOPER" -> {
+                setupBottomNavigationForDeveloper()
+                replaceFragment(HomeDeveloperFragment())
+            }
             else -> Log.w("MainActivity", "Rol de usuario desconocido: $userRole")
         }
-
-        replaceFragment(HomeFragment())
         bottomNavigation.show(1)
     }
 
@@ -59,7 +63,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNavigationForDeveloper() {
         bottomNavigation.setOnClickMenuListener {
             when (it.id) {
-                1 -> replaceFragment(HomeFragment())
+                1 -> replaceFragment(HomeDeveloperFragment())
                 2 -> replaceFragment(SearchProjectFragment()) // Vista de proyectos para desarrolladores
                 3 -> replaceFragment(MessageFragment())
                 4 -> replaceFragment(MenuFragment())
@@ -70,7 +74,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNavigationForEnterprise() {
         bottomNavigation.setOnClickMenuListener {
             when (it.id) {
-                1 -> replaceFragment(HomeFragment())
+                1 -> replaceFragment(HomeEnterpriseFragment())
                 2 -> replaceFragment(SearchFragment()) // Vista de búsqueda para empresas
                 3 -> replaceFragment(MessageFragment())
                 4 -> replaceFragment(MenuFragment())
