@@ -94,7 +94,7 @@ class HomeDeveloperFragment : Fragment() {
                         Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
                     }
                     ProjectState.EN_PROGRESO -> {
-                        replaceFragmentViewProject(ViewProjectFragment(), true)
+                        replaceFragmentViewProject(ViewProjectFragment(), projectCard.idProject,true)
                     }
                     ProjectState.FINALIZADO -> {
                         Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
@@ -406,9 +406,11 @@ class HomeDeveloperFragment : Fragment() {
         transaction.commit()
     }
 
-    private fun replaceFragmentViewProject(fragment: Fragment, isWorking: Boolean) {
-        val bundle = Bundle()
-        bundle.putBoolean("isWorking", isWorking)
+    private fun replaceFragmentViewProject(fragment: Fragment, idProject: Long, isWorking: Boolean) {
+        val bundle = Bundle().apply {
+            putLong("idProject", idProject)
+            putBoolean("isWorking", isWorking)
+        }
         fragment.arguments = bundle
 
         val transaction = parentFragmentManager.beginTransaction()

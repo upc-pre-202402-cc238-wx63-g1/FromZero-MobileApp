@@ -13,4 +13,8 @@ class ProjectRepository (private val projectService: ProjectService) {
     fun getProjectsByDeveloperUserId(userId: Long, token: String): Call<List<Project>> {
         return projectService.getProjectsByUserDeveloperId(userId, "Bearer $token")
     }
+
+    fun getProjectById(projectId: Long, token: String): Call<Project> {
+        return projectService.getProjectById(projectId, "Bearer $token")
+    }
 }

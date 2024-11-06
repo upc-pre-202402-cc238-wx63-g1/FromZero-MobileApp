@@ -19,4 +19,10 @@ interface ProjectService {
         @Path("id") developerId: Long,
         @Header("Authorization") token: String
     ): Call<List<Project>>
+
+    @GET("projects/{id}")
+    fun getProjectById(
+        @Path("id") projectId: Long,
+        @Header("Authorization") token: String
+    ): Call<Project>
 }

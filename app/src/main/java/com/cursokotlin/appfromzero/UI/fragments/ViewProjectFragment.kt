@@ -1,7 +1,9 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,16 +18,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.ProjectData
 import com.cursokotlin.appfromzero.adapters.ProjectDataAdapter
 import com.cursokotlin.appfromzero.R
+import com.cursokotlin.appfromzero.data.remote.RetrofitClient
 import com.cursokotlin.appfromzero.models.HomeViewModel
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import com.cursokotlin.appfromzero.data.repository.project.ProjectRepository
+import com.cursokotlin.appfromzero.models.project.ProjectProfileResponse
+import com.cursokotlin.appfromzero.models.project.Project
+
 
 class ViewProjectFragment : Fragment() {
-    private val homeViewModel: HomeViewModel by activityViewModels()
+    //private val homeViewModel: HomeViewModel by activityViewModels()
 
     private var isWorking: Boolean = false
+    private var idProject: Long = 0
+    private val projectRepository = ProjectRepository(RetrofitClient.projectService)
 
     private lateinit var applyProjectDialog: Dialog
     private lateinit var btnConfirmApplyProject: Button
-    lateinit var projectData: List<ProjectData>
+    private var projectData: List<ProjectData> = emptyList()
     lateinit var projectDataAdapter: ProjectDataAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,13 +49,17 @@ class ViewProjectFragment : Fragment() {
         val tvProjectName = view.findViewById<TextView>(R.id.tvProjectName)
         val btDeliverables = view.findViewById<Button>(R.id.btDeliverables)
 
+        val sharedPreferences =
+            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("token", "")
         arguments?.let {
+            idProject = it.getLong("idProject")
             isWorking = it.getBoolean("isWorking", false)
         }
 
         // Inicializa los diálogos ANTES de asignar los botones
         setupApplyProjectDialog()
-        loadDescription(view)
+        loadDescription(view, idProject, token)
 
         // Cambiar texto del botón según si es developer
         btDeliverables.text = if (isWorking) "Entregables" else "Postular"
@@ -80,47 +96,68 @@ class ViewProjectFragment : Fragment() {
         btnConfirmApplyProject = applyProjectDialog.findViewById(R.id.btn_postular)
     }
 
-    private fun loadDescription(view: View) {
-        projectData = listOf(
-            ProjectData(
-                "Descripción",
-                "La Plataforma de Comercio Electrónico Geekit es un proyecto destinado a crear una experiencia de compra en línea excepcional para nuestra marca de ropa y accesorios para jóvenes apasionados por la cultura geek. La plataforma debe ofrecer una navegación intuitiva, una interfaz atractiva y funcionalidades que mejoren la experiencia del usuario, desde la búsqueda de productos hasta el proceso de compra y seguimiento de pedidos"
-            ),
-            ProjectData(
-                "Tecnologías / Lenguajes", "HTML5\n" +
-                        "CSS3\n" +
-                        "JavaScrip"
-            ),
-            ProjectData(
-                "Tecnologías / Frameworks", "React.js (Frontend)\n" +
-                        "Node.js (Backend)\n" +
-                        "Express.js (Backend)"
-            ),
-            ProjectData(
-                "Presupuesto", "\$50,000\n" +
-                        "\n" +
-                        "El presupuesto asignado para este proyecto es de \$50,000 USD, incluyendo el costo de desarrollo, pruebas, implementación y mantenimiento inicial durante los primeros seis meses."
-            ),
-            ProjectData(
-                "Procesos y Metodologías de Desarrollo",
-                "1. Recolección de Requisitos: Definición de requisitos del proyecto en una reunión inicial.\n" +
-                        "2. Desarrollo Iterativo: Metodología ágil con entregas incrementales para retroalimentación temprana.\n" +
-                        "3. Diseño de UI/UX: Creación de prototipos de interfaz centrados en usabilidad y estética.\n" +
-                        "4. Desarrollo Frontend y Backend: Implementación de frontend y backend con código limpio y modular.\n" +
-                        "5. Pruebas y Control de Calidad: Evaluación exhaustiva en todas las etapas para garantizar calidad.\n" +
-                        "6. Implementación y Despliegue: Lanzamiento en entorno de producción tras completar desarrollo y pruebas.\n" +
-                        "7. Mantenimiento y Soporte: Ofrecimiento de soporte continuo, actualizaciones y monitoreo post-lanzamiento."
-            )
-        )
-        val rvProject = view.findViewById<RecyclerView>(R.id.rvProjectDescription)
-        projectDataAdapter = ProjectDataAdapter(projectData)
-        rvProject.layoutManager = LinearLayoutManager(context)
-        rvProject.adapter = projectDataAdapter
+    private fun loadDescription(view: View, idProject: Long, token: String?) {
+        if (token != null) {
+            val call = projectRepository.getProjectById(idProject, token)
+            call.enqueue(object : Callback<Project> {
+                override fun onResponse(
+                    call: Call<Project>,
+                    response: Response<Project>
+                ) {
+                    if (response.isSuccessful) {
+                        val project = response.body()
+                        if (project != null) {
+                            projectData = listOf(
+                                ProjectData(
+                                    "Descripción",
+                                    project.description
+                                ),
+                                ProjectData(
+                                    "Tecnologías / Lenguajes",
+                                    project.languages.joinToString { it.name }
+                                ),
+                                ProjectData(
+                                    "Tecnologías / Frameworks",
+                                    project.frameworks.joinToString { it.name }
+                                ),
+                                ProjectData(
+                                    "Presupuesto",
+                                    project.budget
+                                ),
+                                ProjectData(
+                                    "Procesos y Metodologías de Desarrollo",
+                                    project.methodologies
+                                )
+                            )
+                            val rvProject = view.findViewById<RecyclerView>(R.id.rvProjectDescription)
+                            projectDataAdapter = ProjectDataAdapter(projectData)
+                            rvProject.layoutManager = LinearLayoutManager(context)
+                            rvProject.adapter = projectDataAdapter
+                        }
+                        else{
+                            Toast.makeText(context, "Proyecto nulo", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    else{
+                        Toast.makeText(context, "Error al obtener datos del proyecto", Toast.LENGTH_SHORT).show()
+                    }
+                }
 
+                override fun onFailure(call: Call<Project>, t: Throwable) {
+                    Toast.makeText(context, "Error al obtener datos del proyecto", Toast.LENGTH_SHORT).show()
+                }
+            })
+        } else {
+            Toast.makeText(context, "No se encontró token", Toast.LENGTH_SHORT).show()
+        }
     }
 
     // Common method to replace fragment
     private fun replaceFragment(fragment: Fragment) {
+        val bundle = Bundle()
+        bundle.putLong("idProject", idProject)
+        fragment.arguments = bundle
+
         val transaction = parentFragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)
         transaction.replace(R.id.fragmenContainer, fragment)
