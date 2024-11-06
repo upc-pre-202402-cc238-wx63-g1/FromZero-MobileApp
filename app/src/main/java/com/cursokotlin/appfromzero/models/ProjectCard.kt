@@ -1,6 +1,7 @@
 package com.cursokotlin.appfromzero.models
 
 class ProjectCard (
+    val idProject: Long,
     val projectName: String,
     val numPostulantes: Int,
     val enterpriseName: String,

@@ -77,4 +77,6 @@
     <string name="enterprise_name">enterprise_name</string>
     <string name="last_name">last_name</string>
     <string name="first_name">first_name</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

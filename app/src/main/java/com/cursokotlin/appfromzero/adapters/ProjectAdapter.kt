@@ -9,14 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
-import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter.OnItemClickListener
 import com.cursokotlin.appfromzero.models.Project
 
 class ProjectAdapter(private val projects: List<Project>,
-                        private val clickListener: OnItemClickListener
+                     private val clickListener: OnItemClickListener
     ) :
     RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() {
 

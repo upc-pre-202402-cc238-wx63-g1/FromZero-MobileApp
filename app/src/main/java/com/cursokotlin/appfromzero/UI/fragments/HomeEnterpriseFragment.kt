@@ -3,67 +3,53 @@ package com.cursokotlin.appfromzero.UI.fragments
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
 import com.cursokotlin.appfromzero.data.repository.enterprise.EnterpriseRepository
-import com.cursokotlin.appfromzero.models.Developer
+import com.cursokotlin.appfromzero.data.repository.project.ProjectRepository
 import com.cursokotlin.appfromzero.models.Enterprise
-import com.cursokotlin.appfromzero.models.HomeViewModel
 import com.cursokotlin.appfromzero.models.ProjectCard
 import com.cursokotlin.appfromzero.models.ProjectState
-import com.cursokotlin.appfromzero.models.profile.EnterpriseProfileRequest
 import com.cursokotlin.appfromzero.models.profile.EnterpriseProfileResponse
+import com.cursokotlin.appfromzero.models.project.Project
 import com.google.android.material.textfield.TextInputEditText
 import com.squareup.picasso.Picasso
-import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Response
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-
-/**
- * A simple [Fragment] subclass.
- * Use the [HomeFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class HomeFragment : Fragment() {
-
-    // Seleccion de Rol
-    private val homeViewModel: HomeViewModel by activityViewModels()
+class HomeEnterpriseFragment : Fragment() {
 
     private val enterpriseRepository = EnterpriseRepository(RetrofitClient.enterpriseService)
+    private val projectRepository = ProjectRepository(RetrofitClient.projectService)
 
-    // Enterprise Home Components
     private var enterprise: Enterprise? = null
-    private lateinit var developer: Developer
-
     private lateinit var recyclerView: RecyclerView
+    private lateinit var cvCardEmpty: CardView
     private lateinit var adapter: ProjectCardAdapter
-    private lateinit var projectList: List<ProjectCard>
+    private var projectList: List<ProjectCard> = emptyList()
 
-    // Home Edit Profile Components
+    private lateinit var emptyView: LinearLayout
+    private lateinit var btnCreateProject: Button
+
+    private lateinit var projects: List<Project>
+
     private lateinit var cvHomeEnterpriseProfile: CardView
 
     private lateinit var ivEditProfile: ImageView
@@ -77,7 +63,6 @@ class HomeFragment : Fragment() {
     private lateinit var etEnterprisePhone: TextInputEditText
     private lateinit var ivConfirmEditProfile: ImageView
 
-    // Home Enterprise Profile Components
     private lateinit var ivProfile: ImageView
     private lateinit var tvEnterpriseWebsite: TextView
     private lateinit var tvEnterpriseName: TextView
@@ -86,71 +71,37 @@ class HomeFragment : Fragment() {
     private lateinit var tvEnterpriseDescription: TextView
     private lateinit var tvEnterpriseCellphone: TextView
 
-    // Home Enterprise Extending Components layout
     private lateinit var llExtending: LinearLayout
-
-    // Home Developer Profile Components
-    private lateinit var cvHomeDeveloperProfile: CardView
-
-    private lateinit var ivProfileDevPhoto: ImageView
-    private lateinit var tvDevName: TextView
-    private lateinit var ratingBar: RatingBar
-
-    private lateinit var tvDevSpecialties: TextView
-    private lateinit var etDevSpecialties: TextInputEditText
-    private lateinit var ivEditDevSpecialties: ImageView
-    private lateinit var tvDevDescription: TextView
-    private lateinit var etDevDescription: TextInputEditText
-    private lateinit var ivEditDevDescription: ImageView
-    private lateinit var tvCellphone: TextView
-    private lateinit var etCellphone: TextInputEditText
-    private lateinit var ivEditDevCellphone: ImageView
-    private lateinit var tvEmail: TextView
-    private lateinit var etEmail: TextInputEditText
-    private lateinit var tvDeveloperProjects: TextView
-
-    private lateinit var llDevExtending: LinearLayout
-    private lateinit var ivConfirmEditDevProfile: ImageView
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        val view = inflater.inflate(R.layout.fragment_home_enterprise, container, false)
 
-        // Read data from Shared Preferences
-        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        val userRole = sharedPreferences.getString("userRole", null)
+        emptyView = view.findViewById(R.id.emptyView)
+        btnCreateProject = view.findViewById(R.id.btnCreateProject)
+
+        btnCreateProject.setOnClickListener {
+            replaceFragment(CreateProjectFragment())
+        }
+
+        setupRecyclerView(view)
+
+        val sharedPreferences =
+            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val userId = sharedPreferences.getLong("userId", 0)
         val token = sharedPreferences.getString("token", null)
 
-        when (userRole) {
-            "ROLE_ENTERPRISE" -> {
-                initEnterpriseView(view, userId, token, userRole)
-                setupRecyclerView(view)
-                setRecyclerViewContraints(view, R.id.cvHomeEnterpriseProfile)
-            }
-
-            "ROLE_DEVELOPER" -> {
-                initDeveloperView(view, userId, token, userRole)
-                setupRecyclerView(view)
-                setRecyclerViewContraints(view, R.id.cvHomeDeveloperProfile)
-
-            }
-
-            else -> {
-                Toast.makeText(requireContext(), "No se encontró el rol del usuario", Toast.LENGTH_SHORT).show()
-            }
-        }
+        initEnterpriseView(view, userId, token, "ROLE_ENTERPRISE")
 
         return view
     }
 
     private fun setRecyclerViewContraints(view: View, cvHomeEnterpriseProfile: Int) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.rvProjects)
-        val constraintLayout = view.findViewById<ConstraintLayout>(R.id.clHomeUI) // Asegúrate de que el ID sea correcto
+        val constraintLayout = view.findViewById<ConstraintLayout>(R.id.clHomeUI)
         val constraintSet = ConstraintSet()
         constraintSet.clone(constraintLayout)
 
@@ -162,31 +113,19 @@ class HomeFragment : Fragment() {
         cvHomeEnterpriseProfile = view.findViewById(R.id.cvHomeEnterpriseProfile)
         cvHomeEnterpriseProfile.visibility = View.VISIBLE
 
-        fetchData(userId, token, userRole)
-
+        fetchData(userId, token, userRole, view)
+        setRecyclerViewContraints(view, R.id.cvHomeEnterpriseProfile)
         initEnterpriseComponent(view)
 
         setUpClickListener(view)
-
         setupTouchListener(view)
     }
-
-    private fun initDeveloperView(view: View, userId: Long, token: String?, userRole: String) {
-        cvHomeDeveloperProfile = view.findViewById(R.id.cvHomeDeveloperProfile)
-        cvHomeDeveloperProfile.visibility = View.VISIBLE
-
-        fetchData(userId, token, userRole)
-
-        initDeveloperComponent(view)
-    }
-
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupTouchListener(view: View) {
         val flContainer: FrameLayout = view.findViewById(R.id.flContainer)
         val cvHomeProfile: CardView = view.findViewById(R.id.cvHomeEnterpriseProfile)
 
-        // Configure the touch listener for the FrameLayout
         flContainer.setOnTouchListener { _, _ ->
             if (llExtending.visibility == View.VISIBLE) {
                 animateViewVisibility(llExtending, View.GONE)
@@ -198,7 +137,6 @@ class HomeFragment : Fragment() {
             false
         }
 
-        // Prevent touch events inside the CardView from propagating to the FrameLayout
         cvHomeProfile.setOnTouchListener { _, _ -> true }
     }
 
@@ -206,14 +144,16 @@ class HomeFragment : Fragment() {
         recyclerView = view.findViewById(R.id.rvProjects)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        adapter = ProjectCardAdapter(projectList, object : ProjectCardAdapter.OnItemClickListener {
+        Log.d("SetupRecyclerView", "asdasd" + this.projectList.size)
+
+        adapter = ProjectCardAdapter(this.projectList, object : ProjectCardAdapter.OnItemClickListener {
             override fun onItemClick(projectCard: ProjectCard) {
-                when(projectCard.projectState){
+                when (projectCard.projectState) {
                     ProjectState.BUSQUEDA_DEVELOPER -> {
                         Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
                     }
                     ProjectState.EN_PROGRESO -> {
-                        replaceFragmentViewProject(ViewProjectFragment(), true)
+                        replaceFragmentViewProject(ViewProjectFragment(),projectCard, true)
                     }
                     ProjectState.FINALIZADO -> {
                         Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
@@ -223,11 +163,12 @@ class HomeFragment : Fragment() {
         })
 
         recyclerView.adapter = adapter
+        Log.d("SetupRecyclerView", "RecyclerView and Adapter initialized")
     }
 
-    private fun fetchData(userId: Long, token: String?, userRole: String) {
-        if ( token != null){
-            if ( userRole == "ROLE_ENTERPRISE"){
+    private fun fetchData(userId: Long, token: String?, userRole: String, view: View) {
+        if (token != null) {
+            if (userRole == "ROLE_ENTERPRISE") {
                 val call = enterpriseRepository.getDeveloperByUserId(userId, token)
                 call.enqueue(object : retrofit2.Callback<EnterpriseProfileResponse> {
                     override fun onResponse(call: Call<EnterpriseProfileResponse>, response: Response<EnterpriseProfileResponse>) {
@@ -252,80 +193,29 @@ class HomeFragment : Fragment() {
                         Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
                 })
-            }
-            else if ( userRole == "ROLE_DEVELOPER"){
-                // developerRepository.getDeveloperByUserId(userId, token)
-            }
-            else {
+
+                val projectCall = projectRepository.getProjectsByEnterpriseUserId(userId, token)
+                projectCall.enqueue(object : retrofit2.Callback<List<Project>> {
+                    override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
+                        if (response.isSuccessful) {
+                            projects = response.body() ?: emptyList()
+                            bindProjectsToViews()
+                            setupRecyclerView(view)
+                        } else {
+                            Toast.makeText(requireContext(), "Error al obtener los proyectos", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Project>>, t: Throwable) {
+                        Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            } else {
                 Toast.makeText(requireContext(), "No se encontró el rol del usuario", Toast.LENGTH_SHORT).show()
             }
-
         } else {
             Toast.makeText(requireContext(), "No se encontró el token", Toast.LENGTH_SHORT).show()
         }
-        loadMockData()
-    }
-
-    private fun loadMockData() {
-        developer = Developer(
-            "Juan Pérez",
-            4.5f,
-            R.drawable.sample_profile,
-            R.drawable.sample_flag,
-            "Especialista en desarrollo móvil con 5 años de experiencia en Android y iOS.",
-            "Android, iOS, Kotlin, Swift"
-        )
-
-        projectList = listOf(
-            ProjectCard(
-                "Proyecto A",
-                5,
-                "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
-                ProjectState.BUSQUEDA_DEVELOPER,
-                0,
-            ),
-            ProjectCard(
-                "Proyecto B",
-                0,
-                "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
-                ProjectState.EN_PROGRESO,
-                30,
-            ),
-            ProjectCard(
-                "Proyecto C",
-                10,
-                "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
-                ProjectState.EN_PROGRESO,
-                0,
-            ),
-            ProjectCard(
-                "Proyecto E",
-                7,
-                "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
-                ProjectState.EN_PROGRESO,
-                70,
-            ),
-            ProjectCard(
-                "Proyecto F",
-                6,
-                "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
-                ProjectState.BUSQUEDA_DEVELOPER,
-                0,
-            ),
-            ProjectCard(
-                "Proyecto G",
-                0,
-                "Geekit.pe",
-                "https://geekitpe.com/wp-content/uploads/2022/11/152x152.jpg",
-                ProjectState.BUSQUEDA_DEVELOPER,
-                0,
-            )
-        )
     }
 
     private fun initEnterpriseComponent(view: View) {
@@ -342,7 +232,6 @@ class HomeFragment : Fragment() {
         tvEnterpriseCellphone = view.findViewById(R.id.tvEnterprisePhone)
         etEnterprisePhone = view.findViewById(R.id.etEnterprisePhone)
 
-        //Initialize the icon for the edit profile
         ivEditProfileWebSite = view.findViewById(R.id.ivEditProfileWebSite)
         ivEditProfileSector = view.findViewById(R.id.ivEditProfileSector)
         ivEditProfileDescription = view.findViewById(R.id.ivEditProfileDescription)
@@ -352,6 +241,8 @@ class HomeFragment : Fragment() {
         llExtending = view.findViewById(R.id.llExtending)
         ivConfirmEditProfile = view.findViewById(R.id.ivConfirmEditProfile)
 
+        cvCardEmpty = view.findViewById(R.id.cvCardEmpty)
+
         setupEditToggle(ivEditProfileWebSite, tvEnterpriseWebsite, etEnterpriseWebsite)
         setupEditToggle(ivEditProfileSector, tvEnterpriseSector, etEnterpriseSector)
         setupEditToggle(ivEditProfileDescription, tvEnterpriseDescription, etEnterpriseDescription)
@@ -360,65 +251,84 @@ class HomeFragment : Fragment() {
         bindDataToViews(role = "empresa")
     }
 
-    private fun initDeveloperComponent(view: View) {
-        cvHomeDeveloperProfile = view.findViewById(R.id.cvHomeDeveloperProfile)
-        ivProfileDevPhoto = view.findViewById(R.id.ivProfileDevPhoto)
-        tvDevName = view.findViewById(R.id.tvDevName)
-        ratingBar = view.findViewById(R.id.ratingBar)
-        tvDevSpecialties = view.findViewById(R.id.tvDevSpecialties)
-        etDevSpecialties = view.findViewById(R.id.etDevSpecialties)
-        ivEditDevSpecialties = view.findViewById(R.id.ivEditProfileDevSpecialties)
-        tvDevDescription = view.findViewById(R.id.tvDeveloperDescription)
-        etDevDescription = view.findViewById(R.id.etDeveloperDescription)
-        ivEditDevDescription = view.findViewById(R.id.ivEditProfileDevDescription)
-        tvCellphone = view.findViewById(R.id.tvDeveloperPhone)
-        etCellphone = view.findViewById(R.id.etDeveloperPhone)
-        ivEditDevCellphone = view.findViewById(R.id.ivEditDevProfilePhone)
-        tvEmail = view.findViewById(R.id.tvDeveloperMail)
-        etEmail = view.findViewById(R.id.etDeveloperEmail)
-        tvDeveloperProjects = view.findViewById(R.id.tvDeveloperProjects)
-
-        llDevExtending = view.findViewById(R.id.llExtendingDeveloper)
-        ivConfirmEditDevProfile = view.findViewById(R.id.ivConfirmEditDevProfile)
-
-        setupEditToggle(ivEditDevSpecialties, tvDevSpecialties, etDevSpecialties)
-        setupEditToggle(ivEditDevDescription, tvDevDescription, etDevDescription)
-        setupEditToggle(ivEditDevCellphone, tvCellphone, etCellphone)
-
-        bindDataToViews(role = "desarrollador")
-    }
-
     private fun bindDataToViews(role: String) {
-        when (role) {
-            "empresa" -> {
-                enterprise?.let {
-                    Picasso.get()
-                        .load(it.pictureUrl)
-                        .placeholder(R.drawable.placeholder)
-                        .error(R.drawable.placeholder)
-                        .into(ivProfile)
-                    tvEnterpriseWebsite.text = it.website
-                    tvEnterpriseName.text = it.name
-                    tvEnterpriseSector.text = it.field
-                    tvEnterpriseRUC.text = it.socialRazon
-                    tvEnterpriseDescription.text = it.description
-                    tvEnterpriseCellphone.text = it.cellphone
-                }
-            }
-            "desarrollador" -> {
+        if (role == "empresa") {
+            enterprise?.let {
                 Picasso.get()
-                    .load(developer.profilePic)
+                    .load(it.pictureUrl)
                     .placeholder(R.drawable.placeholder)
-                    .error(R.drawable.sample_profile)
-                    .into(ivProfileDevPhoto)
-                tvDevName.text = developer.name
-                ratingBar.rating = developer.rating
-                tvDevSpecialties.text = developer.skills
-                tvDevDescription.text = developer.summary
-                tvCellphone.text = developer.phone
-                tvEmail.text = developer.email
+                    .error(R.drawable.placeholder)
+                    .into(ivProfile)
+                tvEnterpriseWebsite.text = it.website
+                tvEnterpriseName.text = it.name
+                tvEnterpriseSector.text = it.field
+                tvEnterpriseRUC.text = it.socialRazon
+                tvEnterpriseDescription.text = it.description
+                tvEnterpriseCellphone.text = it.cellphone
             }
         }
+    }
+
+    private fun bindProjectsToViews() {
+        Log.d("BindProjects", "Binding ${projects.size} projects to views")
+        this.projectList = projects.map { project ->
+            ProjectCard(
+                idProject = project.id,
+                projectName = project.name,
+                numPostulantes = project.candidatesList.size,
+                enterpriseName = enterprise?.name ?: "",
+                pictureUrl = enterprise?.pictureUrl ?: "",
+                projectState = when (project.state) {
+                    "En busqueda" -> ProjectState.BUSQUEDA_DEVELOPER
+                    "En progreso" -> ProjectState.EN_PROGRESO
+                    "Finalizado" -> ProjectState.FINALIZADO
+                    else -> ProjectState.BUSQUEDA_DEVELOPER
+                },
+                projectProgress = project.progress
+            )
+        }
+
+        Log.d("BindProjects", "Project list size: ${projectList.size}")
+
+        if (!::adapter.isInitialized) {
+            adapter = ProjectCardAdapter(this.projectList, object : ProjectCardAdapter.OnItemClickListener {
+                override fun onItemClick(projectCard: ProjectCard) {
+                    when (projectCard.projectState) {
+                        ProjectState.BUSQUEDA_DEVELOPER -> {
+                            Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+                        }
+                        ProjectState.EN_PROGRESO -> {
+                            replaceFragmentViewProject(ViewProjectFragment(),projectCard, true)
+                        }
+                        ProjectState.FINALIZADO -> {
+                            Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            })
+            recyclerView.adapter = adapter
+        }
+
+        if (projectList.isEmpty()) {
+            recyclerView.visibility = View.GONE
+            emptyView.visibility = View.VISIBLE
+            setEmptyViewConstraints(requireView(), R.id.cvHomeEnterpriseProfile)
+            cvCardEmpty.visibility = View.GONE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            emptyView.visibility = View.GONE
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    private fun setEmptyViewConstraints(view: View, cvHomeEnterpriseProfile: Int) {
+        val emptyView = view.findViewById<LinearLayout>(R.id.emptyView)
+        val constraintLayout = view.findViewById<ConstraintLayout>(R.id.clHomeUI)
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintLayout)
+
+        constraintSet.connect(emptyView.id, ConstraintSet.TOP, cvHomeEnterpriseProfile, ConstraintSet.BOTTOM, 15)
+        constraintSet.applyTo(constraintLayout)
     }
 
     private fun setupEditToggle(
@@ -439,7 +349,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-
     private fun setUpClickListener(view: View) {
         ivEditProfile.setOnClickListener {
             if (llExtending.visibility == View.GONE) {
@@ -458,9 +367,6 @@ class HomeFragment : Fragment() {
         }
 
         ivConfirmEditProfile.setOnClickListener {
-            // Save the changes to the API
-            // Save the changes to the local database
-            // Update the UI
             updateProfile()
             bindDataToViews(role = "empresa")
             animateViewVisibility(llExtending, View.GONE)
@@ -494,12 +400,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun updateProfile() {
-        enterprise?.let {
-            it.website = etEnterpriseWebsite.text.toString()
-            it.field = etEnterpriseSector.text.toString()
-            it.description = etEnterpriseDescription.text.toString()
-            it.cellphone = etEnterprisePhone.text.toString()
-        }
+        // TODO: Implement API call to update enterprise profile
     }
 
     private fun animateViewVisibility(
@@ -526,7 +427,6 @@ class HomeFragment : Fragment() {
                 }
         }
     }
-
     private fun replaceFragment(fragment: Fragment) {
         val transaction = parentFragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)
@@ -535,9 +435,17 @@ class HomeFragment : Fragment() {
         transaction.commit()
     }
 
-    private fun replaceFragmentViewProject(fragment: Fragment, isWorking: Boolean){
-        val bundle = Bundle()
-        bundle.putBoolean("isWorking", isWorking)
+    private fun replaceFragmentViewProject(fragment: Fragment, projectCard: ProjectCard, isWorking: Boolean) {
+        val bundle = Bundle().apply {
+            putLong("idProject", projectCard.idProject)
+            putString("projectName", projectCard.projectName)
+            putInt("numPostulantes", projectCard.numPostulantes)
+            putString("enterpriseName", projectCard.enterpriseName)
+            putString("pictureUrl", projectCard.pictureUrl)
+            putString("projectState", projectCard.projectState.name)
+            putInt("projectProgress", projectCard.projectProgress)
+            putBoolean("isWorking", isWorking)
+        }
         fragment.arguments = bundle
 
         val transaction = parentFragmentManager.beginTransaction()

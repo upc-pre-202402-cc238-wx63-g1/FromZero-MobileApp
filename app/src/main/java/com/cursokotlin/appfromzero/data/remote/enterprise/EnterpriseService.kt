@@ -1,6 +1,5 @@
 package com.cursokotlin.appfromzero.data.remote.enterprise
 
-import com.cursokotlin.appfromzero.models.profile.EnterpriseProfileRequest
 import com.cursokotlin.appfromzero.models.profile.EnterpriseProfileResponse
 import retrofit2.Call
 import retrofit2.http.Body
