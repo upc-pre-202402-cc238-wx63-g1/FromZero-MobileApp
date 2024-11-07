@@ -7,6 +7,7 @@ import com.cursokotlin.appfromzero.models.project.ProjectProfileResponse
 import com.cursokotlin.appfromzero.models.project.ProjectResponse
 
 import com.cursokotlin.appfromzero.models.project.ProjectSearchCard
+import okhttp3.ResponseBody
 
 import retrofit2.Call
 
@@ -34,4 +35,8 @@ class ProjectRepository (private val projectService: ProjectService) {
     fun assignDeveloper(projectId: Long, developerId: Long, token: String): Call<Project> {
         return projectService.assignDeveloper(projectId, developerId, "Bearer $token")
     }
+    fun addCandidateToProject(projectId: Long, candidateId: Long, token: String): Call<ResponseBody> {
+        return projectService.addCandidateToProject(projectId, candidateId, "Bearer $token")
+    }
+
 }

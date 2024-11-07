@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.cursokotlin.appfromzero.MainActivity
 import com.cursokotlin.appfromzero.ProjectData
 import com.cursokotlin.appfromzero.adapters.ProjectDataAdapter
 import com.cursokotlin.appfromzero.R
@@ -26,6 +27,7 @@ import retrofit2.Response
 import com.cursokotlin.appfromzero.data.repository.project.ProjectRepository
 import com.cursokotlin.appfromzero.models.project.ProjectProfileResponse
 import com.cursokotlin.appfromzero.models.project.Project
+import okhttp3.ResponseBody
 
 
 class ViewProjectFragment : Fragment() {
@@ -51,6 +53,8 @@ class ViewProjectFragment : Fragment() {
         val sharedPreferences =
             requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", "")
+        val userId = sharedPreferences.getLong("userId", 0)
+
         arguments?.let {
             idProject = it.getLong("idProject")
             isWorking = it.getBoolean("isWorking", false)
@@ -72,8 +76,30 @@ class ViewProjectFragment : Fragment() {
                 applyProjectDialog.show()
 
                 btnConfirmApplyProject.setOnClickListener {
-                    Toast.makeText(context, "Postulación enviada", Toast.LENGTH_SHORT).show()
-                    applyProjectDialog.dismiss()
+                    val call = projectRepository.addCandidateToProject(idProject, userId, token!!)
+                    call.enqueue(object : Callback<ResponseBody> {
+                        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                            //Log.d("ViewProjectFragment", "response: ${response.body()}")
+                            if (response.isSuccessful) {
+                                Toast.makeText(context, "Postulación enviada", Toast.LENGTH_SHORT)
+                                    .show()
+                                applyProjectDialog.dismiss()
+                                parentFragmentManager.beginTransaction()
+                                    .replace(R.id.fragmenContainer, HomeDeveloperFragment())
+                                    .addToBackStack(null)
+                                    .commit()
+                                (activity as MainActivity).showHomeTab()
+                            } else {
+                                Toast.makeText(context, "Error al postular", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                            //Log.d("ViewProjectFragment", "response: ${t.message}")
+                            Toast.makeText(context, "Error al postular", Toast.LENGTH_SHORT).show()
+                        }
+                    })
                 }
             }
         }

@@ -6,6 +6,7 @@ import com.cursokotlin.appfromzero.models.project.ProjectProfileResponse
 import com.cursokotlin.appfromzero.models.project.ProjectResponse
 
 import com.cursokotlin.appfromzero.models.project.ProjectSearchCard
+import okhttp3.ResponseBody
 
 import retrofit2.Call
 import retrofit2.http.Body
@@ -47,6 +48,13 @@ interface ProjectService {
         @Path("state") state: String,
         @Header("Authorization") token: String
     ): Call<List<ProjectSearchCard>>
+  
+    @PATCH("projects/{id}/add-candidate")
+    fun addCandidateToProject(
+        @Path("id") projectId: Long,
+        @Body candidateId: Long,
+        @Header("Authorization") token: String
+    ): Call<ResponseBody>
 
     @PATCH("projects/{projectId}/assign-developer")
     fun assignDeveloper(
