@@ -51,6 +51,10 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.show(1)
     }
 
+    fun showHomeTab(){
+        bottomNavigation.show(1)
+    }
+
     private fun initializeComponents() {
         bottomNavigation = findViewById(R.id.bottomNavigation)
 
