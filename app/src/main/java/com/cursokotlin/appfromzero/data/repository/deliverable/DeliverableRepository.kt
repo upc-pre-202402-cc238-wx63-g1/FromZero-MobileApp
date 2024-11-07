@@ -3,6 +3,10 @@ package com.cursokotlin.appfromzero.data.repository.deliverable
 import com.cursokotlin.appfromzero.data.remote.deliverable.DeliverableService
 import com.cursokotlin.appfromzero.models.Deliverable
 import com.cursokotlin.appfromzero.models.deliverable.DeliverableResponse
+import com.cursokotlin.appfromzero.models.deliverable.UpdateDeliverableRequest
+import com.cursokotlin.appfromzero.models.deliverable.UpdateDeliverableResponse
+import com.cursokotlin.appfromzero.models.profile.DeveloperProfileResponse
+import com.cursokotlin.appfromzero.models.profile.UpdateDeveloperProfileRequest
 import retrofit2.Call
 
 class DeliverableRepository (private val deliverableService: DeliverableService) {
@@ -13,5 +17,9 @@ class DeliverableRepository (private val deliverableService: DeliverableService)
 
     fun createDeliverable(project: DeliverableResponse, token: String): Call<DeliverableResponse> {
         return deliverableService.createDeliverable(project, "Bearer $token")
+    }
+
+    fun updateDeliverable(id: Long, updateDeliverableRequest: UpdateDeliverableRequest, token: String): Call<UpdateDeliverableResponse> {
+        return deliverableService.updateDeliverable(id, updateDeliverableRequest, "Bearer $token")
     }
 }

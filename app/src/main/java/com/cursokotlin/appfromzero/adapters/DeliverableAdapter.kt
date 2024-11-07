@@ -11,25 +11,24 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import com.cursokotlin.appfromzero.MainActivity
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.Deliverable
 
 class DeliverableAdapter(
     var deliverables: List<Deliverable>,
     private val onItemClick: (Deliverable) -> Unit
-) : RecyclerView.Adapter<DeliverablePrototype>() {
+) : RecyclerView.Adapter<DeliverableAdapter.DeliverableViewHolder>() {
 
     var userRole: String? = null
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeliverablePrototype {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeliverableViewHolder {
         val view = LayoutInflater
             .from(parent.context)
             .inflate(R.layout.prototype_deliverable, parent, false)
-        return DeliverablePrototype(view)
+        return DeliverableViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: DeliverablePrototype, position: Int) {
+    override fun onBindViewHolder(holder: DeliverableViewHolder, position: Int) {
         holder.bind(deliverables[position], this, userRole, position, onItemClick)
     }
 
@@ -39,129 +38,129 @@ class DeliverableAdapter(
         //deliverables.removeAt(position)
         notifyItemRemoved(position)
     }
-}
 
-class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class DeliverableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    val tvDeliverableName = itemView.findViewById<TextView>(R.id.tvDeliverableName)
-    val tvProjectName = itemView.findViewById<TextView>(R.id.tvProjectName)
-    val tvDescription = itemView.findViewById<TextView>(R.id.tvDescription)
-    val tvDescriptionText = itemView.findViewById<TextView>(R.id.tvDescriptionText)
-    val tvDate = itemView.findViewById<TextView>(R.id.tvDate)
-    val tvState = itemView.findViewById<TextView>(R.id.tvState)
-    val cvDeliverableCard = itemView.findViewById<CardView>(R.id.cvDeliverableCard)
+        private val tvDeliverableName = itemView.findViewById<TextView>(R.id.tvDeliverableName)
+        private val tvProjectName = itemView.findViewById<TextView>(R.id.tvProjectName)
+        private val tvDescription = itemView.findViewById<TextView>(R.id.tvDescription)
+        private val tvDescriptionText = itemView.findViewById<TextView>(R.id.tvDescriptionText)
+        private val tvDate = itemView.findViewById<TextView>(R.id.tvDate)
+        private val tvState = itemView.findViewById<TextView>(R.id.tvState)
+        private val cvDeliverableCard = itemView.findViewById<CardView>(R.id.cvDeliverableCard)
 
-    val ivClock = itemView.findViewById<ImageView>(R.id.ivClock)
-    val ivState = itemView.findViewById<ImageView>(R.id.ivState)
-    val ivArrow = itemView.findViewById<ImageView>(R.id.ivArrow)
+        private val ivClock = itemView.findViewById<ImageView>(R.id.ivClock)
+        private val ivState = itemView.findViewById<ImageView>(R.id.ivState)
+        private val ivArrow = itemView.findViewById<ImageView>(R.id.ivArrow)
 
-    val btDelete = itemView.findViewById<Button>(R.id.btDelete)
-    val btEdit = itemView.findViewById<Button>(R.id.btEdit)
+        private val btDelete = itemView.findViewById<Button>(R.id.btDelete)
+        private val btEdit = itemView.findViewById<Button>(R.id.btEdit)
 
-    var isExpanded = false
-    var userRole: String? = null
+        private var isExpanded = false
+        private var userRole: String? = null
 
-    fun bind(
-        deliverable: Deliverable,
-        adapter: DeliverableAdapter,
-        role: String?,
-        position: Int,
-        onItemClick: (Deliverable) -> Unit
-    ) {
-        tvDeliverableName.text = deliverable.name
-        tvProjectName.text = deliverable.name
-        tvDescriptionText.text = deliverable.description
-        tvDate.text = deliverable.date.toString()
-        tvState.text = deliverable.state
-        tvDescription.text = "Descripción"
-        ivClock.setImageResource(android.R.drawable.ic_menu_recent_history)
-        ivState.setImageResource(android.R.drawable.ic_menu_info_details)
-        ivArrow.setImageResource(R.drawable.arrow_down)
+        fun bind(
+            deliverable: Deliverable,
+            adapter: DeliverableAdapter,
+            role: String?,
+            position: Int,
+            onItemClick: (Deliverable) -> Unit
+        ) {
+            tvDeliverableName.text = deliverable.name
+            tvProjectName.text = deliverable.name
+            tvDescriptionText.text = deliverable.description
+            tvDate.text = deliverable.date.toString()
+            tvState.text = deliverable.state
+            tvDescription.text = "Descripción"
+            ivClock.setImageResource(android.R.drawable.ic_menu_recent_history)
+            ivState.setImageResource(android.R.drawable.ic_menu_info_details)
+            ivArrow.setImageResource(R.drawable.arrow_down)
 
-        tvDescriptionText.visibility = View.GONE
-        tvDescription.visibility = View.GONE
-        btDelete.visibility = View.GONE
-        btEdit.visibility = View.GONE
+            tvDescriptionText.visibility = View.GONE
+            tvDescription.visibility = View.GONE
+            btDelete.visibility = View.GONE
+            btEdit.visibility = View.GONE
 
-        userRole = role
+            userRole = role
 
-        cvDeliverableCard.setOnClickListener {
-            if (isExpanded) {
-                collapseCard()
-                ivArrow.setImageResource(R.drawable.arrow_down)
-            } else {
-                expandCard()
-                ivArrow.setImageResource(R.drawable.arrow_up)
+            cvDeliverableCard.setOnClickListener {
+                if (isExpanded) {
+                    collapseCard()
+                    ivArrow.setImageResource(R.drawable.arrow_down)
+                } else {
+                    expandCard()
+                    ivArrow.setImageResource(R.drawable.arrow_up)
+                }
+                isExpanded = !isExpanded
             }
-            isExpanded = !isExpanded
-        }
 
-        btDelete.setOnClickListener {
-            val position = adapterPosition
-            println("entregable eliminado en la posicion $position")
-            if (position != RecyclerView.NO_POSITION) {
-                adapter.removeItem(position)
-                if (adapter.itemCount == 0) {
-                    Toast.makeText(itemView.context, "No hay entregables", Toast.LENGTH_SHORT)
-                        .show()
+            btDelete.setOnClickListener {
+                val position = adapterPosition
+                println("entregable eliminado en la posicion $position")
+                if (position != RecyclerView.NO_POSITION) {
+                    adapter.removeItem(position)
+                    if (adapter.itemCount == 0) {
+                        Toast.makeText(itemView.context, "No hay entregables", Toast.LENGTH_SHORT)
+                            .show()
+                    }
                 }
             }
+
+            btEdit.setOnClickListener {
+                onItemClick(deliverable)
+            }
         }
 
-        btEdit.setOnClickListener {
-            onItemClick(deliverable)
+        fun collapseCard() {
+            val initialHeight = cvDeliverableCard.height
+
+            tvDescriptionText.visibility = View.GONE
+            tvDescription.visibility = View.GONE
+            btDelete.visibility = View.GONE
+            btEdit.visibility = View.GONE
+
+            cvDeliverableCard.measure(
+                View.MeasureSpec.makeMeasureSpec(cvDeliverableCard.width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.UNSPECIFIED
+            )
+            val stateVisibleHeight = tvState.bottom + 100
+
+            val animator = ValueAnimator.ofInt(initialHeight, stateVisibleHeight)
+            animator.addUpdateListener { valueAnimator ->
+                val layoutParams = cvDeliverableCard.layoutParams
+                layoutParams.height = valueAnimator.animatedValue as Int
+                cvDeliverableCard.layoutParams = layoutParams
+            }
+            animator.duration = 300
+            animator.interpolator = AccelerateDecelerateInterpolator()
+            animator.start()
         }
-    }
 
-    private fun expandCard() {
-        tvDescriptionText.visibility = View.VISIBLE
-        tvDescription.visibility = View.VISIBLE
+        private fun expandCard() {
+            tvDescriptionText.visibility = View.VISIBLE
+            tvDescription.visibility = View.VISIBLE
 
-        if (userRole != "desarrollador") {
-            btDelete.visibility = View.VISIBLE
-            btEdit.visibility = View.VISIBLE
+            if (userRole != "desarrollador") {
+                btDelete.visibility = View.VISIBLE
+                btEdit.visibility = View.VISIBLE
+            }
+
+            val initialHeight = cvDeliverableCard.height
+            cvDeliverableCard.measure(
+                View.MeasureSpec.makeMeasureSpec(cvDeliverableCard.width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.UNSPECIFIED
+            )
+            val targetHeight = cvDeliverableCard.measuredHeight
+
+            val animator = ValueAnimator.ofInt(initialHeight, targetHeight)
+            animator.addUpdateListener { valueAnimator ->
+                val layoutParams = cvDeliverableCard.layoutParams
+                layoutParams.height = valueAnimator.animatedValue as Int
+                cvDeliverableCard.layoutParams = layoutParams
+            }
+            animator.duration = 300
+            animator.interpolator = AccelerateDecelerateInterpolator()
+            animator.start()
         }
-
-        val initialHeight = cvDeliverableCard.height
-        cvDeliverableCard.measure(
-            View.MeasureSpec.makeMeasureSpec(cvDeliverableCard.width, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.UNSPECIFIED
-        )
-        val targetHeight = cvDeliverableCard.measuredHeight
-
-        val animator = ValueAnimator.ofInt(initialHeight, targetHeight)
-        animator.addUpdateListener { valueAnimator ->
-            val layoutParams = cvDeliverableCard.layoutParams
-            layoutParams.height = valueAnimator.animatedValue as Int
-            cvDeliverableCard.layoutParams = layoutParams
-        }
-        animator.duration = 300
-        animator.interpolator = AccelerateDecelerateInterpolator()
-        animator.start()
-    }
-
-    fun collapseCard() {
-        val initialHeight = cvDeliverableCard.height
-
-        tvDescriptionText.visibility = View.GONE
-        tvDescription.visibility = View.GONE
-        btDelete.visibility = View.GONE
-        btEdit.visibility = View.GONE
-
-        cvDeliverableCard.measure(
-            View.MeasureSpec.makeMeasureSpec(cvDeliverableCard.width, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.UNSPECIFIED
-        )
-        val stateVisibleHeight = tvState.bottom + 100
-
-        val animator = ValueAnimator.ofInt(initialHeight, stateVisibleHeight)
-        animator.addUpdateListener { valueAnimator ->
-            val layoutParams = cvDeliverableCard.layoutParams
-            layoutParams.height = valueAnimator.animatedValue as Int
-            cvDeliverableCard.layoutParams = layoutParams
-        }
-        animator.duration = 300
-        animator.interpolator = AccelerateDecelerateInterpolator()
-        animator.start()
     }
 }
