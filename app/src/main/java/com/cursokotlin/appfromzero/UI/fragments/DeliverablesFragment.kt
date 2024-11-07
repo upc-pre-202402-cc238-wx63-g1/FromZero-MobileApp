@@ -1,10 +1,13 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -14,19 +17,33 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.DeliverableAdapter
-import com.cursokotlin.appfromzero.adapters.DeliverablePrototype
+import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
+import com.cursokotlin.appfromzero.data.remote.RetrofitClient
+import com.cursokotlin.appfromzero.data.repository.deliverable.DeliverableRepository
 import com.cursokotlin.appfromzero.models.Deliverable
 import com.cursokotlin.appfromzero.models.HomeViewModel
+import com.cursokotlin.appfromzero.models.ProjectCard
+import com.cursokotlin.appfromzero.models.ProjectState
+
+import com.cursokotlin.appfromzero.models.deliverable.DeliverableCard
+import retrofit2.Call
+import retrofit2.Response
+import retrofit2.Retrofit
 
 class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverableCreatedListener,
     EditDeliverableFragment.OnDeliverableEditedListener {
 
-    private var deliverables = ArrayList<Deliverable>()
+
     private lateinit var deliverableAdapter: DeliverableAdapter
     private lateinit var rvDeliverables: RecyclerView
     private lateinit var ivAddDeliverable: ImageView
     private lateinit var cvCardEmpty: CardView
     private val homeViewModel: HomeViewModel by activityViewModels()
+
+    private val deliverableRepository=DeliverableRepository(RetrofitClient.deliverableService)
+    private var deliverables: MutableList<Deliverable> = mutableListOf()
+    private var deliverableList: List<DeliverableCard> = emptyList()
+    private var idProject: Long = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -56,7 +73,13 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             }
         }
 
-        loadDeliverables()
+        val sharedPreferences =
+            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("token", null)
+        arguments?.let {
+            idProject = it.getLong("idProject")
+        }
+        loadDeliverables(view,idProject,token)
         return view
     }
 
@@ -64,13 +87,6 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         rvDeliverables = view.findViewById(R.id.rvDeliverables)
         deliverableAdapter = DeliverableAdapter(deliverables) { deliverable ->
             val dialog = EditDeliverableFragment()
-            val bundle = Bundle().apply {
-                putInt("deliverableId", deliverable.id)
-                putString("deliverableTitle", deliverable.title)
-                putString("deliverableDescription", deliverable.description)
-                putString("deliverableDate", deliverable.date)
-            }
-            dialog.arguments = bundle
             dialog.setOnDeliverableEditedListener(this@DeliverablesFragment)
             dialog.show(parentFragmentManager, "EditDeliverableDialog")
         }
@@ -80,70 +96,74 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         ivAddDeliverable = view.findViewById(R.id.ivAddDeliverable)
         cvCardEmpty = view.findViewById(R.id.cvCardEmpty)
         ivAddDeliverable.setOnClickListener {
+
             val dialog = CreateDeliverableFragment()
+            val bundle = Bundle()
+            bundle.putLong("idProject", idProject)
+
+            dialog.arguments = bundle
             dialog.setOnDeliverableCreatedListener(this)
             dialog.show(parentFragmentManager, "AddDeliverableDialog")
         }
     }
 
+
+    private fun loadDeliverables(view: View, projectId: Long, token: String?) {
+        if (token == null) {
+            Toast.makeText(requireContext(), "Token no encontrado", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val deliverableCall = deliverableRepository.getDeliverablesByProjectId(projectId,token)
+        deliverableCall.enqueue(object : retrofit2.Callback<List<Deliverable>> {
+            override fun onResponse(call: Call<List<Deliverable>>, response: Response<List<Deliverable>>) {
+                if (response.isSuccessful) {
+                    deliverables = (response.body() ?: emptyList()).toMutableList()
+                    bindDeliverablesToViews()
+                    initView(view)
+                    Log.d("API Response", "Deliverables: $deliverables")
+
+                } else {
+                    Toast.makeText(requireContext(), "Error al obtener los entregables", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<List<Deliverable>>, t: Throwable) {
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_LONG).show()
+                Log.wtf("deliverables","Error: ${t.message}")
+            }
+        })
+    }
+
+    private fun bindDeliverablesToViews() {
+        this.deliverableList = deliverables.map { deliverable ->
+            DeliverableCard(
+                id = deliverable.id,
+                name = deliverable.name ?: "No Title",
+                description = deliverable.description ?: "No Description",
+                date = deliverable.date ?: "No Date",
+                state = deliverable.state ?: "No State",
+                projectId = deliverable.idProject,
+                developerMessage = deliverable.message ?: "No Message"
+            )
+        }
+    }
+
     override fun onDeliverableCreated(deliverable: Deliverable) {
-        deliverable.id = deliverables.size
         deliverables.add(deliverable)
         deliverableAdapter.notifyItemInserted(deliverables.size - 1)
         rvDeliverables.scrollToPosition(deliverables.size - 1)
     }
 
     override fun onDeliverableEdited(newDeliverable: Deliverable) {
-        val index = deliverables.indexOfFirst { it.id == newDeliverable.id }
-        if (index != -1) {
-            deliverables[index] = newDeliverable
-            deliverableAdapter.notifyItemChanged(index)
-            val viewHolder =
-                rvDeliverables.findViewHolderForAdapterPosition(index) as? DeliverablePrototype
-            viewHolder?.collapseCard()
-        }
+//        val index = deliverables.indexOfFirst { it.id == newDeliverable.id }
+//        if (index != -1) {
+//            deliverables[index] = newDeliverable
+//            deliverableAdapter.notifyItemChanged(index)
+//            val viewHolder =
+//                rvDeliverables.findViewHolderForAdapterPosition(index) as? DeliverablePrototype
+//            viewHolder?.collapseCard()
+//        }
     }
 
-    private fun loadDeliverables() {
-        deliverables.add(
-            Deliverable(
-                1,
-                "Entregable 1",
-                "Plataforma de Comercio Electrónico Geekit",
-                "24/09/2024",
-                "Espera",
-                "Este entregable consistirá en un documento detallado que describe los requisitos funcionales y no funcionales de la Plataforma de Comercio Electrónico Geekit. Incluirá casos de uso, diagramas de flujo, requisitos de usuario, requisitos de sistema y cualquier otra información relevante para guiar el desarrollo del software."
-            )
-        )
-        deliverables.add(
-            Deliverable(
-                2,
-                "Entregable 2",
-                "Plataforma de Comercio Electrónico Geekit",
-                "31/10/2024",
-                "Espera",
-                "Se entregará un prototipo interactivo de la interfaz de usuario de la Plataforma de Comercio Electrónico Geekit. Este prototipo permitirá a los stakeholders visualizar y navegar por las diferentes pantallas y funcionalidades de la aplicación, proporcionando una representación visual de cómo se verá y funcionará la plataforma final."
-            )
-        )
-        deliverables.add(
-            Deliverable(
-                3,
-                "Entregable 3",
-                "Plataforma de Comercio Electrónico Geekit",
-                "30/11/2024",
-                "Espera",
-                "Este entregable consistirá en el código fuente del frontend y backend de la Plataforma de Comercio Electrónico Geekit. Se proporcionará una estructura de directorios organizada, con comentarios claros y limpios en el código para facilitar la comprensión y el mantenimiento futuro."
-            )
-        )
-        deliverables.add(
-            Deliverable(
-                4,
-                "Entregable 4",
-                "Plataforma de Comercio Electrónico Geekit",
-                "30/11/2024",
-                "Espera",
-                "Este entregable consistirá en el código fuente del frontend y backend de la Plataforma de Comercio Electrónico Geekit. Se proporcionará una estructura de directorios organizada, con comentarios claros y limpios en el código para facilitar la comprensión y el mantenimiento futuro."
-            )
-        )
-    }
 }
