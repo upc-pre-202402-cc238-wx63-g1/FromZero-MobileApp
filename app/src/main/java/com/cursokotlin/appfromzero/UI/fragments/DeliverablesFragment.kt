@@ -86,7 +86,15 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
     private fun initView(view: View) {
         rvDeliverables = view.findViewById(R.id.rvDeliverables)
         deliverableAdapter = DeliverableAdapter(deliverables) { deliverable ->
-            val dialog = EditDeliverableFragment()
+            val dialog = EditDeliverableFragment().apply {
+                arguments = Bundle().apply {
+                    putLong("idProject", deliverable.idProject)
+                    putLong("deliverableId", deliverable.id)
+                    putString("deliverableTitle", deliverable.name)
+                    putString("deliverableDescription", deliverable.description)
+                    putString("deliverableDate", deliverable.date)
+                }
+            }
             dialog.setOnDeliverableEditedListener(this@DeliverablesFragment)
             dialog.show(parentFragmentManager, "EditDeliverableDialog")
         }
@@ -96,7 +104,6 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         ivAddDeliverable = view.findViewById(R.id.ivAddDeliverable)
         cvCardEmpty = view.findViewById(R.id.cvCardEmpty)
         ivAddDeliverable.setOnClickListener {
-
             val dialog = CreateDeliverableFragment()
             val bundle = Bundle()
             bundle.putLong("idProject", idProject)
@@ -156,14 +163,13 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
     }
 
     override fun onDeliverableEdited(newDeliverable: Deliverable) {
-//        val index = deliverables.indexOfFirst { it.id == newDeliverable.id }
-//        if (index != -1) {
-//            deliverables[index] = newDeliverable
-//            deliverableAdapter.notifyItemChanged(index)
-//            val viewHolder =
-//                rvDeliverables.findViewHolderForAdapterPosition(index) as? DeliverablePrototype
-//            viewHolder?.collapseCard()
-//        }
+        val index = deliverables.indexOfFirst { it.id == newDeliverable.id }
+        if (index != -1) {
+            deliverables[index] = newDeliverable
+            deliverableAdapter.notifyItemChanged(index)
+            val viewHolder = rvDeliverables.findViewHolderForAdapterPosition(index) as? DeliverableAdapter.DeliverableViewHolder
+            viewHolder?.collapseCard()
+        }
     }
 
 }
