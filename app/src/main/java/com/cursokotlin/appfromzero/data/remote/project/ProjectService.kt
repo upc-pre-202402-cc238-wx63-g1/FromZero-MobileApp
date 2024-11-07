@@ -41,8 +41,9 @@ interface ProjectService {
         @Header("Authorization") token: String
     ): Call<ProjectResponse>
 
-    @GET("projects")
-    fun getProjects(
+    @GET("projects/by-state/{state}")
+    fun getProjectsByState(
+        @Path("state") state: String,
         @Header("Authorization") token: String
     ): Call<List<ProjectSearchCard>>
 
