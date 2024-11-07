@@ -228,7 +228,8 @@ class HomeDeveloperFragment : Fragment() {
                     "Finalizado" -> ProjectState.FINALIZADO
                     else -> ProjectState.BUSQUEDA_DEVELOPER
                 },
-                projectProgress = project.progress
+                projectProgress = project.progress,
+                candidateList = project.candidatesList
             )
         }
         if (projectList.isEmpty()) {
@@ -322,12 +323,15 @@ class HomeDeveloperFragment : Fragment() {
 
     private fun setEmptyViewConstraints(view: View, cvHomeDeveloperProfile: Int) {
         val emptyView = view.findViewById<LinearLayout>(R.id.emptyView)
-        val constraintLayout = view.findViewById<ConstraintLayout>(R.id.clHomeUI)
-        val constraintSet = ConstraintSet()
-        constraintSet.clone(constraintLayout)
-
-        constraintSet.connect(emptyView.id, ConstraintSet.TOP, cvHomeDeveloperProfile, ConstraintSet.BOTTOM, 15)
-        constraintSet.applyTo(constraintLayout)
+        val constraintLayout = view.findViewById<ConstraintLayout>(R.id.clHomeUIDev)
+        if (constraintLayout != null) {
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(constraintLayout)
+            constraintSet.connect(emptyView.id, ConstraintSet.TOP, cvHomeDeveloperProfile, ConstraintSet.BOTTOM, 15)
+            constraintSet.applyTo(constraintLayout)
+        } else {
+            Log.e("HomeDeveloperFragment", "ConstraintLayout with ID clHomeUI not found")
+        }
     }
 
     private fun setUpClickListener(view: View) {

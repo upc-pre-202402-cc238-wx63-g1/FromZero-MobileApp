@@ -39,6 +39,8 @@ class ProjectCardAdapter(
 
             Picasso.get()
                 .load(project.pictureUrl)
+                .placeholder(R.drawable.placeholder)
+                .error(R.drawable.placeholder)
                 .into(ivProfileEnterprisePhoto)
 
             when (project.projectState) {

@@ -12,4 +12,5 @@
     <color name="yellow">#FFFF00</color>
     <color name="Cyan">#45B7A8</color>
     <color name="gray_fromzero">#D7D7D7</color>
+    <color name="red_fromzero">#B62929</color>
 </resources>
