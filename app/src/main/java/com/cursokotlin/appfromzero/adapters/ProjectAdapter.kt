@@ -13,11 +13,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.project.ProjectSearchCard
 
-
-class ProjectAdapter(private val projects: List<ProjectSearchCard>,
-                     private val clickListener: OnItemClickListener
-    ) :
-    RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() {
+class ProjectAdapter(
+    private var projects: List<ProjectSearchCard>,
+    private val clickListener: OnItemClickListener
+) : RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() {
 
     class ProjectViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val projectPic: ImageView = itemView.findViewById(R.id.ivLogo)
@@ -58,12 +57,17 @@ class ProjectAdapter(private val projects: List<ProjectSearchCard>,
                 holder.arrow.setImageResource(R.drawable.arrow_down)
             }
         }
-        holder.title.setOnClickListener{
+        holder.title.setOnClickListener {
             clickListener.onItemClick(project)
         }
     }
 
     override fun getItemCount(): Int = projects.size
+
+    fun updateProjects(newProjects: List<ProjectSearchCard>) {
+        projects = newProjects
+        notifyItemRangeChanged(0, newProjects.size)
+    }
 
     interface OnItemClickListener {
         fun onItemClick(project: ProjectSearchCard)
