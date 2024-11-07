@@ -32,6 +32,7 @@ class CreateProjectFragment : Fragment() {
         val sharedPreferences =
             requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", "")
+        val userId = sharedPreferences.getLong("userId", 0)
 
         val view = inflater.inflate(R.layout.fragment_create_project, container, false)
 
@@ -52,9 +53,21 @@ class CreateProjectFragment : Fragment() {
                 val description = etDescription.text.toString()
 
                 val languages = mutableListOf<String>()
-                languages.add(etLanguages.text.toString())
+                if(etLanguages.text.toString().lowercase() == "java") languages.add("1")
+                else if (etLanguages.text.toString().lowercase() == "python") languages.add("2")
+                else if (etLanguages.text.toString().lowercase() == "javaScript") languages.add("3")
+                else if (etLanguages.text.toString().lowercase() == "c#") languages.add("4")
+                else if (etLanguages.text.toString().lowercase() == "ruby") languages.add("5")
+                else throw IllegalArgumentException("Lenguaje no válido")
+
+
                 val frameworks = mutableListOf<String>()
-                frameworks.add(etFrameworks.text.toString())
+                if (etFrameworks.text.toString().lowercase() == "spring boot" || etFrameworks.text.toString().lowercase() =="spring") frameworks.add("1")
+                else if (etFrameworks.text.toString().lowercase() == "vue.js" || etFrameworks.text.toString().lowercase() == "vue") frameworks.add("2")
+                else if (etFrameworks.text.toString().lowercase() == "angular") frameworks.add("3")
+                else if (etFrameworks.text.toString().lowercase() == "nest.js") frameworks.add("4")
+                else if (etFrameworks.text.toString().lowercase() == "net core") frameworks.add("5")
+                else throw IllegalArgumentException("Framework no válido")
 
                 val presupuesto = etPresupuesto.text.toString()
                 val procesos = etProcesos.text.toString()
@@ -71,7 +84,7 @@ class CreateProjectFragment : Fragment() {
                     val project = ProjectResponse(
                         name = title,
                         description = description,
-                        ownerId = 1,
+                        ownerId = userId,
                         languages = languages,
                         frameworks = frameworks,
                         budget = presupuesto,
