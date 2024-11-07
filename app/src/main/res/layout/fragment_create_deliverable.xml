@@ -92,16 +92,16 @@
         android:textColor="@android:color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/tvDateTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="@string/fecha_limite_titulo"
-        android:textSize="15sp"
-        app:layout_constraintBottom_toTopOf="@+id/textInputLayout4"
-        app:layout_constraintStart_toStartOf="parent" />
+<!--    <TextView-->
+<!--        android:id="@+id/tvDateTitle"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="10dp"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:text="@string/fecha_limite_titulo"-->
+<!--        android:textSize="15sp"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/textInputLayout4"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"
