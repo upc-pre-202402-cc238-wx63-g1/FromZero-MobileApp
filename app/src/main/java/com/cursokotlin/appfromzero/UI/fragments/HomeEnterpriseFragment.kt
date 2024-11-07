@@ -28,6 +28,7 @@ import com.cursokotlin.appfromzero.models.Enterprise
 import com.cursokotlin.appfromzero.models.ProjectCard
 import com.cursokotlin.appfromzero.models.ProjectState
 import com.cursokotlin.appfromzero.models.profile.EnterpriseProfileResponse
+import com.cursokotlin.appfromzero.models.profile.UpdateEnterpriseProfileRequest
 import com.cursokotlin.appfromzero.models.project.Project
 import com.google.android.material.textfield.TextInputEditText
 import com.squareup.picasso.Picasso
@@ -368,7 +369,6 @@ class HomeEnterpriseFragment : Fragment() {
 
         ivConfirmEditProfile.setOnClickListener {
             updateProfile()
-            bindDataToViews(role = "empresa")
             animateViewVisibility(llExtending, View.GONE)
             ivEditProfile.visibility = View.VISIBLE
             ivEditProfileSector.visibility = View.GONE
@@ -400,7 +400,52 @@ class HomeEnterpriseFragment : Fragment() {
     }
 
     private fun updateProfile() {
-        // TODO: Implement API call to update enterprise profile
+        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getLong("userId", 0)
+        val token = sharedPreferences.getString("token", null)
+
+        if (token != null && enterprise != null) {
+            val updateRequest = UpdateEnterpriseProfileRequest(
+                enterpriseName = etEnterpriseWebsite.text.toString(),
+                description = etEnterpriseDescription.text.toString(),
+                country = "Perú",
+                ruc = enterprise!!.socialRazon,
+                phone = etEnterprisePhone.text.toString(),
+                website = etEnterpriseWebsite.text.toString(),
+                profileImgUrl = enterprise!!.pictureUrl,
+                sector = etEnterpriseSector.text.toString()
+            )
+
+            val call = enterpriseRepository.updateEnterpriseProfile(userId, updateRequest, token)
+            call.enqueue(object : retrofit2.Callback<EnterpriseProfileResponse> {
+                override fun onResponse(call: Call<EnterpriseProfileResponse>, response: Response<EnterpriseProfileResponse>) {
+                    if (response.isSuccessful) {
+                        val updatedEnterprise = response.body()
+                        if (updatedEnterprise != null) {
+                            enterprise = Enterprise(
+                                updatedEnterprise.enterpriseName,
+                                updatedEnterprise.website,
+                                updatedEnterprise.profileImgUrl,
+                                updatedEnterprise.description,
+                                updatedEnterprise.sector,
+                                updatedEnterprise.ruc,
+                                updatedEnterprise.phone
+                            )
+                            bindDataToViews(role = "empresa")
+                            Toast.makeText(requireContext(), "Perfil actualizado con éxito", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Error al actualizar el perfil", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<EnterpriseProfileResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        } else {
+            Toast.makeText(requireContext(), "Token no encontrado o datos de empresa no disponibles", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun animateViewVisibility(
