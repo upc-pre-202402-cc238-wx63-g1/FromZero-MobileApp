@@ -46,7 +46,6 @@ class ViewProjectFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_view_project, container, false)
-        val tvProjectName = view.findViewById<TextView>(R.id.tvProjectName)
         val btDeliverables = view.findViewById<Button>(R.id.btDeliverables)
 
         val sharedPreferences =
@@ -107,6 +106,8 @@ class ViewProjectFragment : Fragment() {
                     if (response.isSuccessful) {
                         val project = response.body()
                         if (project != null) {
+                            val tvProjectName = view.findViewById<TextView>(R.id.tvProjectName)
+                            tvProjectName.text = project.name
                             projectData = listOf(
                                 ProjectData(
                                     "Descripción",
@@ -129,22 +130,29 @@ class ViewProjectFragment : Fragment() {
                                     project.methodologies
                                 )
                             )
-                            val rvProject = view.findViewById<RecyclerView>(R.id.rvProjectDescription)
+                            val rvProject =
+                                view.findViewById<RecyclerView>(R.id.rvProjectDescription)
                             projectDataAdapter = ProjectDataAdapter(projectData)
                             rvProject.layoutManager = LinearLayoutManager(context)
                             rvProject.adapter = projectDataAdapter
-                        }
-                        else{
+                        } else {
                             Toast.makeText(context, "Proyecto nulo", Toast.LENGTH_SHORT).show()
                         }
-                    }
-                    else{
-                        Toast.makeText(context, "Error al obtener datos del proyecto", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Error al obtener datos del proyecto",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<Project>, t: Throwable) {
-                    Toast.makeText(context, "Error al obtener datos del proyecto", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Error al obtener datos del proyecto",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             })
         } else {
