@@ -8,10 +8,12 @@ import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
-import com.cursokotlin.appfromzero.models.Developer
+import com.cursokotlin.appfromzero.models.profile.DeveloperSearchCard
+import com.squareup.picasso.Picasso
 
-class DeveloperAdapter(private val developers: List<Developer>) :
-    RecyclerView.Adapter<DeveloperAdapter.DeveloperViewHolder>() {
+class DeveloperAdapter(
+    private var developers: List<DeveloperSearchCard>
+) : RecyclerView.Adapter<DeveloperAdapter.DeveloperViewHolder>() {
 
     class DeveloperViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val profilePic: ImageView = itemView.findViewById(R.id.ivProfilePic)
@@ -33,29 +35,40 @@ class DeveloperAdapter(private val developers: List<Developer>) :
 
     override fun onBindViewHolder(holder: DeveloperViewHolder, position: Int) {
         val developer = developers[position]
-        holder.profilePic.setImageResource(developer.profilePic)
-        holder.name.text = developer.name
-        holder.flag.setImageResource(developer.countryFlag)
-        holder.rating.rating = developer.rating
-        holder.summary.text = developer.summary
-        holder.skills.text = developer.skills
 
+        // Carga la imagen del perfil usando Picasso
+        Picasso.get()
+            .load(developer.profileImgUrl)
+            .error(R.drawable.sample_profile)
+            .into(holder.profilePic)
+
+        // Carga la imagen de la bandera usando Picasso
+        Picasso.get()
+            .load(developer.country)
+            .error(R.drawable.sample_flag)
+            .into(holder.flag)
+
+        // Asignación de otros datos
+        holder.name.text = "${developer.firstName} ${developer.lastName}"
+        holder.rating.rating = developer.rating
+        holder.summary.text = developer.description
+        holder.skills.text = developer.specialties
+
+        // Expande o colapsa la vista al hacer clic en la flecha
         holder.arrow.setOnClickListener {
-            if (holder.summary.visibility == View.GONE) {
-                holder.resumeTitle.visibility = View.VISIBLE
-                holder.summary.visibility = View.VISIBLE
-                holder.skillsTitle.visibility = View.VISIBLE
-                holder.skills.visibility = View.VISIBLE
-                holder.arrow.setImageResource(R.drawable.arrow_up)
-            } else {
-                holder.resumeTitle.visibility = View.GONE
-                holder.summary.visibility = View.GONE
-                holder.skillsTitle.visibility = View.GONE
-                holder.skills.visibility = View.GONE
-                holder.arrow.setImageResource(R.drawable.arrow_down)
-            }
+            val isCollapsed = holder.summary.visibility == View.GONE
+            holder.resumeTitle.visibility = if (isCollapsed) View.VISIBLE else View.GONE
+            holder.summary.visibility = if (isCollapsed) View.VISIBLE else View.GONE
+            holder.skillsTitle.visibility = if (isCollapsed) View.VISIBLE else View.GONE
+            holder.skills.visibility = if (isCollapsed) View.VISIBLE else View.GONE
+            holder.arrow.setImageResource(if (isCollapsed) R.drawable.arrow_up else R.drawable.arrow_down)
         }
     }
 
     override fun getItemCount(): Int = developers.size
+
+    fun updateDevelopers(newDevelopers: List<DeveloperSearchCard>) {
+        developers = newDevelopers
+        notifyItemRangeChanged(0, newDevelopers.size)
+    }
 }
