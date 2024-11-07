@@ -27,10 +27,13 @@ class ProjectRepository (private val projectService: ProjectService) {
     fun createProject(project: ProjectResponse, token: String): Call<ProjectResponse> {
         return projectService.createProject(project, "Bearer $token")
     }
+    
+    fun getProjectsByState(state: String,token: String): Call<List<ProjectSearchCard>>{
+        return projectService.getProjectsByState(state,"Bearer $token")
+    }
 
-    fun getProjects(token: String): Call<List<ProjectSearchCard>>{
-        return projectService.getProjects("Bearer $token")
-
+    fun assignDeveloper(projectId: Long, developerId: Long, token: String): Call<Project> {
+        return projectService.assignDeveloper(projectId, developerId, "Bearer $token")
     }
     fun addCandidateToProject(projectId: Long, candidateId: Long, token: String): Call<ResponseBody> {
         return projectService.addCandidateToProject(projectId, candidateId, "Bearer $token")

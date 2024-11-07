@@ -36,7 +36,7 @@ class SearchProjectFragment : Fragment(), ProjectAdapter.OnItemClickListener {
 
     private fun loadProject(token: String?) {
         if (token != null) {
-            val call = projectRepository.getProjects(token)
+            val call = projectRepository.getProjectsByState("En busqueda",token)
             call.enqueue(object : retrofit2.Callback<List<ProjectSearchCard>> {
                 override fun onResponse(
                     call: Call<List<ProjectSearchCard>>,

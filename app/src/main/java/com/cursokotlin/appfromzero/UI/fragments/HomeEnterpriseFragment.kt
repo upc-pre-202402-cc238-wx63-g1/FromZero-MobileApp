@@ -28,13 +28,15 @@ import com.cursokotlin.appfromzero.models.Enterprise
 import com.cursokotlin.appfromzero.models.ProjectCard
 import com.cursokotlin.appfromzero.models.ProjectState
 import com.cursokotlin.appfromzero.models.profile.EnterpriseProfileResponse
+import com.cursokotlin.appfromzero.models.profile.UpdateEnterpriseProfileRequest
+import com.cursokotlin.appfromzero.models.project.Candidate
 import com.cursokotlin.appfromzero.models.project.Project
 import com.google.android.material.textfield.TextInputEditText
 import com.squareup.picasso.Picasso
 import retrofit2.Call
 import retrofit2.Response
 
-class HomeEnterpriseFragment : Fragment() {
+class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelectedListener {
 
     private val enterpriseRepository = EnterpriseRepository(RetrofitClient.enterpriseService)
     private val projectRepository = ProjectRepository(RetrofitClient.projectService)
@@ -72,6 +74,7 @@ class HomeEnterpriseFragment : Fragment() {
     private lateinit var tvEnterpriseCellphone: TextView
 
     private lateinit var llExtending: LinearLayout
+
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
@@ -140,6 +143,10 @@ class HomeEnterpriseFragment : Fragment() {
         cvHomeProfile.setOnTouchListener { _, _ -> true }
     }
 
+    override fun onDeveloperSelected(developer: Candidate) {
+        Toast.makeText(context, "Seleccionaste a ${developer.firstName} ${developer.lastName}", Toast.LENGTH_SHORT).show()
+    }
+
     private fun setupRecyclerView(view: View) {
         recyclerView = view.findViewById(R.id.rvProjects)
         recyclerView.layoutManager = LinearLayoutManager(context)
@@ -150,7 +157,11 @@ class HomeEnterpriseFragment : Fragment() {
             override fun onItemClick(projectCard: ProjectCard) {
                 when (projectCard.projectState) {
                     ProjectState.BUSQUEDA_DEVELOPER -> {
-                        Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+                        val dialog = ApplicantsFragment()
+                        dialog.setDeveloperList(projectCard.candidateList)
+                        dialog.setProjectId(projectCard.idProject)
+                        dialog.setOnDeveloperSelectedListener(this@HomeEnterpriseFragment)
+                        dialog.show(parentFragmentManager, "ApplicantsDialog")
                     }
                     ProjectState.EN_PROGRESO -> {
                         replaceFragmentViewProject(ViewProjectFragment(),projectCard.idProject, true)
@@ -284,7 +295,8 @@ class HomeEnterpriseFragment : Fragment() {
                     "Finalizado" -> ProjectState.FINALIZADO
                     else -> ProjectState.BUSQUEDA_DEVELOPER
                 },
-                projectProgress = project.progress
+                projectProgress = project.progress,
+                candidateList = project.candidatesList
             )
         }
 
@@ -368,7 +380,6 @@ class HomeEnterpriseFragment : Fragment() {
 
         ivConfirmEditProfile.setOnClickListener {
             updateProfile()
-            bindDataToViews(role = "empresa")
             animateViewVisibility(llExtending, View.GONE)
             ivEditProfile.visibility = View.VISIBLE
             ivEditProfileSector.visibility = View.GONE
@@ -400,7 +411,52 @@ class HomeEnterpriseFragment : Fragment() {
     }
 
     private fun updateProfile() {
-        // TODO: Implement API call to update enterprise profile
+        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getLong("userId", 0)
+        val token = sharedPreferences.getString("token", null)
+
+        if (token != null && enterprise != null) {
+            val updateRequest = UpdateEnterpriseProfileRequest(
+                enterpriseName = etEnterpriseWebsite.text.toString(),
+                description = etEnterpriseDescription.text.toString(),
+                country = "Perú",
+                ruc = enterprise!!.socialRazon,
+                phone = etEnterprisePhone.text.toString(),
+                website = etEnterpriseWebsite.text.toString(),
+                profileImgUrl = enterprise!!.pictureUrl,
+                sector = etEnterpriseSector.text.toString()
+            )
+
+            val call = enterpriseRepository.updateEnterpriseProfile(userId, updateRequest, token)
+            call.enqueue(object : retrofit2.Callback<EnterpriseProfileResponse> {
+                override fun onResponse(call: Call<EnterpriseProfileResponse>, response: Response<EnterpriseProfileResponse>) {
+                    if (response.isSuccessful) {
+                        val updatedEnterprise = response.body()
+                        if (updatedEnterprise != null) {
+                            enterprise = Enterprise(
+                                updatedEnterprise.enterpriseName,
+                                updatedEnterprise.website,
+                                updatedEnterprise.profileImgUrl,
+                                updatedEnterprise.description,
+                                updatedEnterprise.sector,
+                                updatedEnterprise.ruc,
+                                updatedEnterprise.phone
+                            )
+                            bindDataToViews(role = "empresa")
+                            Toast.makeText(requireContext(), "Perfil actualizado con éxito", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Error al actualizar el perfil", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<EnterpriseProfileResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        } else {
+            Toast.makeText(requireContext(), "Token no encontrado o datos de empresa no disponibles", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun animateViewVisibility(

@@ -43,16 +43,24 @@ interface ProjectService {
         @Header("Authorization") token: String
     ): Call<ProjectResponse>
 
-    @GET("projects")
-    fun getProjects(
+    @GET("projects/by-state/{state}")
+    fun getProjectsByState(
+        @Path("state") state: String,
         @Header("Authorization") token: String
     ): Call<List<ProjectSearchCard>>
-
+  
     @PATCH("projects/{id}/add-candidate")
     fun addCandidateToProject(
         @Path("id") projectId: Long,
         @Body candidateId: Long,
         @Header("Authorization") token: String
     ): Call<ResponseBody>
+
+    @PATCH("projects/{projectId}/assign-developer")
+    fun assignDeveloper(
+        @Path("projectId") projectId: Long,
+        @Body developerId: Long,
+        @Header("Authorization") token: String
+    ): Call<Project>
 
 }
