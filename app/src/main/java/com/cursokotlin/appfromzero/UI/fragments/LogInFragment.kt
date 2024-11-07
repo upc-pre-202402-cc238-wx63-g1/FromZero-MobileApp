@@ -33,7 +33,7 @@ class LogInFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val rootView: View = inflater.inflate(R.layout.fragment_log_in, container, false)
+        val rootView: View = inflater.inflate(R.layout.fragment_log_in2, container, false)
 
         // Limpiar token y rol guardados al iniciar la aplicación
         clearSavedUserData()
