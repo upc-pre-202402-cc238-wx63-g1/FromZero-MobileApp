@@ -11,9 +11,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
-import com.cursokotlin.appfromzero.models.Project
+import com.cursokotlin.appfromzero.models.project.ProjectSearchCard
 
-class ProjectAdapter(private val projects: List<Project>,
+
+class ProjectAdapter(private val projects: List<ProjectSearchCard>,
                      private val clickListener: OnItemClickListener
     ) :
     RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder>() {
@@ -35,7 +36,7 @@ class ProjectAdapter(private val projects: List<Project>,
     override fun onBindViewHolder(holder: ProjectViewHolder, position: Int) {
         val project = projects[position]
         project.pictureLogo?.let { holder.projectPic.setImageResource(it) }
-        holder.title.text = project.title
+        holder.title.text = project.name
 
         val descriptionPrefix = "Descripción:"
         val spannableDescription = SpannableString("$descriptionPrefix\n${project.description}")
@@ -65,6 +66,6 @@ class ProjectAdapter(private val projects: List<Project>,
     override fun getItemCount(): Int = projects.size
 
     interface OnItemClickListener {
-        fun onItemClick(project: Project)
+        fun onItemClick(project: ProjectSearchCard)
     }
 }
