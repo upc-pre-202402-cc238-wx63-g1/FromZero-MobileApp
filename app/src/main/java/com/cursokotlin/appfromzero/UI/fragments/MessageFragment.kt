@@ -66,6 +66,7 @@ class MessageFragment : Fragment() {
             override fun onResponse(call: Call<MessageResponse>, response: Response<MessageResponse>) {
                 if (response.isSuccessful) {
                     Toast.makeText(requireContext(), "Mensaje enviado con éxito", Toast.LENGTH_SHORT).show()
+                    clearInputFields()
                 } else {
                     Log.e("MessageFragment", "Error al enviar el mensaje: ${response.errorBody()?.string()}")
                     Toast.makeText(requireContext(), "Error al enviar el mensaje", Toast.LENGTH_SHORT).show()
@@ -77,5 +78,12 @@ class MessageFragment : Fragment() {
                 Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun clearInputFields() {
+        view?.findViewById<TextInputEditText>(R.id.recipient)?.text?.clear()
+        view?.findViewById<TextInputEditText>(R.id.message_title)?.text?.clear()
+        view?.findViewById<TextInputEditText>(R.id.subject)?.text?.clear()
+        view?.findViewById<TextInputEditText>(R.id.message)?.text?.clear()
     }
 }
