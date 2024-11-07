@@ -8,7 +8,7 @@ data class Project(
     val progress: Int,
     val ownerId: Long,
     val developerId: Long?,
-    val candidatesList: List<Any>, // Adjust the type if you have a specific class for candidates
+    val candidatesList: List<Candidate>, // Adjust the type if you have a specific class for candidates
     val languages: List<Language>,
     val frameworks: List<Framework>,
     val type: String,
