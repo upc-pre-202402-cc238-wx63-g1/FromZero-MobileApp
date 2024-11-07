@@ -27,8 +27,8 @@ class ProjectRepository (private val projectService: ProjectService) {
         return projectService.createProject(project, "Bearer $token")
     }
 
-    fun getProjects(token: String): Call<List<ProjectSearchCard>>{
-        return projectService.getProjects("Bearer $token")
+    fun getProjectsByState(state: String,token: String): Call<List<ProjectSearchCard>>{
+        return projectService.getProjectsByState(state,"Bearer $token")
 
     }
 }
