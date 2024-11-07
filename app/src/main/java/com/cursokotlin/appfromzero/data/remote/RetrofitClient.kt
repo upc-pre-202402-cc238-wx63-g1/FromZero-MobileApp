@@ -2,6 +2,7 @@ package com.cursokotlin.appfromzero.data.remote
 
 import com.cursokotlin.appfromzero.common.Constants
 import com.cursokotlin.appfromzero.data.remote.authentication.AuthenticationService
+import com.cursokotlin.appfromzero.data.remote.deliverable.DeliverableService
 import com.cursokotlin.appfromzero.data.remote.developer.DeveloperService
 import com.cursokotlin.appfromzero.data.remote.enterprise.EnterpriseService
 import com.cursokotlin.appfromzero.data.remote.project.ProjectService
@@ -45,6 +46,10 @@ object RetrofitClient {
 
     val developerService: DeveloperService by lazy{
         retrofit.create(DeveloperService::class.java)
+    }
+
+    val deliverableService: DeliverableService by lazy {
+        retrofit.create(DeliverableService::class.java)
     }
 
 }

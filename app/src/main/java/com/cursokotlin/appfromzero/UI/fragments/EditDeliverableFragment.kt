@@ -57,16 +57,16 @@ class EditDeliverableFragment : DialogFragment() {
     ) {
         val saveButton = view.findViewById<Button>(R.id.btEdit)
         saveButton.setOnClickListener {
-            val newDeliverable = Deliverable(
-                id = deliverableId ?: 0,
-                title = etTitle.text.toString(),
-                projectName = "Plataforma de Comercio Electrónico Geekit",
-                date = etDate.text.toString(),
-                state = "Espera",
-                description = etDescription.text.toString()
-            )
-            listener?.onDeliverableEdited(newDeliverable)
-            dismiss()
+//            val newDeliverable = Deliverable(
+//                id = deliverableId ?: 0,
+//                title = etTitle.text.toString(),
+//                projectName = "Plataforma de Comercio Electrónico Geekit",
+//                date = etDate.text.toString(),
+//                state = "Espera",
+//                description = etDescription.text.toString()
+//            )
+//            listener?.onDeliverableEdited(newDeliverable)
+//            dismiss()
         }
     }
 

@@ -43,21 +43,21 @@ class CreateDeliverableFragment : DialogFragment() {
             val description = descriptionField.text.toString()
             val date = dateField.text.toString()
 
-            if (title.isNotEmpty() && description.isNotEmpty() && date.isNotEmpty()) {
-                val newDeliverable = Deliverable(
-                    id = 0, //id temporal
-                    title = title,
-                    projectName = "Plataforma de Comercio Electrónico Geekit",
-                    date = date,
-                    state = "Espera",
-                    description = description
-                )
-                listener?.onDeliverableCreated(newDeliverable)
-                dismiss()
-            } else {
-                Toast.makeText(context, "Por favor, completa todos los campos", Toast.LENGTH_SHORT)
-                    .show()
-            }
+//            if (title.isNotEmpty() && description.isNotEmpty() && date.isNotEmpty()) {
+//                val newDeliverable = Deliverable(
+//                    id = 0, //id temporal
+//                    title = title,
+//                    projectName = "Plataforma de Comercio Electrónico Geekit",
+//                    date = date,
+//                    state = "Espera",
+//                    description = description
+//                )
+//                listener?.onDeliverableCreated(newDeliverable)
+//                dismiss()
+//            } else {
+//                Toast.makeText(context, "Por favor, completa todos los campos", Toast.LENGTH_SHORT)
+//                    .show()
+//            }
         }
     }
 
