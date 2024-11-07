@@ -31,6 +31,7 @@ import com.cursokotlin.appfromzero.models.project.Project
 import com.cursokotlin.appfromzero.models.ProjectCard
 import com.cursokotlin.appfromzero.models.ProjectState
 import com.cursokotlin.appfromzero.models.profile.DeveloperProfileResponse
+import com.cursokotlin.appfromzero.models.profile.UpdateDeveloperProfileRequest
 import com.google.android.material.textfield.TextInputEditText
 import com.squareup.picasso.Picasso
 import retrofit2.Call
@@ -45,12 +46,13 @@ class HomeDeveloperFragment : Fragment() {
 
     private var projectList: List<ProjectCard> = emptyList()
     private lateinit var projects: List<Project>
+
     private lateinit var adapter: ProjectCardAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: LinearLayout
     private lateinit var btnCreateProject: Button
     private lateinit var ivEditDevProfile: ImageView
-    private lateinit var cvCardEmpty: CardView
+    private lateinit var cvCardEmpty: LinearLayout
 
     private lateinit var cvHomeDeveloperProfile: CardView
     private lateinit var ivProfileDevPhoto: ImageView
@@ -86,23 +88,6 @@ class HomeDeveloperFragment : Fragment() {
             replaceFragment(SearchProjectFragment())
         }
 
-        // Initialize adapter with an empty list
-        adapter = ProjectCardAdapter(projectList, object : ProjectCardAdapter.OnItemClickListener {
-            override fun onItemClick(projectCard: ProjectCard) {
-                when (projectCard.projectState) {
-                    ProjectState.BUSQUEDA_DEVELOPER -> {
-                        Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
-                    }
-                    ProjectState.EN_PROGRESO -> {
-                        replaceFragmentViewProject(ViewProjectFragment(), projectCard.idProject,true)
-                    }
-                    ProjectState.FINALIZADO -> {
-                        Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        })
-
         setupRecyclerView(view)
 
         val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
@@ -119,9 +104,9 @@ class HomeDeveloperFragment : Fragment() {
         cvHomeDeveloperProfile = view.findViewById(R.id.cvHomeDeveloperProfile)
         cvHomeDeveloperProfile.visibility = View.VISIBLE
 
-        initDeveloperComponent(view)
         fetchData(userId, token, userRole, view)
         setRecyclerViewContraints(view, R.id.cvHomeDeveloperProfile)
+        initDeveloperComponent(view)
 
         setUpClickListener(view)
         setupTouchListener(view)
@@ -166,6 +151,7 @@ class HomeDeveloperFragment : Fragment() {
                     override fun onResponse(call: Call<List<Project>>, response:Response<List<Project>>){
                         if (response.isSuccessful) {
                             projects = response.body() ?: emptyList()
+                            Log.d("Projects", projects.toString())
                             bindProjectsToViews(projects)
                             setupRecyclerView(view)
                         } else {
@@ -199,13 +185,32 @@ class HomeDeveloperFragment : Fragment() {
                 tvDevDescription.text = it.summary
                 tvCellphone.text = it.phone
                 tvEmail.text = it.email
+                tvDeveloperProjects.text = "0"
             }
         }
     }
 
     private fun setupRecyclerView(view: View) {
-        recyclerView = view.findViewById(R.id.rvProjects)
+        recyclerView = view.findViewById(R.id.rvProjectsDev)
         recyclerView.layoutManager = LinearLayoutManager(context)
+
+        // Initialize adapter with an empty list
+        adapter = ProjectCardAdapter(projectList, object : ProjectCardAdapter.OnItemClickListener {
+            override fun onItemClick(projectCard: ProjectCard) {
+                when (projectCard.projectState) {
+                    ProjectState.BUSQUEDA_DEVELOPER -> {
+                        Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+                    }
+                    ProjectState.EN_PROGRESO -> {
+                        replaceFragmentViewProject(ViewProjectFragment(), projectCard.idProject,true)
+                    }
+                    ProjectState.FINALIZADO -> {
+                        Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+
         recyclerView.adapter = adapter
     }
 
@@ -305,31 +310,39 @@ class HomeDeveloperFragment : Fragment() {
         }
     }
 
-    private fun setRecyclerViewContraints(view: View, viewId: Int) {
-        // TODO: Set RecyclerView constraints
+    private fun setRecyclerViewContraints(view: View, cvHomeEnterpriseProfile: Int) {
+        val recyclerView = view.findViewById<RecyclerView>(R.id.rvProjectsDev)
+        val constraintLayout = view.findViewById<ConstraintLayout>(R.id.clHomeUIDev)
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintLayout)
+
+        constraintSet.connect(recyclerView.id, ConstraintSet.TOP, cvHomeEnterpriseProfile, ConstraintSet.BOTTOM, 15)
+        constraintSet.applyTo(constraintLayout)
     }
 
-    private fun setEmptyViewConstraints(view: View, cvHomeEnterpriseProfile: Int) {
+    private fun setEmptyViewConstraints(view: View, cvHomeDeveloperProfile: Int) {
         val emptyView = view.findViewById<LinearLayout>(R.id.emptyView)
         val constraintLayout = view.findViewById<ConstraintLayout>(R.id.clHomeUI)
         val constraintSet = ConstraintSet()
         constraintSet.clone(constraintLayout)
 
-        constraintSet.connect(emptyView.id, ConstraintSet.TOP, cvHomeEnterpriseProfile, ConstraintSet.BOTTOM, 15)
+        constraintSet.connect(emptyView.id, ConstraintSet.TOP, cvHomeDeveloperProfile, ConstraintSet.BOTTOM, 15)
         constraintSet.applyTo(constraintLayout)
     }
 
     private fun setUpClickListener(view: View) {
-        ivEditDevSpecialties.setOnClickListener {
+        ivEditDevProfile.setOnClickListener {
             if (llDevExtending.visibility == View.GONE) {
                 recyclerView.visibility = View.GONE
-                ivEditDevSpecialties.visibility = View.GONE
+                ivEditDevProfile.visibility = View.GONE
+                ivEditDevSpecialties.visibility = View.VISIBLE
                 ivEditDevDescription.visibility = View.VISIBLE
                 ivEditDevCellphone.visibility = View.VISIBLE
                 animateViewVisibility(llDevExtending, View.VISIBLE)
             } else {
                 llDevExtending.visibility = View.GONE
-                ivEditDevSpecialties.visibility = View.VISIBLE
+                ivEditDevProfile.visibility = View.VISIBLE
+                ivEditDevSpecialties.visibility = View.GONE
                 ivEditDevDescription.visibility = View.GONE
                 ivEditDevCellphone.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
@@ -340,10 +353,12 @@ class HomeDeveloperFragment : Fragment() {
             updateProfile()
             bindDataToViews(role = "developer")
             animateViewVisibility(llDevExtending, View.GONE)
-            ivEditDevSpecialties.visibility = View.VISIBLE
+            ivEditDevSpecialties.visibility = View.GONE
             ivEditDevDescription.visibility = View.GONE
             ivEditDevCellphone.visibility = View.GONE
+            ivEditDevProfile.visibility = View.VISIBLE
             recyclerView.visibility = View.VISIBLE
+
 
             resetEditMode()
         }
@@ -369,8 +384,57 @@ class HomeDeveloperFragment : Fragment() {
         }
     }
 
-    private fun updateProfile() {
-        // TODO: Implement API call to update developer profile
+    private fun updateProfile()  {
+        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getLong("userId", 0)
+        val token = sharedPreferences.getString("token", null)
+
+        if (token != null && developer != null) {
+            val nameParts = developer!!.name.split(" ")
+            val firstName = nameParts[0]
+            val lastName = nameParts.getOrElse(1) { "" }
+
+            val updateRequest = UpdateDeveloperProfileRequest(
+                firstName = firstName,
+                lastName = lastName,
+                description = etDevDescription.text.toString(),
+                country = developer!!.countryFlag.toString(), // Assuming countryFlag holds the country information
+                phone = etCellphone.text.toString(),
+                specialties = etDevSpecialties.text.toString(),
+                profileImgUrl = developer!!.profilePic.toString()
+            )
+
+            val call = developerRepository.updateDeveloperProfile(userId, updateRequest, token)
+            call.enqueue(object : retrofit2.Callback<DeveloperProfileResponse> {
+                override fun onResponse(call: Call<DeveloperProfileResponse>, response: Response<DeveloperProfileResponse>) {
+                    if (response.isSuccessful) {
+                        val updatedDeveloper = response.body()
+                        if (updatedDeveloper != null) {
+                            developer = Developer(
+                                name = "${updatedDeveloper.firstName} ${updatedDeveloper.lastName}",
+                                rating = developer!!.rating,
+                                profilePic = developer!!.profilePic,
+                                countryFlag = developer!!.countryFlag,
+                                summary = updatedDeveloper.description,
+                                skills = updatedDeveloper.specialties,
+                                phone = updatedDeveloper.phone,
+                                email = developer!!.email
+                            )
+                            bindDataToViews(role = "developer")
+                            Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Error updating profile", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<DeveloperProfileResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        } else {
+            Toast.makeText(requireContext(), "Token not found or developer data not available", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun animateViewVisibility(
