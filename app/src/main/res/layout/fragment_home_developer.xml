@@ -151,14 +151,13 @@
                                         android:id="@+id/tvDevSpecialties"
                                         android:layout_width="230dp"
                                         android:layout_height="wrap_content"
-                                        android:text="HTML5,CSS3, Javascript, Node.js, Express, MongoDB, MySQL"
                                         android:textStyle="bold" />
 
                                     <com.google.android.material.textfield.TextInputEditText
                                         android:id="@+id/etDevSpecialties"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="HTML5,CSS3, Javascript, Node.js, Express, MongoDB, MySQL"
+                                        android:text="Desarrollo web, Desarrollo móvil, Diseño de interfaces"
                                         android:textColor="@color/primary_text_color"
                                         android:textSize="16sp"
                                         android:visibility="gone" />
