@@ -1,18 +1,20 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
-import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.cursokotlin.appfromzero.R
+import com.cursokotlin.appfromzero.data.remote.RetrofitClient
 import com.cursokotlin.appfromzero.models.Deliverable
+import com.cursokotlin.appfromzero.models.deliverable.DeliverableResponse
 import com.google.android.material.textfield.TextInputEditText
-import java.util.*
+import retrofit2.Call
+import retrofit2.Response
 
 class CreateDeliverableFragment : DialogFragment() {
 
@@ -22,13 +24,20 @@ class CreateDeliverableFragment : DialogFragment() {
 
     private var listener: OnDeliverableCreatedListener? = null
 
+    private var idProject: Long = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_create_deliverable, container, false)
+
+        arguments?.let {
+            idProject = it.getLong("idProject")
+        }
+
         setupCreateButton(view)
         setupCancelButton(view)
-        setupDatePicker(view)
+
         return view
     }
 
@@ -36,7 +45,7 @@ class CreateDeliverableFragment : DialogFragment() {
         val createButton = view.findViewById<Button>(R.id.btEdit)
         val titleField = view.findViewById<TextInputEditText>(R.id.etTitle)
         val descriptionField = view.findViewById<TextInputEditText>(R.id.etDescription)
-        val dateField = view.findViewById<TextView>(R.id.tvDate)
+        val dateField = view.findViewById<TextInputEditText>(R.id.etDate)
 
         createButton.setOnClickListener {
             val title = titleField.text.toString()
@@ -44,22 +53,52 @@ class CreateDeliverableFragment : DialogFragment() {
             val date = dateField.text.toString()
 
             if (title.isNotEmpty() && description.isNotEmpty() && date.isNotEmpty()) {
-                val newDeliverable = Deliverable(
-                    id = 0, //id temporal
-                    title = title,
-                    projectName = "Plataforma de Comercio Electrónico Geekit",
+                val newDeliverableResponse = DeliverableResponse(
+                    name = title,
+                    description = description,
                     date = date,
-                    state = "Espera",
-                    description = description
+                    projectId = idProject
                 )
-                listener?.onDeliverableCreated(newDeliverable)
-                dismiss()
+
+
+                val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                val token = sharedPreferences.getString("token", "") ?: ""
+
+                RetrofitClient.deliverableService.createDeliverable(newDeliverableResponse, "Bearer $token")
+                    .enqueue(object : retrofit2.Callback<DeliverableResponse> {
+                        override fun onResponse(call: Call<DeliverableResponse>, response: Response<DeliverableResponse>) {
+                            if (response.isSuccessful) {
+
+                                response.body()?.let {
+                                    val newDeliverable = Deliverable(
+                                        id = 0,
+                                        name = it.name,
+                                        idProject = it.projectId,
+                                        date = it.date,
+                                        state = "Pendiente",
+                                        description = it.description,
+                                        message = ""
+                                    )
+                                    listener?.onDeliverableCreated(newDeliverable)
+                                    dismiss()
+                                }
+                            } else {
+                                // Manejar error de la API
+                                Toast.makeText(context, "Error al crear el entregable: ${response.message()}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+
+                        override fun onFailure(call: Call<DeliverableResponse>, t: Throwable) {
+                            // Manejar error en la conexión
+                            Toast.makeText(context, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    })
             } else {
-                Toast.makeText(context, "Por favor, completa todos los campos", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(context, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
 
     private fun setupCancelButton(view: View) {
         val cancelButton = view.findViewById<Button>(R.id.btCancel)
@@ -68,26 +107,6 @@ class CreateDeliverableFragment : DialogFragment() {
         }
     }
 
-    private fun setupDatePicker(view: View) {
-        val dateField = view.findViewById<TextView>(R.id.tvDate)
-
-        dateField.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val year = calendar.get(Calendar.YEAR)
-            val month = calendar.get(Calendar.MONTH)
-            val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-            //formatear la fecha
-            val datePickerDialog =
-                DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-                    val formattedDate =
-                        String.format("%02d/%02d/%d", selectedDay, selectedMonth + 1, selectedYear)
-                    dateField.text = formattedDate
-                }, year, month, day)
-
-            datePickerDialog.show()
-        }
-    }
 
     fun setOnDeliverableCreatedListener(listener: OnDeliverableCreatedListener) {
         this.listener = listener

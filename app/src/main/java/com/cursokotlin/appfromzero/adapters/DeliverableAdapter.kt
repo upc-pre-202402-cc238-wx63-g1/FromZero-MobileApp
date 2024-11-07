@@ -16,7 +16,7 @@ import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.Deliverable
 
 class DeliverableAdapter(
-    var deliverables: ArrayList<Deliverable>,
+    var deliverables: List<Deliverable>,
     private val onItemClick: (Deliverable) -> Unit
 ) : RecyclerView.Adapter<DeliverablePrototype>() {
 
@@ -36,7 +36,7 @@ class DeliverableAdapter(
     override fun getItemCount(): Int = deliverables.size
 
     fun removeItem(position: Int) {
-        deliverables.removeAt(position)
+        //deliverables.removeAt(position)
         notifyItemRemoved(position)
     }
 }
@@ -68,10 +68,10 @@ class DeliverablePrototype(itemView: View) : RecyclerView.ViewHolder(itemView) {
         position: Int,
         onItemClick: (Deliverable) -> Unit
     ) {
-        tvDeliverableName.text = deliverable.title
-        tvProjectName.text = deliverable.projectName
+        tvDeliverableName.text = deliverable.name
+        tvProjectName.text = deliverable.name
         tvDescriptionText.text = deliverable.description
-        tvDate.text = deliverable.date
+        tvDate.text = deliverable.date.toString()
         tvState.text = deliverable.state
         tvDescription.text = "Descripción"
         ivClock.setImageResource(android.R.drawable.ic_menu_recent_history)

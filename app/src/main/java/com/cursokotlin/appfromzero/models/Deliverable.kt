@@ -1,10 +1,12 @@
 package com.cursokotlin.appfromzero.models
 
-class Deliverable(
-    var id:Int,
-    var title:String,
-    var projectName:String,
+
+data class Deliverable(
+    var id:Long,
+    var name:String,
+    var description: String,
     var date:String,
     var state:String,
-    var description: String,
+    var idProject:Long,
+    var message:String
 )

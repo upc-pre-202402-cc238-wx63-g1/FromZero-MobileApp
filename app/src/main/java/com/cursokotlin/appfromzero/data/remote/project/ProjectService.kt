@@ -2,10 +2,18 @@ package com.cursokotlin.appfromzero.data.remote.project
 
 import com.cursokotlin.appfromzero.models.project.Project
 import com.cursokotlin.appfromzero.models.project.ProjectProfileResponse
+
+import com.cursokotlin.appfromzero.models.project.ProjectResponse
+
+import com.cursokotlin.appfromzero.models.project.ProjectSearchCard
+
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.POST
 import retrofit2.http.Path
+
 
 interface ProjectService {
     @GET("projects/enterprise/{id}")
@@ -25,4 +33,17 @@ interface ProjectService {
         @Path("id") projectId: Long,
         @Header("Authorization") token: String
     ): Call<Project>
+
+
+    @POST("projects")
+    fun createProject(
+        @Body project: ProjectResponse,
+        @Header("Authorization") token: String
+    ): Call<ProjectResponse>
+
+    @GET("projects")
+    fun getProjects(
+        @Header("Authorization") token: String
+    ): Call<List<ProjectSearchCard>>
+
 }
