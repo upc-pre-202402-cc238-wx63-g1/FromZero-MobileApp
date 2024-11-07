@@ -77,10 +77,16 @@ class SearchProjectFragment : Fragment(), ProjectAdapter.OnItemClickListener {
     }
 
     override fun onItemClick(project: ProjectSearchCard) {
-        replaceFragment(ViewProjectFragment())
+        replaceFragment(ViewProjectFragment(), project.id, false)
     }
 
-    private fun replaceFragment(fragment: Fragment) {
+    private fun replaceFragment(fragment: Fragment, idProject: Long, isWorking: Boolean) {
+        val bundle = Bundle().apply {
+            putLong("idProject", idProject)
+            putBoolean("isWorking", isWorking)
+        }
+        fragment.arguments = bundle
+
         val transaction = parentFragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)
         transaction.replace(R.id.fragmenContainer, fragment)
