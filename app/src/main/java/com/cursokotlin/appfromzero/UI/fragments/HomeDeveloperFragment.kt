@@ -46,12 +46,13 @@ class HomeDeveloperFragment : Fragment() {
 
     private var projectList: List<ProjectCard> = emptyList()
     private lateinit var projects: List<Project>
+
     private lateinit var adapter: ProjectCardAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var emptyView: LinearLayout
     private lateinit var btnCreateProject: Button
     private lateinit var ivEditDevProfile: ImageView
-    private lateinit var cvCardEmpty: CardView
+    private lateinit var cvCardEmpty: LinearLayout
 
     private lateinit var cvHomeDeveloperProfile: CardView
     private lateinit var ivProfileDevPhoto: ImageView
@@ -87,23 +88,6 @@ class HomeDeveloperFragment : Fragment() {
             replaceFragment(SearchProjectFragment())
         }
 
-        // Initialize adapter with an empty list
-        adapter = ProjectCardAdapter(projectList, object : ProjectCardAdapter.OnItemClickListener {
-            override fun onItemClick(projectCard: ProjectCard) {
-                when (projectCard.projectState) {
-                    ProjectState.BUSQUEDA_DEVELOPER -> {
-                        Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
-                    }
-                    ProjectState.EN_PROGRESO -> {
-                        replaceFragmentViewProject(ViewProjectFragment(), projectCard.idProject,true)
-                    }
-                    ProjectState.FINALIZADO -> {
-                        Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-        })
-
         setupRecyclerView(view)
 
         val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
@@ -120,9 +104,9 @@ class HomeDeveloperFragment : Fragment() {
         cvHomeDeveloperProfile = view.findViewById(R.id.cvHomeDeveloperProfile)
         cvHomeDeveloperProfile.visibility = View.VISIBLE
 
-        initDeveloperComponent(view)
         fetchData(userId, token, userRole, view)
         setRecyclerViewContraints(view, R.id.cvHomeDeveloperProfile)
+        initDeveloperComponent(view)
 
         setUpClickListener(view)
         setupTouchListener(view)
@@ -167,6 +151,7 @@ class HomeDeveloperFragment : Fragment() {
                     override fun onResponse(call: Call<List<Project>>, response:Response<List<Project>>){
                         if (response.isSuccessful) {
                             projects = response.body() ?: emptyList()
+                            Log.d("Projects", projects.toString())
                             bindProjectsToViews(projects)
                             setupRecyclerView(view)
                         } else {
@@ -206,8 +191,26 @@ class HomeDeveloperFragment : Fragment() {
     }
 
     private fun setupRecyclerView(view: View) {
-        recyclerView = view.findViewById(R.id.rvProjects)
+        recyclerView = view.findViewById(R.id.rvProjectsDev)
         recyclerView.layoutManager = LinearLayoutManager(context)
+
+        // Initialize adapter with an empty list
+        adapter = ProjectCardAdapter(projectList, object : ProjectCardAdapter.OnItemClickListener {
+            override fun onItemClick(projectCard: ProjectCard) {
+                when (projectCard.projectState) {
+                    ProjectState.BUSQUEDA_DEVELOPER -> {
+                        Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+                    }
+                    ProjectState.EN_PROGRESO -> {
+                        replaceFragmentViewProject(ViewProjectFragment(), projectCard.idProject,true)
+                    }
+                    ProjectState.FINALIZADO -> {
+                        Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        })
+
         recyclerView.adapter = adapter
     }
 
@@ -307,17 +310,23 @@ class HomeDeveloperFragment : Fragment() {
         }
     }
 
-    private fun setRecyclerViewContraints(view: View, viewId: Int) {
-        // TODO: Set RecyclerView constraints
+    private fun setRecyclerViewContraints(view: View, cvHomeEnterpriseProfile: Int) {
+        val recyclerView = view.findViewById<RecyclerView>(R.id.rvProjectsDev)
+        val constraintLayout = view.findViewById<ConstraintLayout>(R.id.clHomeUIDev)
+        val constraintSet = ConstraintSet()
+        constraintSet.clone(constraintLayout)
+
+        constraintSet.connect(recyclerView.id, ConstraintSet.TOP, cvHomeEnterpriseProfile, ConstraintSet.BOTTOM, 15)
+        constraintSet.applyTo(constraintLayout)
     }
 
-    private fun setEmptyViewConstraints(view: View, cvHomeEnterpriseProfile: Int) {
+    private fun setEmptyViewConstraints(view: View, cvHomeDeveloperProfile: Int) {
         val emptyView = view.findViewById<LinearLayout>(R.id.emptyView)
         val constraintLayout = view.findViewById<ConstraintLayout>(R.id.clHomeUI)
         val constraintSet = ConstraintSet()
         constraintSet.clone(constraintLayout)
 
-        constraintSet.connect(emptyView.id, ConstraintSet.TOP, cvHomeEnterpriseProfile, ConstraintSet.BOTTOM, 15)
+        constraintSet.connect(emptyView.id, ConstraintSet.TOP, cvHomeDeveloperProfile, ConstraintSet.BOTTOM, 15)
         constraintSet.applyTo(constraintLayout)
     }
 
@@ -344,7 +353,7 @@ class HomeDeveloperFragment : Fragment() {
             updateProfile()
             bindDataToViews(role = "developer")
             animateViewVisibility(llDevExtending, View.GONE)
-            ivEditDevSpecialties.visibility = View.VISIBLE
+            ivEditDevSpecialties.visibility = View.GONE
             ivEditDevDescription.visibility = View.GONE
             ivEditDevCellphone.visibility = View.GONE
             ivEditDevProfile.visibility = View.VISIBLE
@@ -375,7 +384,7 @@ class HomeDeveloperFragment : Fragment() {
         }
     }
 
-    private fun updateProfile() {
+    private fun updateProfile()  {
         val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val userId = sharedPreferences.getLong("userId", 0)
         val token = sharedPreferences.getString("token", null)
