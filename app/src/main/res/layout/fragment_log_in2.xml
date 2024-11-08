@@ -81,7 +81,8 @@
             android:background="@drawable/ic_line"
             android:hint="@string/password"
             android:textColor="@color/green_fromzero"
-            android:textSize="17sp" />
+            android:textSize="17sp"
+            android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
