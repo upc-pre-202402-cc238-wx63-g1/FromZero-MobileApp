@@ -31,7 +31,7 @@ class MessageFragment : Fragment() {
 
         val sharedPreferences = requireContext().getSharedPreferences("app_prefs", MODE_PRIVATE)
         val token = sharedPreferences.getString("token", "") ?: ""
-        senderId = sharedPreferences.getLong("user_id", 0) // Ensure the key matches the one used in LogInFragment
+        senderId = sharedPreferences.getLong("userId", 0)
         messageRepository = MessageRepository(RetrofitClient.messageService(token))
 
         Log.d("MessageFragment", "Token: $token")
