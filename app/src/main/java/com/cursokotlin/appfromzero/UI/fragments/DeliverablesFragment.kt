@@ -160,8 +160,8 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         deliverables.add(deliverable)
         deliverableAdapter.notifyItemInserted(deliverables.size - 1)
         rvDeliverables.scrollToPosition(deliverables.size - 1)
+        loadDeliverables(requireView(), idProject, requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE).getString("token", null))
     }
-
     override fun onDeliverableEdited(newDeliverable: Deliverable) {
         val index = deliverables.indexOfFirst { it.id == newDeliverable.id }
         if (index != -1) {

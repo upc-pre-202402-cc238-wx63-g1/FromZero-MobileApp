@@ -45,6 +45,13 @@ class EditDeliverableFragment : DialogFragment() {
             deliverableId = it.getLong("deliverableId")
         }
 
+        if (deliverableId == 0L) {
+            Log.e("EditDeliverableFragment", "Invalid deliverableId: $deliverableId")
+            Toast.makeText(requireContext(), "Invalid deliverable ID", Toast.LENGTH_SHORT).show()
+            dismiss()
+            return null
+        }
+
         val deliverableTitle = arguments?.getString("deliverableTitle")
         val deliverableDescription = arguments?.getString("deliverableDescription")
         val deliverableDate = arguments?.getString("deliverableDate")
