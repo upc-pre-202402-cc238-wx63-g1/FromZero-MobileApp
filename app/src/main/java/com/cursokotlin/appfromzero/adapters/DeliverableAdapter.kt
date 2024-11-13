@@ -13,6 +13,8 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.Deliverable
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class DeliverableAdapter(
     var deliverables: List<Deliverable>,
@@ -66,12 +68,24 @@ class DeliverableAdapter(
             tvDeliverableName.text = deliverable.name
             tvProjectName.text = deliverable.name
             tvDescriptionText.text = deliverable.description
-            tvDate.text = deliverable.date.toString()
+
             tvState.text = deliverable.state
             tvDescription.text = "Descripción"
             ivClock.setImageResource(android.R.drawable.ic_menu_recent_history)
             ivState.setImageResource(android.R.drawable.ic_menu_info_details)
             ivArrow.setImageResource(R.drawable.arrow_down)
+
+            val inputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val outputDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+            val formattedDate = deliverable.date?.let {
+                try {
+                    val date = inputDateFormat.parse(it)
+                    outputDateFormat.format(date)
+                } catch (e: Exception) {
+                    it
+                }
+            } ?: "No Date"
+            tvDate.text = formattedDate
 
             tvDescriptionText.visibility = View.GONE
             tvDescription.visibility = View.GONE

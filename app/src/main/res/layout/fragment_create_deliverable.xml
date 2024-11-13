@@ -85,11 +85,11 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/border_date_input"
-        android:hint="@string/fecha_limite"
-        android:textColor="@android:color/black" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/fecha_limite"
+            android:clickable="true"
+            android:focusable="false" />
     </com.google.android.material.textfield.TextInputLayout>
 
 <!--    <TextView-->
