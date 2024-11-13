@@ -85,7 +85,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
 
     private fun initView(view: View) {
         rvDeliverables = view.findViewById(R.id.rvDeliverables)
-        deliverableAdapter = DeliverableAdapter(deliverables) { deliverable ->
+        deliverableAdapter = DeliverableAdapter(deliverables, { deliverable ->
             val dialog = EditDeliverableFragment().apply {
                 arguments = Bundle().apply {
                     putLong("idProject", deliverable.idProject)
@@ -97,7 +97,9 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             }
             dialog.setOnDeliverableEditedListener(this@DeliverablesFragment)
             dialog.show(parentFragmentManager, "EditDeliverableDialog")
-        }
+        }, { deliverableId ->
+            deleteDeliverable(deliverableId)
+        })
         rvDeliverables.adapter = deliverableAdapter
         rvDeliverables.layoutManager = LinearLayoutManager(requireContext())
 
@@ -141,6 +143,38 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             }
         })
     }
+
+    private fun deleteDeliverable(deliverableId: Long) {
+        val token = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            .getString("token", null)
+        if (token == null) {
+            Toast.makeText(requireContext(), "Token no encontrado", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val deleteCall = deliverableRepository.deleteDeliverable(deliverableId, token)
+        deleteCall.enqueue(object : retrofit2.Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "Deliverable eliminado", Toast.LENGTH_SHORT).show()
+                    deliverables.removeAll { it.id == deliverableId }
+                    deliverableAdapter.notifyDataSetChanged()
+                    loadDeliverables(requireView(), idProject, token)
+                } else {
+                    val errorMessage = response.errorBody()?.string() ?: "Error desconocido"
+                    Log.e("DeliverablesFragment", "Error al eliminar el deliverable: $errorMessage")
+                    Toast.makeText(requireContext(), "Error al eliminar el deliverable", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("DeliverablesFragment", "Error: ${t.message}", t)
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_LONG).show()
+            }
+        })
+    }
+
+
 
     private fun bindDeliverablesToViews() {
         this.deliverableList = deliverables.map { deliverable ->

@@ -8,6 +8,7 @@ import com.cursokotlin.appfromzero.models.deliverable.UpdateDeliverableResponse
 import com.cursokotlin.appfromzero.models.profile.DeveloperProfileResponse
 import com.cursokotlin.appfromzero.models.profile.UpdateDeveloperProfileRequest
 import retrofit2.Call
+import retrofit2.Response
 
 class DeliverableRepository (private val deliverableService: DeliverableService) {
 
@@ -21,5 +22,9 @@ class DeliverableRepository (private val deliverableService: DeliverableService)
 
     fun updateDeliverable(id: Long, updateDeliverableRequest: UpdateDeliverableRequest, token: String): Call<UpdateDeliverableResponse> {
         return deliverableService.updateDeliverable(id, updateDeliverableRequest, "Bearer $token")
+    }
+
+    fun deleteDeliverable(deliverableId: Long, token: String): Call<Void> {
+        return deliverableService.deleteDeliverable(deliverableId, "Bearer $token")
     }
 }

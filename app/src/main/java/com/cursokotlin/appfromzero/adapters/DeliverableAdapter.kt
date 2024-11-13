@@ -16,7 +16,8 @@ import com.cursokotlin.appfromzero.models.Deliverable
 
 class DeliverableAdapter(
     var deliverables: List<Deliverable>,
-    private val onItemClick: (Deliverable) -> Unit
+    private val onItemClick: (Deliverable) -> Unit,
+    private val onDeleteClick: (Long) -> Unit
 ) : RecyclerView.Adapter<DeliverableAdapter.DeliverableViewHolder>() {
 
     var userRole: String? = null
@@ -34,10 +35,6 @@ class DeliverableAdapter(
 
     override fun getItemCount(): Int = deliverables.size
 
-    fun removeItem(position: Int) {
-        //deliverables.removeAt(position)
-        notifyItemRemoved(position)
-    }
 
     inner class DeliverableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -95,15 +92,7 @@ class DeliverableAdapter(
             }
 
             btDelete.setOnClickListener {
-                val position = adapterPosition
-                println("entregable eliminado en la posicion $position")
-                if (position != RecyclerView.NO_POSITION) {
-                    adapter.removeItem(position)
-                    if (adapter.itemCount == 0) {
-                        Toast.makeText(itemView.context, "No hay entregables", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
+                onDeleteClick(deliverable.id)
             }
 
             btEdit.setOnClickListener {

@@ -6,6 +6,7 @@ import com.cursokotlin.appfromzero.models.deliverable.UpdateDeliverableRequest
 import com.cursokotlin.appfromzero.models.deliverable.UpdateDeliverableResponse
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -31,5 +32,11 @@ interface DeliverableService {
         @Body updateDeliverableRequest: UpdateDeliverableRequest,
         @Header("Authorization") token:String
     ): Call<UpdateDeliverableResponse>
+
+    @DELETE("deliverables/{id}")
+    fun deleteDeliverable(
+        @Path("id") deliverableId: Long,
+        @Header("Authorization") token: String
+    ): Call<Void>
 
 }
