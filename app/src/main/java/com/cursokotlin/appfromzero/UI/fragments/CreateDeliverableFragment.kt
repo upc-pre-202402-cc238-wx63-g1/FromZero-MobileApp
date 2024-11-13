@@ -38,7 +38,7 @@ class CreateDeliverableFragment : DialogFragment() {
             idProject = it.getLong("idProject")
         }
 
-        val dateField = view.findViewById<TextInputEditText>(R.id.etDate)
+        val dateField = view.findViewById<EditText>(R.id.etDate)
         setupDatePicker(dateField)
         setupCreateButton(view)
         setupCancelButton(view)
@@ -59,7 +59,6 @@ class CreateDeliverableFragment : DialogFragment() {
             datePickerDialog.show()
         }
     }
-
     private fun setupCreateButton(view: View) {
         val createButton = view.findViewById<Button>(R.id.btEdit)
         val titleField = view.findViewById<TextInputEditText>(R.id.etTitle)
@@ -79,6 +78,7 @@ class CreateDeliverableFragment : DialogFragment() {
                     projectId = idProject
                 )
 
+
                 val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
                 val token = sharedPreferences.getString("token", "") ?: ""
 
@@ -86,6 +86,7 @@ class CreateDeliverableFragment : DialogFragment() {
                     .enqueue(object : retrofit2.Callback<DeliverableResponse> {
                         override fun onResponse(call: Call<DeliverableResponse>, response: Response<DeliverableResponse>) {
                             if (response.isSuccessful) {
+
                                 response.body()?.let {
                                     val newDeliverable = Deliverable(
                                         id = 0,
@@ -94,17 +95,20 @@ class CreateDeliverableFragment : DialogFragment() {
                                         date = it.date,
                                         state = "Pendiente",
                                         description = it.description,
-                                        message = ""
+                                        message = "",
+                                        projectName = ""
                                     )
                                     listener?.onDeliverableCreated(newDeliverable)
                                     dismiss()
                                 }
                             } else {
+                                // Manejar error de la API
                                 Toast.makeText(context, "Error al crear el entregable: ${response.message()}", Toast.LENGTH_SHORT).show()
                             }
                         }
 
                         override fun onFailure(call: Call<DeliverableResponse>, t: Throwable) {
+                            // Manejar error en la conexión
                             Toast.makeText(context, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
                         }
                     })
@@ -114,12 +118,14 @@ class CreateDeliverableFragment : DialogFragment() {
         }
     }
 
+
     private fun setupCancelButton(view: View) {
         val cancelButton = view.findViewById<Button>(R.id.btCancel)
         cancelButton.setOnClickListener {
             dismiss()
         }
     }
+
 
     fun setOnDeliverableCreatedListener(listener: OnDeliverableCreatedListener) {
         this.listener = listener

@@ -32,6 +32,7 @@ class EditDeliverableFragment : DialogFragment() {
     private val deliverableRepository = DeliverableRepository(RetrofitClient.deliverableService)
     private var idProject: Long = 0
     private var deliverableId: Long = 0
+    private var projectName: String = ""
 
     fun setOnDeliverableEditedListener(listener: OnDeliverableEditedListener) {
         this.listener = listener
@@ -45,6 +46,7 @@ class EditDeliverableFragment : DialogFragment() {
         arguments?.let {
             idProject = it.getLong("idProject")
             deliverableId = it.getLong("deliverableId")
+            projectName = it.getString("projectName", "")
         }
 
         if (deliverableId == 0L) {
@@ -105,7 +107,8 @@ class EditDeliverableFragment : DialogFragment() {
                 date = updatedDate,
                 state = "Pendiente",
                 idProject = idProject,
-                message = ""
+                message = "",
+                projectName = projectName
             )
 
             updateDeliverableOnServer(updatedDeliverable)

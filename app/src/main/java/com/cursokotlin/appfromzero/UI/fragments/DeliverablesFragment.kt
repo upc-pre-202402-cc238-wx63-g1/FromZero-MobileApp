@@ -20,12 +20,14 @@ import com.cursokotlin.appfromzero.adapters.DeliverableAdapter
 import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
 import com.cursokotlin.appfromzero.data.repository.deliverable.DeliverableRepository
+import com.cursokotlin.appfromzero.data.repository.project.ProjectRepository
 import com.cursokotlin.appfromzero.models.Deliverable
 import com.cursokotlin.appfromzero.models.HomeViewModel
 import com.cursokotlin.appfromzero.models.ProjectCard
 import com.cursokotlin.appfromzero.models.ProjectState
 
 import com.cursokotlin.appfromzero.models.deliverable.DeliverableCard
+import com.cursokotlin.appfromzero.models.project.Project
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -40,6 +42,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
     private lateinit var cvCardEmpty: CardView
     private val homeViewModel: HomeViewModel by activityViewModels()
 
+    private val projectRepository=ProjectRepository(RetrofitClient.projectService)
     private val deliverableRepository=DeliverableRepository(RetrofitClient.deliverableService)
     private var deliverables: MutableList<Deliverable> = mutableListOf()
     private var deliverableList: List<DeliverableCard> = emptyList()
@@ -87,6 +90,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
                     putString("deliverableTitle", deliverable.name)
                     putString("deliverableDescription", deliverable.description)
                     putString("deliverableDate", deliverable.date)
+                    putString("projectName", deliverable.projectName)
                 }
             }
             dialog.setOnDeliverableEditedListener(this@DeliverablesFragment)
@@ -110,6 +114,33 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         }
     }
 
+    private fun loadProjectName(projectId: Long, token: String?) {
+        if (token == null) {
+            Toast.makeText(requireContext(), "Token no encontrado", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val projectCall = projectRepository.getProjectById(projectId, token)
+        projectCall.enqueue(object : retrofit2.Callback<Project> {
+            override fun onResponse(call: Call<Project>, response: Response<Project>) {
+                if (response.isSuccessful) {
+                    val project = response.body()
+                    val projectName = project?.name ?: "Nombre no disponible"
+                    // Aquí actualizamos el nombre del proyecto en todos los deliverables
+                    deliverables.forEach { deliverable ->
+                        deliverable.projectName = projectName
+                    }
+                    deliverableAdapter.notifyDataSetChanged() // Notificar al adaptador que los datos han cambiado
+                } else {
+                    Toast.makeText(requireContext(), "Error al obtener el proyecto", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Project>, t: Throwable) {
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_LONG).show()
+            }
+        })
+    }
 
     private fun loadDeliverables(view: View, projectId: Long, token: String?) {
         if (token == null) {
@@ -117,15 +148,15 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             return
         }
 
-        val deliverableCall = deliverableRepository.getDeliverablesByProjectId(projectId,token)
+        val deliverableCall = deliverableRepository.getDeliverablesByProjectId(projectId, token)
         deliverableCall.enqueue(object : retrofit2.Callback<List<Deliverable>> {
             override fun onResponse(call: Call<List<Deliverable>>, response: Response<List<Deliverable>>) {
                 if (response.isSuccessful) {
                     deliverables = (response.body() ?: emptyList()).toMutableList()
                     bindDeliverablesToViews()
                     initView(view)
+                    loadProjectName(projectId, token) // Llamamos a la función para cargar el nombre del proyecto
                     Log.d("API Response", "Deliverables: $deliverables")
-
                 } else {
                     Toast.makeText(requireContext(), "Error al obtener los entregables", Toast.LENGTH_SHORT).show()
                 }
@@ -133,10 +164,11 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
 
             override fun onFailure(call: Call<List<Deliverable>>, t: Throwable) {
                 Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_LONG).show()
-                Log.wtf("deliverables","Error: ${t.message}")
+                Log.wtf("deliverables", "Error: ${t.message}")
             }
         })
     }
+
 
     private fun deleteDeliverable(deliverableId: Long) {
         val token = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
@@ -179,7 +211,8 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
                 date = deliverable.date ?: "No Date",
                 state = deliverable.state ?: "No State",
                 projectId = deliverable.idProject,
-                developerMessage = deliverable.message ?: "No Message"
+                developerMessage = deliverable.message ?: "No Message",
+                projectName = deliverable.projectName ?: "No Project Name"
             )
         }
     }

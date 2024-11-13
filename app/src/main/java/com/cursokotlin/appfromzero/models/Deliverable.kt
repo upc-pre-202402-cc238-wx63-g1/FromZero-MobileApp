@@ -8,5 +8,6 @@ data class Deliverable(
     var date:String,
     var state:String,
     var idProject:Long,
-    var message:String
+    var message:String,
+    var projectName:String
 )

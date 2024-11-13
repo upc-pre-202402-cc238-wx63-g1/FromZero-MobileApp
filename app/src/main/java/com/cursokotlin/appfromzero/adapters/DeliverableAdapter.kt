@@ -66,9 +66,9 @@ class DeliverableAdapter(
             onItemClick: (Deliverable) -> Unit
         ) {
             tvDeliverableName.text = deliverable.name
-            tvProjectName.text = deliverable.name
+            tvProjectName.text = deliverable.projectName
             tvDescriptionText.text = deliverable.description
-
+            tvDate.text = deliverable.date.toString()
             tvState.text = deliverable.state
             tvDescription.text = "Descripción"
             ivClock.setImageResource(android.R.drawable.ic_menu_recent_history)
