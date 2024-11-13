@@ -1,5 +1,6 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +20,7 @@ import com.cursokotlin.appfromzero.models.deliverable.UpdateDeliverableResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Calendar
 
 class EditDeliverableFragment : DialogFragment() {
 
@@ -64,9 +66,24 @@ class EditDeliverableFragment : DialogFragment() {
         etDescription.setText(deliverableDescription)
         etDate.setText(deliverableDate)
 
+        setupDatePicker(etDate)
         setupCancelButton(view)
         setupSaveButton(view, etTitle, etDescription, etDate)
         return view
+    }
+
+    private fun setupDatePicker(dateField: EditText) {
+        dateField.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+            val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+                val formattedDate = String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
+                dateField.setText(formattedDate)
+            }, year, month, day)
+            datePickerDialog.show()
+        }
     }
 
     private fun setupSaveButton(

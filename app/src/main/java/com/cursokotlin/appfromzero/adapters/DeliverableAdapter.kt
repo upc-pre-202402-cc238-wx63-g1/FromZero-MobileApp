@@ -131,9 +131,12 @@ class DeliverableAdapter(
             tvDescriptionText.visibility = View.VISIBLE
             tvDescription.visibility = View.VISIBLE
 
-            if (userRole == "desarrollador") {
-                btDelete.visibility = View.GONE
-                btEdit.visibility = View.GONE
+            if (userRole == "ROLE_DEVELOPER") {
+                btDelete.visibility = View.VISIBLE
+                btEdit.visibility = View.VISIBLE
+            }else{
+                btDelete.visibility = View.VISIBLE
+                btEdit.visibility = View.VISIBLE
             }
 
             val initialHeight = cvDeliverableCard.height
