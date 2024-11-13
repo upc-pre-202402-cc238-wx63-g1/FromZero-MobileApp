@@ -54,6 +54,7 @@ class DeliverableAdapter(
 
         private val btDelete = itemView.findViewById<Button>(R.id.btDelete)
         private val btEdit = itemView.findViewById<Button>(R.id.btEdit)
+        private val btReview=itemView.findViewById<Button>(R.id.btReview)
 
         private var isExpanded = false
         private var userRole: String? = null
@@ -91,6 +92,7 @@ class DeliverableAdapter(
             tvDescription.visibility = View.GONE
             btDelete.visibility = View.GONE
             btEdit.visibility = View.GONE
+            btReview.visibility = View.GONE
 
             userRole = role
 
@@ -123,6 +125,7 @@ class DeliverableAdapter(
             tvDescription.visibility = View.GONE
             btDelete.visibility = View.GONE
             btEdit.visibility = View.GONE
+            btReview.visibility = View.GONE
 
             cvDeliverableCard.measure(
                 View.MeasureSpec.makeMeasureSpec(cvDeliverableCard.width, View.MeasureSpec.EXACTLY),
@@ -145,12 +148,10 @@ class DeliverableAdapter(
             tvDescriptionText.visibility = View.VISIBLE
             tvDescription.visibility = View.VISIBLE
 
-            if (userRole == "ROLE_DEVELOPER") {
+            if (userRole != "ROLE_DEVELOPER") {
                 btDelete.visibility = View.VISIBLE
                 btEdit.visibility = View.VISIBLE
-            }else{
-                btDelete.visibility = View.VISIBLE
-                btEdit.visibility = View.VISIBLE
+                btReview.visibility = View.VISIBLE
             }
 
             val initialHeight = cvDeliverableCard.height
