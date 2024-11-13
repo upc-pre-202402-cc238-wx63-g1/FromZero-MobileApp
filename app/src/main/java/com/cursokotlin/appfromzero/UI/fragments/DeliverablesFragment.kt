@@ -58,18 +58,12 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
 
         initView(view)
 
-
         homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
-            when (role) {
-                "desarrollador" -> {
-
-                    ivAddDeliverable.visibility = View.GONE
-                    cvCardEmpty.visibility = View.VISIBLE
-                    val adapter = rvDeliverables.adapter as? DeliverableAdapter
-                    if (adapter != null) {
-                        adapter.userRole = role
-                    }
-                }
+            if (role == "ROLE_DEVELOPER") {
+                ivAddDeliverable.visibility = View.GONE
+                cvCardEmpty.visibility = View.VISIBLE
+            } else {
+                ivAddDeliverable.visibility = View.VISIBLE
             }
         }
 
@@ -156,7 +150,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         deleteCall.enqueue(object : retrofit2.Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(requireContext(), "Deliverable eliminado", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Entregable eliminado", Toast.LENGTH_SHORT).show()
                     deliverables.removeAll { it.id == deliverableId }
                     deliverableAdapter.notifyDataSetChanged()
                     loadDeliverables(requireView(), idProject, token)

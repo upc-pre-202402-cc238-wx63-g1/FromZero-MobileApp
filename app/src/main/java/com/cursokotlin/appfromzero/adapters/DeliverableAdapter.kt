@@ -98,6 +98,8 @@ class DeliverableAdapter(
             btEdit.setOnClickListener {
                 onItemClick(deliverable)
             }
+
+
         }
 
         fun collapseCard() {
@@ -129,9 +131,9 @@ class DeliverableAdapter(
             tvDescriptionText.visibility = View.VISIBLE
             tvDescription.visibility = View.VISIBLE
 
-            if (userRole != "desarrollador") {
-                btDelete.visibility = View.VISIBLE
-                btEdit.visibility = View.VISIBLE
+            if (userRole == "desarrollador") {
+                btDelete.visibility = View.GONE
+                btEdit.visibility = View.GONE
             }
 
             val initialHeight = cvDeliverableCard.height
@@ -151,5 +153,7 @@ class DeliverableAdapter(
             animator.interpolator = AccelerateDecelerateInterpolator()
             animator.start()
         }
+
+
     }
 }
