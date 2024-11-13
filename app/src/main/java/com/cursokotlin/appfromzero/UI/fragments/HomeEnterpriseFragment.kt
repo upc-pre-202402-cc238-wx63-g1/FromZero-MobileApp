@@ -43,7 +43,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
 
     private var enterprise: Enterprise? = null
     private lateinit var recyclerView: RecyclerView
-    private lateinit var cvCardEmpty: CardView
+    private lateinit var cvCardEmpty: LinearLayout
     private lateinit var adapter: ProjectCardAdapter
     private var projectList: List<ProjectCard> = emptyList()
 
