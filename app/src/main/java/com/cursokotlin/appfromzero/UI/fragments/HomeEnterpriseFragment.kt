@@ -1,8 +1,14 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -17,8 +24,11 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.cursokotlin.appfromzero.MainActivity
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
@@ -31,6 +41,7 @@ import com.cursokotlin.appfromzero.models.profile.EnterpriseProfileResponse
 import com.cursokotlin.appfromzero.models.profile.UpdateEnterpriseProfileRequest
 import com.cursokotlin.appfromzero.models.project.Candidate
 import com.cursokotlin.appfromzero.models.project.Project
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
 import com.squareup.picasso.Picasso
 import retrofit2.Call
@@ -40,6 +51,8 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
 
     private val enterpriseRepository = EnterpriseRepository(RetrofitClient.enterpriseService)
     private val projectRepository = ProjectRepository(RetrofitClient.projectService)
+
+    private val PICK_IMAGE_REQUEST = 1
 
     private var enterprise: Enterprise? = null
     private lateinit var recyclerView: RecyclerView
@@ -66,6 +79,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
     private lateinit var ivConfirmEditProfile: ImageView
 
     private lateinit var ivProfile: ImageView
+    private lateinit var btnChangeProfilePhoto: ImageButton
     private lateinit var tvEnterpriseWebsite: TextView
     private lateinit var tvEnterpriseName: TextView
     private lateinit var tvEnterpriseSector: TextView
@@ -74,7 +88,6 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
     private lateinit var tvEnterpriseCellphone: TextView
 
     private lateinit var llExtending: LinearLayout
-
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
@@ -86,11 +99,14 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         emptyView = view.findViewById(R.id.emptyView)
         btnCreateProject = view.findViewById(R.id.btnCreateProject)
 
+        btnChangeProfilePhoto = view.findViewById(R.id.btnChangeProfilePhoto)
+
         btnCreateProject.setOnClickListener {
             replaceFragment(CreateProjectFragment())
         }
 
         setupRecyclerView(view)
+        setChangeProfilePhotoListener()
 
         val sharedPreferences =
             requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
@@ -100,6 +116,18 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         initEnterpriseView(view, userId, token, "ROLE_ENTERPRISE")
 
         return view
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+            val selectedImageUri = data.data
+            // Usar Glide para cargar la imagen en el ImageView circular
+            Glide.with(this)
+                .load(selectedImageUri)
+                .circleCrop()
+                .into(ivProfile)
+        }
     }
 
     private fun setRecyclerViewContraints(view: View, cvHomeEnterpriseProfile: Int) {
@@ -260,6 +288,28 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         setupEditToggle(ivEditProfilePhone, tvEnterpriseCellphone, etEnterprisePhone)
 
         bindDataToViews(role = "empresa")
+    }
+
+    private fun setChangeProfilePhotoListener() {
+        btnChangeProfilePhoto.setOnClickListener {
+            showPhotoOptions()
+        }
+    }
+
+    private fun showPhotoOptions() {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        val view = layoutInflater.inflate(R.layout.bottom_sheet_photo_options, null)
+        bottomSheetDialog.setContentView(view)
+
+        val tvChooseFromGallery = view.findViewById<TextView>(R.id.tvChooseFromGallery)
+
+        tvChooseFromGallery.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            startActivityForResult(intent, PICK_IMAGE_REQUEST)
+            bottomSheetDialog.dismiss()
+        }
+
+        bottomSheetDialog.show()
     }
 
     private fun bindDataToViews(role: String) {
