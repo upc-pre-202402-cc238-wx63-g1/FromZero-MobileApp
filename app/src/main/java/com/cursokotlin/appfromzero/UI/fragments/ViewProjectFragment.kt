@@ -35,6 +35,7 @@ class ViewProjectFragment : Fragment() {
 
     private var isWorking: Boolean = false
     private var idProject: Long = 0
+    private var isFinished: Boolean = false
     private val projectRepository = ProjectRepository(RetrofitClient.projectService)
 
     private lateinit var applyProjectDialog: Dialog
@@ -49,6 +50,7 @@ class ViewProjectFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_view_project, container, false)
         val btDeliverables = view.findViewById<Button>(R.id.btDeliverables)
+        val btDeleteProject = view.findViewById<Button>(R.id.btDeleteProject)
 
         val sharedPreferences =
             requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
@@ -58,6 +60,7 @@ class ViewProjectFragment : Fragment() {
         arguments?.let {
             idProject = it.getLong("idProject")
             isWorking = it.getBoolean("isWorking", false)
+            isFinished = it.getBoolean("isFinished", false)
         }
 
         // Inicializa los diálogos ANTES de asignar los botones
@@ -66,6 +69,9 @@ class ViewProjectFragment : Fragment() {
 
         // Cambiar texto del botón según si es developer
         btDeliverables.text = if (isWorking) "Entregables" else "Postular"
+
+        // Cambiar visibilidad del botón de eliminar proyecto
+        btDeleteProject.visibility = if (isFinished) View.VISIBLE else View.GONE
 
         btDeliverables.setOnClickListener {
             if (isWorking) {
