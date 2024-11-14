@@ -17,24 +17,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.DeliverableAdapter
-import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
 import com.cursokotlin.appfromzero.data.repository.deliverable.DeliverableRepository
 import com.cursokotlin.appfromzero.data.repository.project.ProjectRepository
 import com.cursokotlin.appfromzero.models.Deliverable
 import com.cursokotlin.appfromzero.models.HomeViewModel
-import com.cursokotlin.appfromzero.models.ProjectCard
-import com.cursokotlin.appfromzero.models.ProjectState
-
 import com.cursokotlin.appfromzero.models.deliverable.DeliverableCard
 import com.cursokotlin.appfromzero.models.project.Project
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.Retrofit
 
 class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverableCreatedListener,
     EditDeliverableFragment.OnDeliverableEditedListener {
-
 
     private lateinit var deliverableAdapter: DeliverableAdapter
     private lateinit var rvDeliverables: RecyclerView
@@ -42,8 +36,8 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
     private lateinit var cvCardEmpty: CardView
     private val homeViewModel: HomeViewModel by activityViewModels()
 
-    private val projectRepository=ProjectRepository(RetrofitClient.projectService)
-    private val deliverableRepository=DeliverableRepository(RetrofitClient.deliverableService)
+    private val projectRepository = ProjectRepository(RetrofitClient.projectService)
+    private val deliverableRepository = DeliverableRepository(RetrofitClient.deliverableService)
     private var deliverables: MutableList<Deliverable> = mutableListOf()
     private var deliverableList: List<DeliverableCard> = emptyList()
     private var idProject: Long = 0
@@ -76,27 +70,18 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         arguments?.let {
             idProject = it.getLong("idProject")
         }
-        loadDeliverables(view,idProject,token)
+        loadDeliverables(view, idProject, token)
         return view
     }
 
     private fun initView(view: View) {
         rvDeliverables = view.findViewById(R.id.rvDeliverables)
         deliverableAdapter = DeliverableAdapter(deliverables, { deliverable ->
-            val dialog = EditDeliverableFragment().apply {
-                arguments = Bundle().apply {
-                    putLong("idProject", deliverable.idProject)
-                    putLong("deliverableId", deliverable.id)
-                    putString("deliverableTitle", deliverable.name)
-                    putString("deliverableDescription", deliverable.description)
-                    putString("deliverableDate", deliverable.date)
-                    putString("projectName", deliverable.projectName)
-                }
-            }
-            dialog.setOnDeliverableEditedListener(this@DeliverablesFragment)
-            dialog.show(parentFragmentManager, "EditDeliverableDialog")
+            onDeliverableSelected(deliverable)
         }, { deliverableId ->
             deleteDeliverable(deliverableId)
+        }, { deliverable ->
+            onReviewDeliverable(deliverable)
         })
         rvDeliverables.adapter = deliverableAdapter
         rvDeliverables.layoutManager = LinearLayoutManager(requireContext())
@@ -107,7 +92,6 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             val dialog = CreateDeliverableFragment()
             val bundle = Bundle()
             bundle.putLong("idProject", idProject)
-
             dialog.arguments = bundle
             dialog.setOnDeliverableCreatedListener(this)
             dialog.show(parentFragmentManager, "AddDeliverableDialog")
@@ -126,11 +110,10 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
                 if (response.isSuccessful) {
                     val project = response.body()
                     val projectName = project?.name ?: "Nombre no disponible"
-                    // Aquí actualizamos el nombre del proyecto en todos los deliverables
                     deliverables.forEach { deliverable ->
                         deliverable.projectName = projectName
                     }
-                    deliverableAdapter.notifyDataSetChanged() // Notificar al adaptador que los datos han cambiado
+                    deliverableAdapter.notifyDataSetChanged()
                 } else {
                     Toast.makeText(requireContext(), "Error al obtener el proyecto", Toast.LENGTH_SHORT).show()
                 }
@@ -155,7 +138,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
                     deliverables = (response.body() ?: emptyList()).toMutableList()
                     bindDeliverablesToViews()
                     initView(view)
-                    loadProjectName(projectId, token) // Llamamos a la función para cargar el nombre del proyecto
+                    loadProjectName(projectId, token)
                     Log.d("API Response", "Deliverables: $deliverables")
                 } else {
                     Toast.makeText(requireContext(), "Error al obtener los entregables", Toast.LENGTH_SHORT).show()
@@ -168,7 +151,6 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             }
         })
     }
-
 
     private fun deleteDeliverable(deliverableId: Long) {
         val token = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
@@ -200,8 +182,6 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         })
     }
 
-
-
     private fun bindDeliverablesToViews() {
         this.deliverableList = deliverables.map { deliverable ->
             DeliverableCard(
@@ -211,11 +191,12 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
                 date = deliverable.date ?: "No Date",
                 state = deliverable.state ?: "No State",
                 projectId = deliverable.idProject,
-                developerMessage = deliverable.message ?: "No Message",
+                developerMessage = deliverable.developerMessage ?: "No Message",
                 projectName = deliverable.projectName ?: "No Project Name"
             )
         }
     }
+
 
     override fun onDeliverableCreated(deliverable: Deliverable) {
         deliverables.add(deliverable)
@@ -223,6 +204,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         rvDeliverables.scrollToPosition(deliverables.size - 1)
         loadDeliverables(requireView(), idProject, requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE).getString("token", null))
     }
+
     override fun onDeliverableEdited(newDeliverable: Deliverable) {
         val index = deliverables.indexOfFirst { it.id == newDeliverable.id }
         if (index != -1) {
@@ -233,4 +215,30 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         }
     }
 
+    private fun onDeliverableSelected(deliverable: Deliverable) {
+        val dialog = EditDeliverableFragment().apply {
+            arguments = Bundle().apply {
+                putLong("deliverableId", deliverable.id)
+                putString("deliverableName", deliverable.name)
+                putString("deliverableDescription", deliverable.description)
+                putString("deliverableDate", deliverable.date)
+                putString("projectName", deliverable.projectName)
+            }
+        }
+        dialog.setOnDeliverableEditedListener(this)
+        dialog.show(parentFragmentManager, "EditDeliverableDialog")
+    }
+
+
+
+
+    private fun onReviewDeliverable(deliverable: Deliverable) {
+        val dialog = ReviewDeliverableFragment().apply {
+            arguments = Bundle().apply {
+                putLong("deliverableId", deliverable.id)
+                putString("developerMessage", deliverable.developerMessage ?: "No hay ninguna entrega disponible.")
+            }
+        }
+        dialog.show(parentFragmentManager, "ReviewDeliverableDialog")
+    }
 }

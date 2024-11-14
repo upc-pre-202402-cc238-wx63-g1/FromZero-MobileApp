@@ -75,7 +75,8 @@ class CreateDeliverableFragment : DialogFragment() {
                     name = title,
                     description = description,
                     date = date,
-                    projectId = idProject
+                    projectId = idProject,
+                    state="Pendiente"
                 )
 
 
@@ -95,20 +96,18 @@ class CreateDeliverableFragment : DialogFragment() {
                                         date = it.date,
                                         state = "Pendiente",
                                         description = it.description,
-                                        message = "",
+                                        developerMessage = "",
                                         projectName = ""
                                     )
                                     listener?.onDeliverableCreated(newDeliverable)
                                     dismiss()
                                 }
                             } else {
-                                // Manejar error de la API
                                 Toast.makeText(context, "Error al crear el entregable: ${response.message()}", Toast.LENGTH_SHORT).show()
                             }
                         }
 
                         override fun onFailure(call: Call<DeliverableResponse>, t: Throwable) {
-                            // Manejar error en la conexión
                             Toast.makeText(context, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
                         }
                     })

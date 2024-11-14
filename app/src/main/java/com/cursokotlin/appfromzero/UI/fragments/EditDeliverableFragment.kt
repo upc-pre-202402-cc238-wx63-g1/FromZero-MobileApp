@@ -56,7 +56,7 @@ class EditDeliverableFragment : DialogFragment() {
             return null
         }
 
-        val deliverableTitle = arguments?.getString("deliverableTitle")
+        val deliverableTitle = arguments?.getString("deliverableName")
         val deliverableDescription = arguments?.getString("deliverableDescription")
         val deliverableDate = arguments?.getString("deliverableDate")
 
@@ -88,62 +88,57 @@ class EditDeliverableFragment : DialogFragment() {
         }
     }
 
-    private fun setupSaveButton(
-        view: View,
-        etTitle: EditText,
-        etDescription: EditText,
-        etDate: EditText
-    ) {
+    private fun setupSaveButton(view: View, etTitle: EditText, etDescription: EditText, etDate: EditText) {
         val saveButton = view.findViewById<Button>(R.id.btEdit)
         saveButton.setOnClickListener {
             val updatedTitle = etTitle.text.toString()
             val updatedDescription = etDescription.text.toString()
             val updatedDate = etDate.text.toString()
 
-            val updatedDeliverable = Deliverable(
-                id = deliverableId,  // ID del entregable
+            val updateRequest = UpdateDeliverableRequest(
                 name = updatedTitle,
                 description = updatedDescription,
-                date = updatedDate,
-                state = "Pendiente",
-                idProject = idProject,
-                message = "",
-                projectName = projectName
+                date = updatedDate
             )
 
-            updateDeliverableOnServer(updatedDeliverable)
+            updateDeliverableOnServer(updateRequest)
         }
     }
 
-    private fun updateDeliverableOnServer(updatedDeliverable: Deliverable) {
+    private fun updateDeliverableOnServer(updateRequest: UpdateDeliverableRequest) {
         val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", null)
 
         if (token != null) {
-            val updateRequest = UpdateDeliverableRequest(
-                name = updatedDeliverable.name,
-                description = updatedDeliverable.description,
-                date = updatedDeliverable.date,
-            )
-
-            val call = deliverableRepository.updateDeliverable(updatedDeliverable.id, updateRequest, token)
+            val call = deliverableRepository.updateDeliverable(deliverableId, updateRequest, token)
             Log.d("EditDeliverableFragment", "Request URL: ${call.request()}")
             Log.d("EditDeliverableFragment", "Request Body: $updateRequest")
 
             call.enqueue(object : Callback<UpdateDeliverableResponse> {
                 override fun onResponse(call: Call<UpdateDeliverableResponse>, response: Response<UpdateDeliverableResponse>) {
                     if (response.isSuccessful) {
-                        listener?.onDeliverableEdited(updatedDeliverable)
-                        dismiss()
-                        Toast.makeText(requireContext(), "Deliverable updated successfully", Toast.LENGTH_SHORT).show()
+                        val responseBody = response.body()
+
+                        if (responseBody != null) {
+
+                            val updatedDeliverable = Deliverable(
+                                id = responseBody.id,
+                                name = responseBody.name,
+                                description = responseBody.description,
+                                date = responseBody.date,
+                                state = responseBody.state,
+                                idProject = idProject,
+                                developerMessage = responseBody.developerMessage,
+                                projectName = projectName
+                            )
+
+                            listener?.onDeliverableEdited(updatedDeliverable)
+                            dismiss()
+                        }
                     } else {
-                        val errorMessage = response.errorBody()?.string() ?: "Unknown error"
-                        Log.e("EditDeliverableFragment", "Error code: ${response.code()}")
-                        Log.e("EditDeliverableFragment", "Error updating deliverable: $errorMessage")
-                        Toast.makeText(requireContext(), "Error updating deliverable: $errorMessage", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Error updating deliverable", Toast.LENGTH_SHORT).show()
                     }
                 }
-
                 override fun onFailure(call: Call<UpdateDeliverableResponse>, t: Throwable) {
                     Toast.makeText(requireContext(), "Connection error: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
@@ -152,6 +147,8 @@ class EditDeliverableFragment : DialogFragment() {
             Toast.makeText(requireContext(), "Authentication token not found", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 
     private fun setupCancelButton(view: View) {
         val cancelButton = view.findViewById<Button>(R.id.btCancel)

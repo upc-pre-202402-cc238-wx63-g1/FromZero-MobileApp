@@ -18,8 +18,9 @@ import java.util.Locale
 
 class DeliverableAdapter(
     var deliverables: List<Deliverable>,
-    private val onItemClick: (Deliverable) -> Unit,
-    private val onDeleteClick: (Long) -> Unit
+    private val onEditClick: (Deliverable) -> Unit,
+    private val onDeleteClick: (Long) -> Unit,
+    private val onReviewClick: (Deliverable) -> Unit
 ) : RecyclerView.Adapter<DeliverableAdapter.DeliverableViewHolder>() {
 
     var userRole: String? = null
@@ -32,7 +33,7 @@ class DeliverableAdapter(
     }
 
     override fun onBindViewHolder(holder: DeliverableViewHolder, position: Int) {
-        holder.bind(deliverables[position], this, userRole, position, onItemClick)
+        holder.bind(deliverables[position], this, userRole, position, onEditClick, onReviewClick)
     }
 
     override fun getItemCount(): Int = deliverables.size
@@ -64,8 +65,14 @@ class DeliverableAdapter(
             adapter: DeliverableAdapter,
             role: String?,
             position: Int,
-            onItemClick: (Deliverable) -> Unit
+            onItemClick: (Deliverable) -> Unit,
+            onReviewClick: (Deliverable) -> Unit
         ) {
+
+            itemView.findViewById<Button>(R.id.btReview).setOnClickListener {
+                onReviewClick(deliverable)
+            }
+
             tvDeliverableName.text = deliverable.name
             tvProjectName.text = deliverable.projectName
             tvDescriptionText.text = deliverable.description
