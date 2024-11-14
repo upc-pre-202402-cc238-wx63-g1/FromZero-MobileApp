@@ -1,8 +1,9 @@
 package com.cursokotlin.appfromzero.data.remote.deliverable
 
+import com.cursokotlin.appfromzero.UI.fragments.ReviewDeliverableFragment
 import com.cursokotlin.appfromzero.models.Deliverable
 import com.cursokotlin.appfromzero.models.deliverable.DeliverableResponse
-import com.cursokotlin.appfromzero.models.deliverable.ReviewDeliverableRequest
+import com.cursokotlin.appfromzero.models.deliverable.ReviewDeliverableResponse
 import com.cursokotlin.appfromzero.models.deliverable.UpdateDeliverableRequest
 import com.cursokotlin.appfromzero.models.deliverable.UpdateDeliverableResponse
 import retrofit2.Call
@@ -44,8 +45,7 @@ interface DeliverableService {
     @PATCH("deliverables/{deliverableId}/review")
     fun reviewDeliverable(
         @Path("deliverableId") deliverableId: Long,
-        @Body reviewRequest: ReviewDeliverableRequest,
+        @Body accepted: Boolean,
         @Header("Authorization") token: String
-    ): Call<DeliverableResponse>
-
+    ): Call<ReviewDeliverableResponse>
 }

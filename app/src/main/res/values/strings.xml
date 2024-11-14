@@ -87,5 +87,6 @@
     <string name="revisar_entregable">Revisar entregable</string>
     <string name="descripci_n_de_la_entrega">Descripción de la entrega</string>
     <string name="aprobar">Aprobar</string>
+    <string name="rechazar">Rechazar</string>
 
 </resources>
