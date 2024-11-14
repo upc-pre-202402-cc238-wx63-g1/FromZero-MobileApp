@@ -229,10 +229,8 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         dialog.show(parentFragmentManager, "EditDeliverableDialog")
     }
 
-
-
-
     private fun onReviewDeliverable(deliverable: Deliverable) {
+        Log.d("DeliverablesFragment", "onReviewDeliverable called for deliverableId: ${deliverable.id}")
         val dialog = ReviewDeliverableFragment().apply {
             arguments = Bundle().apply {
                 putLong("deliverableId", deliverable.id)
@@ -241,4 +239,14 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         }
         dialog.show(parentFragmentManager, "ReviewDeliverableDialog")
     }
+
+
+    fun updateDeliverableState(deliverableId: Long, newState: String) {
+        val index = deliverables.indexOfFirst { it.id == deliverableId }
+        if (index != -1) {
+            deliverables[index].state = newState
+            deliverableAdapter.notifyItemChanged(index)
+        }
+    }
+
 }

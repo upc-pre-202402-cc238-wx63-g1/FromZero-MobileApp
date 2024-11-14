@@ -80,6 +80,10 @@ class ReviewDeliverableFragment : DialogFragment() {
                 if (response.isSuccessful) {
                     val message = if (accepted) "Entrega aprobada" else "Entrega rechazada"
                     Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+
+                    val newState = if (accepted) "Approved" else "Rejected"
+                    (activity as? DeliverablesFragment)?.updateDeliverableState(deliverableId, newState)
+
                     dismiss()
                 } else {
                     val errorBody = response.errorBody()?.string()
@@ -94,6 +98,7 @@ class ReviewDeliverableFragment : DialogFragment() {
             }
         })
     }
+
 
     private fun setupCancelButton(view: View) {
         val cancelButton = view.findViewById<Button>(R.id.btCancel)

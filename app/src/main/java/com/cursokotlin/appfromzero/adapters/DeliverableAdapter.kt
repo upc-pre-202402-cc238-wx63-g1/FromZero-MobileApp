@@ -1,6 +1,7 @@
 package com.cursokotlin.appfromzero.adapters
 
 import android.animation.ValueAnimator
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,18 +70,14 @@ class DeliverableAdapter(
             onReviewClick: (Deliverable) -> Unit
         ) {
 
-            itemView.findViewById<Button>(R.id.btReview).setOnClickListener {
-                onReviewClick(deliverable)
-            }
-
             tvDeliverableName.text = deliverable.name
             tvProjectName.text = deliverable.projectName
             tvDescriptionText.text = deliverable.description
             tvDate.text = deliverable.date.toString()
             tvState.text = deliverable.state
             tvDescription.text = "Descripción"
-            ivClock.setImageResource(android.R.drawable.ic_menu_recent_history)
-            ivState.setImageResource(android.R.drawable.ic_menu_info_details)
+            ivState.setImageResource(R.drawable.ic_clock)
+            ivState.setImageResource(R.drawable.ic_check)
             ivArrow.setImageResource(R.drawable.arrow_down)
 
             val inputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -94,6 +91,38 @@ class DeliverableAdapter(
                 }
             } ?: "No Date"
             tvDate.text = formattedDate
+
+
+
+            when (deliverable.state) {
+                "Completed" -> {
+                    tvState.text = "Aprobado"
+                    ivState.setImageResource(R.drawable.ic_check)
+                    btReview.isEnabled = false
+                }
+                "Rejected" -> {
+                    tvState.text = "Rechazado"
+                    ivState.setImageResource(R.drawable.ic_reject)
+                    btReview.isEnabled = true
+                }
+                else -> {
+                    tvState.text = "Pendiente"
+                    ivState.setImageResource(R.drawable.ic_pending)
+                    btReview.isEnabled = true
+                }
+            }
+
+
+            btReview.setOnClickListener {
+                if (!btReview.isEnabled) {
+                    // si esta aprobado debe indicarle al usuario que no puede volver a revisarlo
+                    Toast.makeText(itemView.context, "El entregable ya ha sido revisado", Toast.LENGTH_SHORT).show()
+                } else {
+                    // sino que revise el entregable
+                    onReviewClick(deliverable)
+                }
+            }
+
 
             tvDescriptionText.visibility = View.GONE
             tvDescription.visibility = View.GONE
