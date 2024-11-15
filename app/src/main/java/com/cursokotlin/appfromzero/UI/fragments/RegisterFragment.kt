@@ -90,7 +90,7 @@ class RegisterFragment : Fragment() {
                 if (response.isSuccessful) {
                     Log.d("RegisterFragment", "Registration successful: ${response.body()}")
                     Toast.makeText(requireContext(), "Creación de cuenta exitosa", Toast.LENGTH_SHORT).show()
-                    navigateToLoginFragment()
+                    navigateToHappyPathFragment()
                 } else {
                     Toast.makeText(requireContext(), "Registration failed", Toast.LENGTH_SHORT).show()
                 }
@@ -109,7 +109,7 @@ class RegisterFragment : Fragment() {
                 if (response.isSuccessful) {
                     Log.d("RegisterFragment", "Registration successful: ${response.body()}")
                     Toast.makeText(requireContext(), "Creación de cuenta exitosa", Toast.LENGTH_SHORT).show()
-                    navigateToLoginFragment()
+                    navigateToHappyPathFragment()
                 } else {
                     Toast.makeText(requireContext(), "Registration failed", Toast.LENGTH_SHORT).show()
                 }
@@ -121,10 +121,14 @@ class RegisterFragment : Fragment() {
         })
     }
 
-    private fun navigateToLoginFragment() {
-        val loginFragment = LogInFragment()
+    private fun navigateToHappyPathFragment() {
+        val happyPathFragment = HappyPathFragment()
+        happyPathFragment.arguments = Bundle().apply {
+            putString("source", "register")
+        }
+
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragmentAuthContainer, loginFragment)
+            .replace(R.id.fragmentAuthContainer, happyPathFragment)
             .addToBackStack(null)
             .commit()
     }

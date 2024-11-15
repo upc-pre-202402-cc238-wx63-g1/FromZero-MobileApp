@@ -34,7 +34,7 @@
         android:src="@drawable/happy_person_path" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_accept"
         android:layout_width="300dp"
         android:layout_height="68dp"
         android:layout_gravity="center"
