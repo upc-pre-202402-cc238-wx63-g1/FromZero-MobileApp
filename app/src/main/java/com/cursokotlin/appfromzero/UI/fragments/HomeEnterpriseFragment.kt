@@ -164,7 +164,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                         dialog.show(parentFragmentManager, "ApplicantsDialog")
                     }
                     ProjectState.EN_PROGRESO -> {
-                        replaceFragmentViewProject(ViewProjectFragment(),projectCard.idProject, true)
+                        replaceFragmentViewProject(ViewProjectFragment(),projectCard.idProject, true, projectCard.projectProgress)
                     }
                     ProjectState.FINALIZADO -> {
                         Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
@@ -310,7 +310,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                             Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
                         }
                         ProjectState.EN_PROGRESO -> {
-                            replaceFragmentViewProject(ViewProjectFragment(),projectCard.idProject, true)
+                            replaceFragmentViewProject(ViewProjectFragment(),projectCard.idProject, true, projectCard.projectProgress)
                         }
                         ProjectState.FINALIZADO -> {
                             Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
@@ -491,10 +491,16 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         transaction.commit()
     }
 
-    private fun replaceFragmentViewProject(fragment: Fragment, idProject: Long, isWorking: Boolean) {
+    private fun replaceFragmentViewProject(fragment: Fragment, idProject: Long, isWorking: Boolean, progress: Int) {
         val bundle = Bundle().apply {
             putLong("idProject", idProject)
             putBoolean("isWorking", isWorking)
+            if(progress == 100) {
+                putBoolean("isFinished", true)
+            }
+            else{
+                putBoolean("isFinished", false)
+            }
         }
         fragment.arguments = bundle
 

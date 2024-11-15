@@ -35,10 +35,14 @@ class ViewProjectFragment : Fragment() {
 
     private var isWorking: Boolean = false
     private var idProject: Long = 0
+    private var isFinished: Boolean = false
     private val projectRepository = ProjectRepository(RetrofitClient.projectService)
 
     private lateinit var applyProjectDialog: Dialog
     private lateinit var btnConfirmApplyProject: Button
+    private lateinit var deleteProjectDialog: Dialog
+    private lateinit var btnConfirmDeleteProject: Button
+    private lateinit var btnCancelDeleteProject: Button
     private var projectData: List<ProjectData> = emptyList()
     lateinit var projectDataAdapter: ProjectDataAdapter
     override fun onCreateView(
@@ -49,6 +53,7 @@ class ViewProjectFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_view_project, container, false)
         val btDeliverables = view.findViewById<Button>(R.id.btDeliverables)
+        val btDeleteProject = view.findViewById<Button>(R.id.btDeleteProject)
 
         val sharedPreferences =
             requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
@@ -58,14 +63,19 @@ class ViewProjectFragment : Fragment() {
         arguments?.let {
             idProject = it.getLong("idProject")
             isWorking = it.getBoolean("isWorking", false)
+            isFinished = it.getBoolean("isFinished", false)
         }
 
         // Inicializa los diálogos ANTES de asignar los botones
         setupApplyProjectDialog()
+        setupDeleteProjectDialog()
         loadDescription(view, idProject, token)
 
         // Cambiar texto del botón según si es developer
         btDeliverables.text = if (isWorking) "Entregables" else "Postular"
+
+        // Cambiar visibilidad del botón de eliminar proyecto
+        btDeleteProject.visibility = if (isFinished) View.VISIBLE else View.GONE
 
         btDeliverables.setOnClickListener {
             if (isWorking) {
@@ -74,6 +84,7 @@ class ViewProjectFragment : Fragment() {
             } else {
 
                 applyProjectDialog.show()
+
 
                 btnConfirmApplyProject.setOnClickListener {
                     val call = projectRepository.addCandidateToProject(idProject, userId, token!!)
@@ -103,6 +114,31 @@ class ViewProjectFragment : Fragment() {
                 }
             }
         }
+
+        btDeleteProject.setOnClickListener{
+            deleteProjectDialog.show()
+            btnConfirmDeleteProject.setOnClickListener {
+                val call = projectRepository.deleteProject(idProject, token!!)
+                call.enqueue(object : Callback<ResponseBody> {
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                            Toast.makeText(context, "Proyecto eliminado", Toast.LENGTH_SHORT).show()
+                            deleteProjectDialog.dismiss()
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragmenContainer, HomeEnterpriseFragment())
+                                .addToBackStack(null)
+                                .commit()
+                            (activity as MainActivity).showHomeTab()
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Toast.makeText(context, "Error al eliminar proyecto", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            }
+            btnCancelDeleteProject.setOnClickListener {
+                deleteProjectDialog.dismiss()
+            }
+        }
         return view
     }
 
@@ -119,6 +155,23 @@ class ViewProjectFragment : Fragment() {
         applyProjectDialog.setCancelable(true)
 
         btnConfirmApplyProject = applyProjectDialog.findViewById(R.id.btn_postular)
+    }
+
+    private fun setupDeleteProjectDialog() {
+        deleteProjectDialog = Dialog(requireContext())
+        deleteProjectDialog.setContentView(R.layout.delete_project_dialog)
+        deleteProjectDialog.window?.setBackgroundDrawable(
+            ContextCompat.getDrawable(requireContext(), R.drawable.rounded_dialog_background)
+        )
+        deleteProjectDialog.window?.setLayout(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        deleteProjectDialog.setCancelable(true)
+
+        btnConfirmDeleteProject = deleteProjectDialog.findViewById(R.id.btn_aceptar)
+        btnConfirmDeleteProject = deleteProjectDialog.findViewById(R.id.btn_cancelar)
+
     }
 
     private fun loadDescription(view: View, idProject: Long, token: String?) {
