@@ -100,11 +100,20 @@ class DeliverableAdapter(
                     tvState.text = "Aprobado"
                     ivState.setImageResource(R.drawable.ic_check)
                     btReview.isEnabled = false
+                    btSend.isEnabled = false
                 }
                 "Rejected" -> {
                     tvState.text = "Rechazado"
                     ivState.setImageResource(R.drawable.ic_reject)
                     btReview.isEnabled = true
+                }
+                "Awaiting Review" -> {
+                    tvState.text = "En revisión"
+                    ivState.setImageResource(R.drawable.ic_reviewing)
+                    btSend.isEnabled = false
+                    btSend.setOnClickListener {
+                        Toast.makeText(itemView.context, "Ya ha subido un avance a este entregable", Toast.LENGTH_SHORT).show()
+                    }
                 }
                 else -> {
                     tvState.text = "Pendiente"
