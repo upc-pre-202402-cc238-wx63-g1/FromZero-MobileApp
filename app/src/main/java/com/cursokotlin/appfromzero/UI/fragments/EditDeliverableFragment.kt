@@ -1,5 +1,6 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -19,6 +20,7 @@ import com.cursokotlin.appfromzero.models.deliverable.UpdateDeliverableResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Calendar
 
 class EditDeliverableFragment : DialogFragment() {
 
@@ -30,6 +32,7 @@ class EditDeliverableFragment : DialogFragment() {
     private val deliverableRepository = DeliverableRepository(RetrofitClient.deliverableService)
     private var idProject: Long = 0
     private var deliverableId: Long = 0
+    private var projectName: String = ""
 
     fun setOnDeliverableEditedListener(listener: OnDeliverableEditedListener) {
         this.listener = listener
@@ -43,6 +46,7 @@ class EditDeliverableFragment : DialogFragment() {
         arguments?.let {
             idProject = it.getLong("idProject")
             deliverableId = it.getLong("deliverableId")
+            projectName = it.getString("projectName", "")
         }
 
         if (deliverableId == 0L) {
@@ -52,7 +56,7 @@ class EditDeliverableFragment : DialogFragment() {
             return null
         }
 
-        val deliverableTitle = arguments?.getString("deliverableTitle")
+        val deliverableTitle = arguments?.getString("deliverableName")
         val deliverableDescription = arguments?.getString("deliverableDescription")
         val deliverableDate = arguments?.getString("deliverableDate")
 
@@ -64,66 +68,77 @@ class EditDeliverableFragment : DialogFragment() {
         etDescription.setText(deliverableDescription)
         etDate.setText(deliverableDate)
 
+        setupDatePicker(etDate)
         setupCancelButton(view)
         setupSaveButton(view, etTitle, etDescription, etDate)
         return view
     }
 
-    private fun setupSaveButton(
-        view: View,
-        etTitle: EditText,
-        etDescription: EditText,
-        etDate: EditText
-    ) {
+    private fun setupDatePicker(dateField: EditText) {
+        dateField.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+            val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+                val formattedDate = String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
+                dateField.setText(formattedDate)
+            }, year, month, day)
+            datePickerDialog.show()
+        }
+    }
+
+    private fun setupSaveButton(view: View, etTitle: EditText, etDescription: EditText, etDate: EditText) {
         val saveButton = view.findViewById<Button>(R.id.btEdit)
         saveButton.setOnClickListener {
             val updatedTitle = etTitle.text.toString()
             val updatedDescription = etDescription.text.toString()
             val updatedDate = etDate.text.toString()
 
-            val updatedDeliverable = Deliverable(
-                id = deliverableId,  // ID del entregable
+            val updateRequest = UpdateDeliverableRequest(
                 name = updatedTitle,
                 description = updatedDescription,
-                date = updatedDate,
-                state = "Pendiente",
-                idProject = idProject,
-                message = ""
+                date = updatedDate
             )
 
-            updateDeliverableOnServer(updatedDeliverable)
+            updateDeliverableOnServer(updateRequest)
         }
     }
 
-    private fun updateDeliverableOnServer(updatedDeliverable: Deliverable) {
+    private fun updateDeliverableOnServer(updateRequest: UpdateDeliverableRequest) {
         val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", null)
 
         if (token != null) {
-            val updateRequest = UpdateDeliverableRequest(
-                name = updatedDeliverable.name,
-                description = updatedDeliverable.description,
-                date = updatedDeliverable.date,
-            )
-
-            val call = deliverableRepository.updateDeliverable(updatedDeliverable.id, updateRequest, token)
+            val call = deliverableRepository.updateDeliverable(deliverableId, updateRequest, token)
             Log.d("EditDeliverableFragment", "Request URL: ${call.request()}")
             Log.d("EditDeliverableFragment", "Request Body: $updateRequest")
 
             call.enqueue(object : Callback<UpdateDeliverableResponse> {
                 override fun onResponse(call: Call<UpdateDeliverableResponse>, response: Response<UpdateDeliverableResponse>) {
                     if (response.isSuccessful) {
-                        listener?.onDeliverableEdited(updatedDeliverable)
-                        dismiss()
-                        Toast.makeText(requireContext(), "Deliverable updated successfully", Toast.LENGTH_SHORT).show()
+                        val responseBody = response.body()
+
+                        if (responseBody != null) {
+
+                            val updatedDeliverable = Deliverable(
+                                id = responseBody.id,
+                                name = responseBody.name,
+                                description = responseBody.description,
+                                date = responseBody.date,
+                                state = responseBody.state,
+                                idProject = idProject,
+                                developerMessage = responseBody.developerMessage,
+                                projectName = projectName
+                            )
+
+                            listener?.onDeliverableEdited(updatedDeliverable)
+                            dismiss()
+                        }
                     } else {
-                        val errorMessage = response.errorBody()?.string() ?: "Unknown error"
-                        Log.e("EditDeliverableFragment", "Error code: ${response.code()}")
-                        Log.e("EditDeliverableFragment", "Error updating deliverable: $errorMessage")
-                        Toast.makeText(requireContext(), "Error updating deliverable: $errorMessage", Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Error updating deliverable", Toast.LENGTH_SHORT).show()
                     }
                 }
-
                 override fun onFailure(call: Call<UpdateDeliverableResponse>, t: Throwable) {
                     Toast.makeText(requireContext(), "Connection error: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
@@ -132,6 +147,8 @@ class EditDeliverableFragment : DialogFragment() {
             Toast.makeText(requireContext(), "Authentication token not found", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 
     private fun setupCancelButton(view: View) {
         val cancelButton = view.findViewById<Button>(R.id.btCancel)

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvMessageTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="165dp"
+        android:text="@string/descripci_n_de_la_entrega"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvReviewTitle" />
+
+
+    <Button
+        android:id="@+id/btSend"
+        android:layout_width="321dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="40dp"
+        android:backgroundTint="@color/white"
+        android:text="@string/enviar"
+        android:textColor="@color/Cyan"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayout3"
+        app:strokeColor="@color/material_dynamic_neutral80"
+        app:strokeWidth="1sp" />
+
+    <Button
+        android:id="@+id/btCancel"
+        android:layout_width="321dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="32dp"
+        android:backgroundTint="@color/white"
+        android:text="@string/cancelar"
+        android:textColor="@color/primary_text_color"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btSend"
+        app:layout_constraintVertical_bias="0.0"
+        app:strokeColor="@color/material_dynamic_neutral80"
+        app:strokeWidth="1sp" />
+
+    <TextView
+        android:id="@+id/tvReviewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:textSize="30sp"
+        android:text="Enviar entregable"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout3"
+        android:layout_width="330dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="42dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvMessageTitle">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etDeveloperMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ejemplo: Se entregó un prototipo interactivo de la interfaz de usuario de la Plataforma de Comercio Electrónico Geekit. " />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

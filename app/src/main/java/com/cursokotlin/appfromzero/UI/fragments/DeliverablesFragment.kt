@@ -17,22 +17,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.DeliverableAdapter
-import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
 import com.cursokotlin.appfromzero.data.repository.deliverable.DeliverableRepository
+import com.cursokotlin.appfromzero.data.repository.project.ProjectRepository
 import com.cursokotlin.appfromzero.models.Deliverable
 import com.cursokotlin.appfromzero.models.HomeViewModel
-import com.cursokotlin.appfromzero.models.ProjectCard
-import com.cursokotlin.appfromzero.models.ProjectState
-
 import com.cursokotlin.appfromzero.models.deliverable.DeliverableCard
+import com.cursokotlin.appfromzero.models.project.Project
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.Retrofit
 
 class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverableCreatedListener,
     EditDeliverableFragment.OnDeliverableEditedListener {
-
 
     private lateinit var deliverableAdapter: DeliverableAdapter
     private lateinit var rvDeliverables: RecyclerView
@@ -40,7 +36,8 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
     private lateinit var cvCardEmpty: CardView
     private val homeViewModel: HomeViewModel by activityViewModels()
 
-    private val deliverableRepository=DeliverableRepository(RetrofitClient.deliverableService)
+    private val projectRepository = ProjectRepository(RetrofitClient.projectService)
+    private val deliverableRepository = DeliverableRepository(RetrofitClient.deliverableService)
     private var deliverables: MutableList<Deliverable> = mutableListOf()
     private var deliverableList: List<DeliverableCard> = emptyList()
     private var idProject: Long = 0
@@ -56,49 +53,42 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             insets
         }
 
-        initView(view)
-
-
-        homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
-            when (role) {
-                "desarrollador" -> {
-
-                    ivAddDeliverable.visibility = View.GONE
-                    cvCardEmpty.visibility = View.VISIBLE
-                    val adapter = rvDeliverables.adapter as? DeliverableAdapter
-                    if (adapter != null) {
-                        adapter.userRole = role
-                    }
-                }
-            }
-        }
-
         val sharedPreferences =
             requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", null)
         arguments?.let {
             idProject = it.getLong("idProject")
         }
-        loadDeliverables(view,idProject,token)
+
+        initView(view)
+        loadDeliverables(view, idProject, token)
         return view
     }
 
     private fun initView(view: View) {
         rvDeliverables = view.findViewById(R.id.rvDeliverables)
-        deliverableAdapter = DeliverableAdapter(deliverables) { deliverable ->
-            val dialog = EditDeliverableFragment().apply {
-                arguments = Bundle().apply {
-                    putLong("idProject", deliverable.idProject)
-                    putLong("deliverableId", deliverable.id)
-                    putString("deliverableTitle", deliverable.name)
-                    putString("deliverableDescription", deliverable.description)
-                    putString("deliverableDate", deliverable.date)
-                }
+
+        homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
+            deliverableAdapter = DeliverableAdapter(
+                deliverables,
+                role,
+                { deliverable -> onDeliverableSelected(deliverable) },
+                { deliverableId -> deleteDeliverable(deliverableId) },
+                { deliverable -> onReviewDeliverable(deliverable) },
+                { deliverableId -> onSendDeliverable(deliverableId) }
+            )
+            rvDeliverables.adapter = deliverableAdapter
+            deliverableAdapter.notifyDataSetChanged()
+
+            Toast.makeText(requireContext(), "El rol de usuario es: $role", Toast.LENGTH_SHORT).show()
+            if (role == "ROLE_DEVELOPER") {
+                ivAddDeliverable.visibility = View.GONE
+                cvCardEmpty.visibility = View.VISIBLE
+            } else {
+                ivAddDeliverable.visibility = View.VISIBLE
             }
-            dialog.setOnDeliverableEditedListener(this@DeliverablesFragment)
-            dialog.show(parentFragmentManager, "EditDeliverableDialog")
         }
-        rvDeliverables.adapter = deliverableAdapter
+
         rvDeliverables.layoutManager = LinearLayoutManager(requireContext())
 
         ivAddDeliverable = view.findViewById(R.id.ivAddDeliverable)
@@ -107,13 +97,38 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             val dialog = CreateDeliverableFragment()
             val bundle = Bundle()
             bundle.putLong("idProject", idProject)
-
             dialog.arguments = bundle
             dialog.setOnDeliverableCreatedListener(this)
             dialog.show(parentFragmentManager, "AddDeliverableDialog")
         }
     }
 
+    private fun loadProjectName(projectId: Long, token: String?) {
+        if (token == null) {
+            Toast.makeText(requireContext(), "Token no encontrado", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val projectCall = projectRepository.getProjectById(projectId, token)
+        projectCall.enqueue(object : retrofit2.Callback<Project> {
+            override fun onResponse(call: Call<Project>, response: Response<Project>) {
+                if (response.isSuccessful) {
+                    val project = response.body()
+                    val projectName = project?.name ?: "Nombre no disponible"
+                    deliverables.forEach { deliverable ->
+                        deliverable.projectName = projectName
+                    }
+                    deliverableAdapter.notifyDataSetChanged()
+                } else {
+                    Toast.makeText(requireContext(), "Error al obtener el proyecto", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Project>, t: Throwable) {
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_LONG).show()
+            }
+        })
+    }
 
     private fun loadDeliverables(view: View, projectId: Long, token: String?) {
         if (token == null) {
@@ -121,15 +136,15 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             return
         }
 
-        val deliverableCall = deliverableRepository.getDeliverablesByProjectId(projectId,token)
+        val deliverableCall = deliverableRepository.getDeliverablesByProjectId(projectId, token)
         deliverableCall.enqueue(object : retrofit2.Callback<List<Deliverable>> {
             override fun onResponse(call: Call<List<Deliverable>>, response: Response<List<Deliverable>>) {
                 if (response.isSuccessful) {
                     deliverables = (response.body() ?: emptyList()).toMutableList()
                     bindDeliverablesToViews()
                     initView(view)
+                    loadProjectName(projectId, token)
                     Log.d("API Response", "Deliverables: $deliverables")
-
                 } else {
                     Toast.makeText(requireContext(), "Error al obtener los entregables", Toast.LENGTH_SHORT).show()
                 }
@@ -137,7 +152,37 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
 
             override fun onFailure(call: Call<List<Deliverable>>, t: Throwable) {
                 Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_LONG).show()
-                Log.wtf("deliverables","Error: ${t.message}")
+                Log.wtf("deliverables", "Error: ${t.message}")
+            }
+        })
+    }
+
+    private fun deleteDeliverable(deliverableId: Long) {
+        val token = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+            .getString("token", null)
+        if (token == null) {
+            Toast.makeText(requireContext(), "Token no encontrado", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val deleteCall = deliverableRepository.deleteDeliverable(deliverableId, token)
+        deleteCall.enqueue(object : retrofit2.Callback<Void> {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                if (response.isSuccessful) {
+                    Toast.makeText(requireContext(), "Entregable eliminado", Toast.LENGTH_SHORT).show()
+                    deliverables.removeAll { it.id == deliverableId }
+                    deliverableAdapter.notifyDataSetChanged()
+                    loadDeliverables(requireView(), idProject, token)
+                } else {
+                    val errorMessage = response.errorBody()?.string() ?: "Error desconocido"
+                    Log.e("DeliverablesFragment", "Error al eliminar el deliverable: $errorMessage")
+                    Toast.makeText(requireContext(), "Error al eliminar el deliverable", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<Void>, t: Throwable) {
+                Log.e("DeliverablesFragment", "Error: ${t.message}", t)
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -151,10 +196,12 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
                 date = deliverable.date ?: "No Date",
                 state = deliverable.state ?: "No State",
                 projectId = deliverable.idProject,
-                developerMessage = deliverable.message ?: "No Message"
+                developerMessage = deliverable.developerMessage ?: "No Message",
+                projectName = deliverable.projectName ?: "No Project Name"
             )
         }
     }
+
 
     override fun onDeliverableCreated(deliverable: Deliverable) {
         deliverables.add(deliverable)
@@ -162,6 +209,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         rvDeliverables.scrollToPosition(deliverables.size - 1)
         loadDeliverables(requireView(), idProject, requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE).getString("token", null))
     }
+
     override fun onDeliverableEdited(newDeliverable: Deliverable) {
         val index = deliverables.indexOfFirst { it.id == newDeliverable.id }
         if (index != -1) {
@@ -170,6 +218,48 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             val viewHolder = rvDeliverables.findViewHolderForAdapterPosition(index) as? DeliverableAdapter.DeliverableViewHolder
             viewHolder?.collapseCard()
         }
+    }
+
+    private fun onDeliverableSelected(deliverable: Deliverable) {
+        val dialog = EditDeliverableFragment().apply {
+            arguments = Bundle().apply {
+                putLong("deliverableId", deliverable.id)
+                putString("deliverableName", deliverable.name)
+                putString("deliverableDescription", deliverable.description)
+                putString("deliverableDate", deliverable.date)
+                putString("projectName", deliverable.projectName)
+            }
+        }
+        dialog.setOnDeliverableEditedListener(this)
+        dialog.show(parentFragmentManager, "EditDeliverableDialog")
+    }
+
+    private fun onReviewDeliverable(deliverable: Deliverable) {
+        Log.d("DeliverablesFragment", "onReviewDeliverable called for deliverableId: ${deliverable.id}")
+        val dialog = ReviewDeliverableFragment().apply {
+            arguments = Bundle().apply {
+                putLong("deliverableId", deliverable.id)
+                putString("developerMessage", deliverable.developerMessage ?: "No hay ninguna entrega disponible.")
+            }
+        }
+        dialog.show(parentFragmentManager, "ReviewDeliverableDialog")
+    }
+
+
+    fun updateDeliverableState(deliverableId: Long, newState: String) {
+        val index = deliverables.indexOfFirst { it.id == deliverableId }
+        if (index != -1) {
+            deliverables[index].state = newState
+            deliverableAdapter.notifyItemChanged(index)
+        }
+    }
+
+    private fun onSendDeliverable(deliverableId: Long) {
+        val sendDeliverableFragment = SendDeliverableFragment()
+        val bundle = Bundle()
+        bundle.putLong("deliverableId", deliverableId)
+        sendDeliverableFragment.arguments = bundle
+        sendDeliverableFragment.show(parentFragmentManager, "sendDeliverableFragment")
     }
 
 }

@@ -9,5 +9,6 @@ data class DeliverableCard (
     val date: String,
     val state: String,
     val projectId: Long,
-    val developerMessage: String
+    val developerMessage: String,
+    var projectName:String
 )
