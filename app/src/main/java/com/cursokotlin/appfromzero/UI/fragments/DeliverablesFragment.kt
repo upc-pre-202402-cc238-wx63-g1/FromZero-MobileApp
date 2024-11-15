@@ -53,9 +53,33 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             insets
         }
 
+        val sharedPreferences =
+            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("token", null)
+        arguments?.let {
+            idProject = it.getLong("idProject")
+        }
+
         initView(view)
+        loadDeliverables(view, idProject, token)
+        return view
+    }
+
+    private fun initView(view: View) {
+        rvDeliverables = view.findViewById(R.id.rvDeliverables)
 
         homeViewModel.userRole.observe(viewLifecycleOwner) { role ->
+            deliverableAdapter = DeliverableAdapter(
+                deliverables,
+                role,
+                { deliverable -> onDeliverableSelected(deliverable) },
+                { deliverableId -> deleteDeliverable(deliverableId) },
+                { deliverable -> onReviewDeliverable(deliverable) }
+            )
+            rvDeliverables.adapter = deliverableAdapter
+            deliverableAdapter.notifyDataSetChanged()
+
+            Toast.makeText(requireContext(), "El rol de usuario es: $role", Toast.LENGTH_SHORT).show()
             if (role == "ROLE_DEVELOPER") {
                 ivAddDeliverable.visibility = View.GONE
                 cvCardEmpty.visibility = View.VISIBLE
@@ -64,26 +88,6 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             }
         }
 
-        val sharedPreferences =
-            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-        val token = sharedPreferences.getString("token", null)
-        arguments?.let {
-            idProject = it.getLong("idProject")
-        }
-        loadDeliverables(view, idProject, token)
-        return view
-    }
-
-    private fun initView(view: View) {
-        rvDeliverables = view.findViewById(R.id.rvDeliverables)
-        deliverableAdapter = DeliverableAdapter(deliverables, { deliverable ->
-            onDeliverableSelected(deliverable)
-        }, { deliverableId ->
-            deleteDeliverable(deliverableId)
-        }, { deliverable ->
-            onReviewDeliverable(deliverable)
-        })
-        rvDeliverables.adapter = deliverableAdapter
         rvDeliverables.layoutManager = LinearLayoutManager(requireContext())
 
         ivAddDeliverable = view.findViewById(R.id.ivAddDeliverable)

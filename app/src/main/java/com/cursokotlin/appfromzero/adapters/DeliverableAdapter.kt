@@ -19,12 +19,12 @@ import java.util.Locale
 
 class DeliverableAdapter(
     var deliverables: List<Deliverable>,
+    private val userRole: String,
     private val onEditClick: (Deliverable) -> Unit,
     private val onDeleteClick: (Long) -> Unit,
     private val onReviewClick: (Deliverable) -> Unit
 ) : RecyclerView.Adapter<DeliverableAdapter.DeliverableViewHolder>() {
 
-    var userRole: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeliverableViewHolder {
         val view = LayoutInflater
