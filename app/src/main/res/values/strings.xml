@@ -86,5 +86,8 @@
     <string name="nombres">Nombres</string>
     <string name="apellidos">Apellidos</string>
     <string name="nombre_de_la_empresa">Nombre de la empresa</string>
+    <string name="acci_n_realizada_con_xito">Acción realizada con éxito</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="ups_parece_que_ocurrio_un_error">Ups! Parece que ocurrio un error</string>
 
 </resources>
