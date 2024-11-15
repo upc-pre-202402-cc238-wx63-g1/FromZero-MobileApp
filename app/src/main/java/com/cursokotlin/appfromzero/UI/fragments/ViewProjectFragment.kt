@@ -40,6 +40,9 @@ class ViewProjectFragment : Fragment() {
 
     private lateinit var applyProjectDialog: Dialog
     private lateinit var btnConfirmApplyProject: Button
+    private lateinit var deleteProjectDialog: Dialog
+    private lateinit var btnConfirmDeleteProject: Button
+    private lateinit var btnCancelDeleteProject: Button
     private var projectData: List<ProjectData> = emptyList()
     lateinit var projectDataAdapter: ProjectDataAdapter
     override fun onCreateView(
@@ -65,6 +68,7 @@ class ViewProjectFragment : Fragment() {
 
         // Inicializa los diálogos ANTES de asignar los botones
         setupApplyProjectDialog()
+        setupDeleteProjectDialog()
         loadDescription(view, idProject, token)
 
         // Cambiar texto del botón según si es developer
@@ -80,6 +84,7 @@ class ViewProjectFragment : Fragment() {
             } else {
 
                 applyProjectDialog.show()
+
 
                 btnConfirmApplyProject.setOnClickListener {
                     val call = projectRepository.addCandidateToProject(idProject, userId, token!!)
@@ -109,6 +114,31 @@ class ViewProjectFragment : Fragment() {
                 }
             }
         }
+
+        btDeleteProject.setOnClickListener{
+            deleteProjectDialog.show()
+            btnConfirmDeleteProject.setOnClickListener {
+                val call = projectRepository.deleteProject(idProject, token!!)
+                call.enqueue(object : Callback<ResponseBody> {
+                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                            Toast.makeText(context, "Proyecto eliminado", Toast.LENGTH_SHORT).show()
+                            deleteProjectDialog.dismiss()
+                            parentFragmentManager.beginTransaction()
+                                .replace(R.id.fragmenContainer, HomeEnterpriseFragment())
+                                .addToBackStack(null)
+                                .commit()
+                            (activity as MainActivity).showHomeTab()
+                    }
+
+                    override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                        Toast.makeText(context, "Error al eliminar proyecto", Toast.LENGTH_SHORT).show()
+                    }
+                })
+            }
+            btnCancelDeleteProject.setOnClickListener {
+                deleteProjectDialog.dismiss()
+            }
+        }
         return view
     }
 
@@ -125,6 +155,23 @@ class ViewProjectFragment : Fragment() {
         applyProjectDialog.setCancelable(true)
 
         btnConfirmApplyProject = applyProjectDialog.findViewById(R.id.btn_postular)
+    }
+
+    private fun setupDeleteProjectDialog() {
+        deleteProjectDialog = Dialog(requireContext())
+        deleteProjectDialog.setContentView(R.layout.delete_project_dialog)
+        deleteProjectDialog.window?.setBackgroundDrawable(
+            ContextCompat.getDrawable(requireContext(), R.drawable.rounded_dialog_background)
+        )
+        deleteProjectDialog.window?.setLayout(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        deleteProjectDialog.setCancelable(true)
+
+        btnConfirmDeleteProject = deleteProjectDialog.findViewById(R.id.btn_aceptar)
+        btnConfirmDeleteProject = deleteProjectDialog.findViewById(R.id.btn_cancelar)
+
     }
 
     private fun loadDescription(view: View, idProject: Long, token: String?) {

@@ -10,6 +10,7 @@ import okhttp3.ResponseBody
 
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.PATCH
@@ -63,4 +64,9 @@ interface ProjectService {
         @Header("Authorization") token: String
     ): Call<Project>
 
+    @DELETE("projects/{projectId}")
+    fun deleteProject(
+        @Path("projectId") projectId: Long,
+        @Header("Authorization") token: String
+    ): Call<ResponseBody>
 }
