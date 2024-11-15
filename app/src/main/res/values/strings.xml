@@ -83,5 +83,8 @@
     <string name="iniciar_sesi_n">Iniciar Sesión</string>
 
     <string name="aplicantes">Aplicantes</string>
+    <string name="nombres">Nombres</string>
+    <string name="apellidos">Apellidos</string>
+    <string name="nombre_de_la_empresa">Nombre de la empresa</string>
 
 </resources>

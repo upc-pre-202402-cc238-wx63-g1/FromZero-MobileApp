@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_line"
-                android:hint="@string/first_name"
+                android:hint="@string/nombres"
                 android:textColor="@color/green_fromzero" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -97,7 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_line"
-                android:hint="@string/last_name"
+                android:hint="@string/apellidos"
                 android:textColor="@color/green_fromzero" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -119,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_line"
-                android:hint="@string/enterprise_name"
+                android:hint="@string/nombre_de_la_empresa"
                 android:textColor="@color/green_fromzero" />
         </com.google.android.material.textfield.TextInputLayout>
 
