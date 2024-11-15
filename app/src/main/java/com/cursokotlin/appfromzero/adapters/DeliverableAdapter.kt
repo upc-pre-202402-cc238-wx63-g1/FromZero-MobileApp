@@ -1,7 +1,8 @@
 package com.cursokotlin.appfromzero.adapters
 
 import android.animation.ValueAnimator
-import android.graphics.Color
+import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +11,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
@@ -22,9 +24,9 @@ class DeliverableAdapter(
     private val userRole: String,
     private val onEditClick: (Deliverable) -> Unit,
     private val onDeleteClick: (Long) -> Unit,
-    private val onReviewClick: (Deliverable) -> Unit
+    private val onReviewClick: (Deliverable) -> Unit,
+    private val onSendClick: (Long) -> Unit
 ) : RecyclerView.Adapter<DeliverableAdapter.DeliverableViewHolder>() {
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeliverableViewHolder {
         val view = LayoutInflater
@@ -34,11 +36,10 @@ class DeliverableAdapter(
     }
 
     override fun onBindViewHolder(holder: DeliverableViewHolder, position: Int) {
-        holder.bind(deliverables[position], this, userRole, position, onEditClick, onReviewClick)
+        holder.bind(deliverables[position], this, userRole, position, onEditClick, onReviewClick, onSendClick)
     }
 
     override fun getItemCount(): Int = deliverables.size
-
 
     inner class DeliverableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -56,8 +57,8 @@ class DeliverableAdapter(
 
         private val btDelete = itemView.findViewById<Button>(R.id.btDelete)
         private val btEdit = itemView.findViewById<Button>(R.id.btEdit)
-        private val btReview=itemView.findViewById<Button>(R.id.btReview)
-        private val btSend=itemView.findViewById<Button>(R.id.btSend)
+        private val btReview = itemView.findViewById<Button>(R.id.btReview)
+        private val btSend = itemView.findViewById<Button>(R.id.btSend)
 
         private var isExpanded = false
         private var userRole: String? = null
@@ -68,7 +69,8 @@ class DeliverableAdapter(
             role: String?,
             position: Int,
             onItemClick: (Deliverable) -> Unit,
-            onReviewClick: (Deliverable) -> Unit
+            onReviewClick: (Deliverable) -> Unit,
+            onSendClick: (Long) -> Unit
         ) {
 
             tvDeliverableName.text = deliverable.name
@@ -93,8 +95,6 @@ class DeliverableAdapter(
             } ?: "No Date"
             tvDate.text = formattedDate
 
-
-
             when (deliverable.state) {
                 "Completed" -> {
                     tvState.text = "Aprobado"
@@ -113,24 +113,24 @@ class DeliverableAdapter(
                 }
             }
 
-
             btReview.setOnClickListener {
                 if (!btReview.isEnabled) {
-                    // si esta aprobado debe indicarle al usuario que no puede volver a revisarlo
                     Toast.makeText(itemView.context, "El entregable ya ha sido revisado", Toast.LENGTH_SHORT).show()
                 } else {
-                    // sino que revise el entregable
                     onReviewClick(deliverable)
                 }
             }
 
+            btSend.setOnClickListener {
+                onSendClick(deliverable.id)
+            }
 
             tvDescriptionText.visibility = View.GONE
             tvDescription.visibility = View.GONE
             btDelete.visibility = View.GONE
             btEdit.visibility = View.GONE
             btReview.visibility = View.GONE
-            btSend.visibility=View.GONE
+            btSend.visibility = View.GONE
 
             userRole = role
 
@@ -152,8 +152,6 @@ class DeliverableAdapter(
             btEdit.setOnClickListener {
                 onItemClick(deliverable)
             }
-
-
         }
 
         fun collapseCard() {
@@ -191,7 +189,7 @@ class DeliverableAdapter(
                 btDelete.visibility = View.VISIBLE
                 btEdit.visibility = View.VISIBLE
                 btReview.visibility = View.VISIBLE
-            }else{
+            } else {
                 btSend.visibility = View.VISIBLE
             }
 
@@ -212,7 +210,5 @@ class DeliverableAdapter(
             animator.interpolator = AccelerateDecelerateInterpolator()
             animator.start()
         }
-
-
     }
 }

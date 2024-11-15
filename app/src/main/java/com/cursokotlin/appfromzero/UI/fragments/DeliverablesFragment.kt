@@ -74,7 +74,8 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
                 role,
                 { deliverable -> onDeliverableSelected(deliverable) },
                 { deliverableId -> deleteDeliverable(deliverableId) },
-                { deliverable -> onReviewDeliverable(deliverable) }
+                { deliverable -> onReviewDeliverable(deliverable) },
+                { deliverableId -> onSendDeliverable(deliverableId) }
             )
             rvDeliverables.adapter = deliverableAdapter
             deliverableAdapter.notifyDataSetChanged()
@@ -251,6 +252,14 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             deliverables[index].state = newState
             deliverableAdapter.notifyItemChanged(index)
         }
+    }
+
+    private fun onSendDeliverable(deliverableId: Long) {
+        val sendDeliverableFragment = SendDeliverableFragment()
+        val bundle = Bundle()
+        bundle.putLong("deliverableId", deliverableId)
+        sendDeliverableFragment.arguments = bundle
+        sendDeliverableFragment.show(parentFragmentManager, "sendDeliverableFragment")
     }
 
 }

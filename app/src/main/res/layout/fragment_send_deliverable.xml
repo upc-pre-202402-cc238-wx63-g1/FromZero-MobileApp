@@ -79,7 +79,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tvMessageTitle">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etDeliverable"
+            android:id="@+id/etDeveloperMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Ejemplo: Se entregó un prototipo interactivo de la interfaz de usuario de la Plataforma de Comercio Electrónico Geekit. " />

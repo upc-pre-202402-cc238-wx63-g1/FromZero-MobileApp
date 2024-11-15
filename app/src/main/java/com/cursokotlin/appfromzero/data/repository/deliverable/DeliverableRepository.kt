@@ -4,6 +4,7 @@ import com.cursokotlin.appfromzero.data.remote.deliverable.DeliverableService
 import com.cursokotlin.appfromzero.models.Deliverable
 import com.cursokotlin.appfromzero.models.deliverable.DeliverableResponse
 import com.cursokotlin.appfromzero.models.deliverable.ReviewDeliverableResponse
+import com.cursokotlin.appfromzero.models.deliverable.SendDeliverableResponse
 import com.cursokotlin.appfromzero.models.deliverable.UpdateDeliverableRequest
 import com.cursokotlin.appfromzero.models.deliverable.UpdateDeliverableResponse
 import retrofit2.Call
@@ -28,5 +29,9 @@ class DeliverableRepository (private val deliverableService: DeliverableService)
 
     fun reviewDeliverable(deliverableId: Long, accepted: Boolean, token: String): Call<ReviewDeliverableResponse> {
         return deliverableService.reviewDeliverable(deliverableId, accepted, "Bearer $token")
+    }
+
+    fun sendDeliverable(deliverableId: Long, developerMessage: String, token: String): Call<SendDeliverableResponse> {
+        return deliverableService.sendDeliverable(deliverableId, developerMessage, "Bearer $token")
     }
 }
