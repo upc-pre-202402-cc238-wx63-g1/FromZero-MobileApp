@@ -17,7 +17,6 @@ import com.cursokotlin.appfromzero.models.deliverable.ReviewDeliverableResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import java.lang.Long.parseLong
 
 class ReviewDeliverableFragment : DialogFragment() {
 
@@ -47,7 +46,7 @@ class ReviewDeliverableFragment : DialogFragment() {
         val tvDeveloperMessage = view.findViewById<TextView>(R.id.tvDeveloperMessage)
         tvDeveloperMessage.text = developerMessage
 
-        val btApprove = view.findViewById<Button>(R.id.btApprove)
+        val btApprove = view.findViewById<Button>(R.id.btSend)
         btApprove.setOnClickListener {
             if (developerMessage == "No hay ninguna entrega disponible.") {
                 Toast.makeText(requireContext(), "No puede realizar esta acción porque no existe una entrega.", Toast.LENGTH_SHORT).show()
