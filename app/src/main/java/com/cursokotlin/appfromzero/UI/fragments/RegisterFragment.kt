@@ -93,11 +93,13 @@ class RegisterFragment : Fragment() {
                     navigateToHappyPathFragment()
                 } else {
                     Toast.makeText(requireContext(), "Registration failed", Toast.LENGTH_SHORT).show()
+                    navigateToErrorPathFragment()
                 }
             }
 
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
                 Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                navigateToErrorPathFragment()
             }
         })
     }
@@ -112,11 +114,13 @@ class RegisterFragment : Fragment() {
                     navigateToHappyPathFragment()
                 } else {
                     Toast.makeText(requireContext(), "Registration failed", Toast.LENGTH_SHORT).show()
+                    navigateToErrorPathFragment()
                 }
             }
 
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
                 Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                navigateToErrorPathFragment()
             }
         })
     }
@@ -130,6 +134,14 @@ class RegisterFragment : Fragment() {
         parentFragmentManager.beginTransaction()
             .replace(R.id.fragmentAuthContainer, happyPathFragment)
             .addToBackStack(null)
+            .commit()
+    }
+
+    private fun navigateToErrorPathFragment() {
+        val errorPathFragment = ErrorPathFragment()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentAuthContainer, errorPathFragment)
+            .addToBackStack(null) // Agrega este fragmento al stack
             .commit()
     }
 }

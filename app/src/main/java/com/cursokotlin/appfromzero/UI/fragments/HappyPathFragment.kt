@@ -18,7 +18,6 @@ class HappyPathFragment : Fragment() {
         val btnAccept = rootView.findViewById<Button>(R.id.btn_accept)
 
         val source = arguments?.getString("source") // Detectar el origen
-
         btnAccept.setOnClickListener {
             if (source == "register") {
                 navigateToLoginFragment()
