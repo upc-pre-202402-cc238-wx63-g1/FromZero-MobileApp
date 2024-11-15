@@ -38,5 +38,7 @@ class ProjectRepository (private val projectService: ProjectService) {
     fun addCandidateToProject(projectId: Long, candidateId: Long, token: String): Call<ResponseBody> {
         return projectService.addCandidateToProject(projectId, candidateId, "Bearer $token")
     }
-
+    fun deleteProject(projectId: Long, token: String): Call<ResponseBody> {
+        return projectService.deleteProject(projectId, "Bearer $token")
+    }
 }

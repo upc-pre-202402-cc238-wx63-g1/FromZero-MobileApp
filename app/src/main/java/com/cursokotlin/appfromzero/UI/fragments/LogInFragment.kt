@@ -76,6 +76,7 @@ class LogInFragment : Fragment() {
                     Resource.Success(response.body())
                 } else {
                     Resource.Error("Login fallido")
+
                 }
                 handleLoginResponse(resource)
             }
@@ -104,6 +105,7 @@ class LogInFragment : Fragment() {
             }
             is Resource.Error -> {
                 Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
+                navigateToErrorPathFragment()
             }
         }
     }
@@ -141,5 +143,13 @@ class LogInFragment : Fragment() {
         transaction.replace(R.id.fragmentAuthContainer, fragment)
         transaction.addToBackStack("principal")
         transaction.commit()
+    }
+
+    private fun navigateToErrorPathFragment() {
+        val errorPathFragment = ErrorPathFragment()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentAuthContainer, errorPathFragment)
+            .addToBackStack(null) // Agrega este fragmento al stack
+            .commit()
     }
 }

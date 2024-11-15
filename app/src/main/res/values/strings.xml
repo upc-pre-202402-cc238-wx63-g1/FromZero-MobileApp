@@ -84,5 +84,18 @@
 
     <string name="aplicantes">Aplicantes</string>
     <string name="bot_n_de_cambio_de_foto_de_perfil">Botón de cambio de foto de perfil</string>
+    <string name="nombres">Nombres</string>
+    <string name="apellidos">Apellidos</string>
+    <string name="nombre_de_la_empresa">Nombre de la empresa</string>
+    <string name="acci_n_realizada_con_xito">Acción realizada con éxito</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="ups_parece_que_ocurrio_un_error">Ups! Parece que ocurrio un error</string>
+
+    <string name="revisar">Revisar</string>
+    <string name="revisar_entregable">Revisar entregable</string>
+    <string name="descripci_n_de_la_entrega">Descripción de la entrega</string>
+    <string name="aprobar">Aprobar</string>
+    <string name="rechazar">Rechazar</string>
+    <string name="terminar_proyecto">Terminar Proyecto</string>
 
 </resources>

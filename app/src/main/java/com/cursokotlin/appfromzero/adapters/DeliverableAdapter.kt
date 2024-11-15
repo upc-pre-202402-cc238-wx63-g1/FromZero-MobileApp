@@ -1,6 +1,8 @@
 package com.cursokotlin.appfromzero.adapters
 
 import android.animation.ValueAnimator
+import android.content.Context
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,17 +11,22 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.Deliverable
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class DeliverableAdapter(
     var deliverables: List<Deliverable>,
-    private val onItemClick: (Deliverable) -> Unit
+    private val userRole: String,
+    private val onEditClick: (Deliverable) -> Unit,
+    private val onDeleteClick: (Long) -> Unit,
+    private val onReviewClick: (Deliverable) -> Unit,
+    private val onSendClick: (Long) -> Unit
 ) : RecyclerView.Adapter<DeliverableAdapter.DeliverableViewHolder>() {
-
-    var userRole: String? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DeliverableViewHolder {
         val view = LayoutInflater
@@ -29,15 +36,10 @@ class DeliverableAdapter(
     }
 
     override fun onBindViewHolder(holder: DeliverableViewHolder, position: Int) {
-        holder.bind(deliverables[position], this, userRole, position, onItemClick)
+        holder.bind(deliverables[position], this, userRole, position, onEditClick, onReviewClick, onSendClick)
     }
 
     override fun getItemCount(): Int = deliverables.size
-
-    fun removeItem(position: Int) {
-        //deliverables.removeAt(position)
-        notifyItemRemoved(position)
-    }
 
     inner class DeliverableViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -55,6 +57,8 @@ class DeliverableAdapter(
 
         private val btDelete = itemView.findViewById<Button>(R.id.btDelete)
         private val btEdit = itemView.findViewById<Button>(R.id.btEdit)
+        private val btReview = itemView.findViewById<Button>(R.id.btReview)
+        private val btSend = itemView.findViewById<Button>(R.id.btSend)
 
         private var isExpanded = false
         private var userRole: String? = null
@@ -64,22 +68,78 @@ class DeliverableAdapter(
             adapter: DeliverableAdapter,
             role: String?,
             position: Int,
-            onItemClick: (Deliverable) -> Unit
+            onItemClick: (Deliverable) -> Unit,
+            onReviewClick: (Deliverable) -> Unit,
+            onSendClick: (Long) -> Unit
         ) {
+
             tvDeliverableName.text = deliverable.name
-            tvProjectName.text = deliverable.name
+            tvProjectName.text = deliverable.projectName
             tvDescriptionText.text = deliverable.description
             tvDate.text = deliverable.date.toString()
             tvState.text = deliverable.state
             tvDescription.text = "Descripción"
-            ivClock.setImageResource(android.R.drawable.ic_menu_recent_history)
-            ivState.setImageResource(android.R.drawable.ic_menu_info_details)
+            ivState.setImageResource(R.drawable.ic_clock)
+            ivState.setImageResource(R.drawable.ic_check)
             ivArrow.setImageResource(R.drawable.arrow_down)
+
+            val inputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val outputDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
+            val formattedDate = deliverable.date?.let {
+                try {
+                    val date = inputDateFormat.parse(it)
+                    outputDateFormat.format(date)
+                } catch (e: Exception) {
+                    it
+                }
+            } ?: "No Date"
+            tvDate.text = formattedDate
+
+            when (deliverable.state) {
+                "Completed" -> {
+                    tvState.text = "Aprobado"
+                    ivState.setImageResource(R.drawable.ic_check)
+                    btReview.isEnabled = false
+                    btSend.isEnabled = false
+                }
+                "Rejected" -> {
+                    tvState.text = "Rechazado"
+                    ivState.setImageResource(R.drawable.ic_reject)
+                    btReview.isEnabled = true
+                }
+                "Awaiting Review" -> {
+                    tvState.text = "En revisión"
+                    ivState.setImageResource(R.drawable.ic_reviewing)
+                    btSend.isEnabled = false
+                    btSend.setOnClickListener {
+                        Toast.makeText(itemView.context, "Ya ha subido un avance a este entregable", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                else -> {
+                    tvState.text = "Pendiente"
+                    ivState.setImageResource(R.drawable.ic_pending)
+                    btReview.isEnabled = true
+                }
+            }
+
+            btReview.setOnClickListener {
+                if (!btReview.isEnabled) {
+                    Toast.makeText(itemView.context, "El entregable ya ha sido revisado", Toast.LENGTH_SHORT).show()
+                } else {
+                    onReviewClick(deliverable)
+                }
+            }
+
+            btSend.setOnClickListener {
+                onSendClick(deliverable.id)
+            }
 
             tvDescriptionText.visibility = View.GONE
             tvDescription.visibility = View.GONE
             btDelete.visibility = View.GONE
             btEdit.visibility = View.GONE
+            btReview.visibility = View.GONE
+            btSend.visibility = View.GONE
 
             userRole = role
 
@@ -95,15 +155,7 @@ class DeliverableAdapter(
             }
 
             btDelete.setOnClickListener {
-                val position = adapterPosition
-                println("entregable eliminado en la posicion $position")
-                if (position != RecyclerView.NO_POSITION) {
-                    adapter.removeItem(position)
-                    if (adapter.itemCount == 0) {
-                        Toast.makeText(itemView.context, "No hay entregables", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }
+                onDeleteClick(deliverable.id)
             }
 
             btEdit.setOnClickListener {
@@ -118,6 +170,8 @@ class DeliverableAdapter(
             tvDescription.visibility = View.GONE
             btDelete.visibility = View.GONE
             btEdit.visibility = View.GONE
+            btReview.visibility = View.GONE
+            btSend.visibility = View.GONE
 
             cvDeliverableCard.measure(
                 View.MeasureSpec.makeMeasureSpec(cvDeliverableCard.width, View.MeasureSpec.EXACTLY),
@@ -140,9 +194,12 @@ class DeliverableAdapter(
             tvDescriptionText.visibility = View.VISIBLE
             tvDescription.visibility = View.VISIBLE
 
-            if (userRole != "desarrollador") {
+            if (userRole != "ROLE_DEVELOPER") {
                 btDelete.visibility = View.VISIBLE
                 btEdit.visibility = View.VISIBLE
+                btReview.visibility = View.VISIBLE
+            } else {
+                btSend.visibility = View.VISIBLE
             }
 
             val initialHeight = cvDeliverableCard.height

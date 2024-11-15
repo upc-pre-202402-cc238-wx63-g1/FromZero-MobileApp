@@ -1,13 +1,18 @@
 package com.cursokotlin.appfromzero.data.remote.deliverable
 
+import com.cursokotlin.appfromzero.UI.fragments.ReviewDeliverableFragment
 import com.cursokotlin.appfromzero.models.Deliverable
 import com.cursokotlin.appfromzero.models.deliverable.DeliverableResponse
+import com.cursokotlin.appfromzero.models.deliverable.ReviewDeliverableResponse
+import com.cursokotlin.appfromzero.models.deliverable.SendDeliverableResponse
 import com.cursokotlin.appfromzero.models.deliverable.UpdateDeliverableRequest
 import com.cursokotlin.appfromzero.models.deliverable.UpdateDeliverableResponse
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -32,4 +37,23 @@ interface DeliverableService {
         @Header("Authorization") token:String
     ): Call<UpdateDeliverableResponse>
 
+    @DELETE("deliverables/{id}")
+    fun deleteDeliverable(
+        @Path("id") deliverableId: Long,
+        @Header("Authorization") token: String
+    ): Call<Void>
+
+    @PATCH("deliverables/{deliverableId}/review")
+    fun reviewDeliverable(
+        @Path("deliverableId") deliverableId: Long,
+        @Body accepted: Boolean,
+        @Header("Authorization") token: String
+    ): Call<ReviewDeliverableResponse>
+
+    @PATCH("deliverables/{deliverableId}/send")
+    fun sendDeliverable(
+        @Path("deliverableId") deliverableId: Long,
+        @Body developerMessage: String,
+        @Header("Authorization") token: String
+    ): Call<SendDeliverableResponse>
 }

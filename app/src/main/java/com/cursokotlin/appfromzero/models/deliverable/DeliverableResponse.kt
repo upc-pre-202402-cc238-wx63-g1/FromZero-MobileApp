@@ -5,4 +5,5 @@ class DeliverableResponse (
     val description: String,
     val date: String,
     val projectId: Long,
+    val state:String
 )
