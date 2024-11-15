@@ -90,14 +90,16 @@ class RegisterFragment : Fragment() {
                 if (response.isSuccessful) {
                     Log.d("RegisterFragment", "Registration successful: ${response.body()}")
                     Toast.makeText(requireContext(), "Creación de cuenta exitosa", Toast.LENGTH_SHORT).show()
-                    navigateToLoginFragment()
+                    navigateToHappyPathFragment()
                 } else {
                     Toast.makeText(requireContext(), "Registration failed", Toast.LENGTH_SHORT).show()
+                    navigateToErrorPathFragment()
                 }
             }
 
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
                 Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                navigateToErrorPathFragment()
             }
         })
     }
@@ -109,23 +111,37 @@ class RegisterFragment : Fragment() {
                 if (response.isSuccessful) {
                     Log.d("RegisterFragment", "Registration successful: ${response.body()}")
                     Toast.makeText(requireContext(), "Creación de cuenta exitosa", Toast.LENGTH_SHORT).show()
-                    navigateToLoginFragment()
+                    navigateToHappyPathFragment()
                 } else {
                     Toast.makeText(requireContext(), "Registration failed", Toast.LENGTH_SHORT).show()
+                    navigateToErrorPathFragment()
                 }
             }
 
             override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
                 Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                navigateToErrorPathFragment()
             }
         })
     }
 
-    private fun navigateToLoginFragment() {
-        val loginFragment = LogInFragment()
+    private fun navigateToHappyPathFragment() {
+        val happyPathFragment = HappyPathFragment()
+        happyPathFragment.arguments = Bundle().apply {
+            putString("source", "register")
+        }
+
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragmentAuthContainer, loginFragment)
+            .replace(R.id.fragmentAuthContainer, happyPathFragment)
             .addToBackStack(null)
+            .commit()
+    }
+
+    private fun navigateToErrorPathFragment() {
+        val errorPathFragment = ErrorPathFragment()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmentAuthContainer, errorPathFragment)
+            .addToBackStack(null) // Agrega este fragmento al stack
             .commit()
     }
 }
