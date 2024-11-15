@@ -1,11 +1,13 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -24,13 +26,16 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cursokotlin.appfromzero.MainActivity
 import com.cursokotlin.appfromzero.R
+import com.cursokotlin.appfromzero.adapters.CircleTransform
 import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
+import com.cursokotlin.appfromzero.data.SupabaseStorageClient
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
 import com.cursokotlin.appfromzero.data.repository.enterprise.EnterpriseRepository
 import com.cursokotlin.appfromzero.data.repository.project.ProjectRepository
@@ -44,8 +49,14 @@ import com.cursokotlin.appfromzero.models.project.Project
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.textfield.TextInputEditText
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Response
+import java.io.File
+import java.util.UUID
 
 class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelectedListener {
 
@@ -120,15 +131,127 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
-            val selectedImageUri = data.data
-            // Usar Glide para cargar la imagen en el ImageView circular
-            Glide.with(this)
-                .load(selectedImageUri)
-                .circleCrop()
-                .into(ivProfile)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK) {
+            val uri = data?.data
+            if (uri != null) {
+                handleImageUri(uri)
+            } else {
+                Toast.makeText(requireContext(), "No se seleccionó ninguna imagen", Toast.LENGTH_SHORT).show()
+            }
         }
     }
+
+    private fun checkAndRequestPermissions() {
+        val permissions = arrayOf(
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+
+        if (permissions.any {
+                ContextCompat.checkSelfPermission(requireContext(), it) != PackageManager.PERMISSION_GRANTED
+            }) {
+            ActivityCompat.requestPermissions(requireActivity(), permissions, 1)
+        }
+    }
+
+
+    private fun handleImageUri(uri: Uri) {
+        try {
+            // Usar ContentResolver para acceder al archivo
+            val inputStream = requireContext().contentResolver.openInputStream(uri)
+
+            // Generar un nombre único para el archivo
+            val uniqueFileName = "profile_${UUID.randomUUID()}.png"
+
+            // Guardar el archivo con nombre único y formato PNG
+            val file = File(requireContext().cacheDir, uniqueFileName)
+            file.outputStream().use { outputStream ->
+                inputStream?.copyTo(outputStream)
+            }
+
+            // Subir la imagen a Supabase
+            uploadImageToSupabase(file)  // Sube el archivo a Supabase
+        } catch (e: Exception) {
+            Log.e("ImageSelection", "Error al manejar el archivo seleccionado", e)
+            Toast.makeText(requireContext(), "Error al procesar la imagen", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+
+    private fun uploadImageToSupabase(file: File) {
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val url = SupabaseStorageClient.uploadFileToSupabase(file, "profile")
+                withContext(Dispatchers.Main) {
+                    if (url != null) {
+                        saveProfileImageUrl(url)  // Guarda el URL en tu base de datos
+                        bindDataToViews(role = "empresa")
+                        bindProjectsToViews()
+                        Toast.makeText(requireActivity(), "Imagen subida con éxito", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireActivity(), "Error al subir la imagen", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("SupabaseUpload", "Error al subir la imagen", e)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireActivity(), "Error al subir la imagen", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    // Función para enviar la URL de la imagen al backend
+    private fun saveProfileImageUrl(url: String) {
+        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getLong("userId", 0)
+        val token = sharedPreferences.getString("token", null)
+
+        if (token != null) {
+            // Crear un objeto solo con la URL de la imagen
+            val updateRequest = UpdateEnterpriseProfileRequest(
+                enterpriseName = etEnterpriseWebsite.text.toString(),  // Mantener el resto de datos existentes
+                description = etEnterpriseDescription.text.toString(),
+                country = "Perú",
+                ruc = enterprise!!.socialRazon,
+                phone = etEnterprisePhone.text.toString(),
+                website = etEnterpriseWebsite.text.toString(),
+                profileImgUrl = url,  // Usar el nuevo URL de la imagen
+                sector = etEnterpriseSector.text.toString()
+            )
+
+            val call = enterpriseRepository.updateEnterpriseProfile(userId, updateRequest, token)
+            call.enqueue(object : retrofit2.Callback<EnterpriseProfileResponse> {
+                override fun onResponse(call: Call<EnterpriseProfileResponse>, response: Response<EnterpriseProfileResponse>) {
+                    if (response.isSuccessful) {
+                        val updatedEnterprise = response.body()
+                        if (updatedEnterprise != null) {
+                            enterprise = Enterprise(
+                                updatedEnterprise.enterpriseName,
+                                updatedEnterprise.website,
+                                updatedEnterprise.profileImgUrl,
+                                updatedEnterprise.description,
+                                updatedEnterprise.sector,
+                                updatedEnterprise.ruc,
+                                updatedEnterprise.phone
+                            )
+                            bindDataToViews(role = "empresa")
+                            Toast.makeText(requireContext(), "Imagen de perfil actualizada con éxito", Toast.LENGTH_SHORT).show()
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Error al actualizar la imagen de perfil", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<EnterpriseProfileResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        } else {
+            Toast.makeText(requireContext(), "Token no encontrado", Toast.LENGTH_SHORT).show()
+        }
+    }
+
 
     private fun setRecyclerViewContraints(view: View, cvHomeEnterpriseProfile: Int) {
         val recyclerView = view.findViewById<RecyclerView>(R.id.rvProjects)
@@ -304,22 +427,29 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         val tvChooseFromGallery = view.findViewById<TextView>(R.id.tvChooseFromGallery)
 
         tvChooseFromGallery.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            checkAndRequestPermissions()
+            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                addCategory(Intent.CATEGORY_OPENABLE)
+                type = "image/*"
+            }
             startActivityForResult(intent, PICK_IMAGE_REQUEST)
+
             bottomSheetDialog.dismiss()
         }
 
         bottomSheetDialog.show()
     }
 
+
     private fun bindDataToViews(role: String) {
         if (role == "empresa") {
             enterprise?.let {
                 Picasso.get()
                     .load(it.pictureUrl)
-                    .placeholder(R.drawable.placeholder)
-                    .error(R.drawable.placeholder)
-                    .into(ivProfile)
+                    .placeholder(R.drawable.placeholder)  // Imagen de carga
+                    .error(R.drawable.placeholder)  // Imagen en caso de error
+                    .transform(CircleTransform())  // Aplica el recorte circular
+                    .into(ivProfile)  // Carga la imagen en el ImageView
                 tvEnterpriseWebsite.text = it.website
                 tvEnterpriseName.text = it.name
                 tvEnterpriseSector.text = it.field
@@ -329,6 +459,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
             }
         }
     }
+
 
     private fun bindProjectsToViews() {
         Log.d("BindProjects", "Binding ${projects.size} projects to views")

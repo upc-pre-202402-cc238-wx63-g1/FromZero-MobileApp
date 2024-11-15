@@ -27,4 +27,6 @@ class AuthActivity : AppCompatActivity() {
             .replace(R.id.fragmentAuthContainer, fragment)
             .commit()
     }
+
+
 }
