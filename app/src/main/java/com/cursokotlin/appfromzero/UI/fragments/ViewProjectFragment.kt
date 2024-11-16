@@ -117,6 +117,7 @@ class ViewProjectFragment : Fragment() {
 
         btDeleteProject.setOnClickListener{
             deleteProjectDialog.show()
+
             btnConfirmDeleteProject.setOnClickListener {
                 val call = projectRepository.deleteProject(idProject, token!!)
                 call.enqueue(object : Callback<ResponseBody> {
@@ -170,7 +171,7 @@ class ViewProjectFragment : Fragment() {
         deleteProjectDialog.setCancelable(true)
 
         btnConfirmDeleteProject = deleteProjectDialog.findViewById(R.id.btn_aceptar)
-        btnConfirmDeleteProject = deleteProjectDialog.findViewById(R.id.btn_cancelar)
+        btnCancelDeleteProject = deleteProjectDialog.findViewById(R.id.btn_cancelar)
 
     }
 
