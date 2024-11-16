@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import com.cursokotlin.appfromzero.MainActivity
 import com.cursokotlin.appfromzero.R
 
 class HappyPathFragment : Fragment() {
@@ -21,9 +22,12 @@ class HappyPathFragment : Fragment() {
         btnAccept.setOnClickListener {
             if (source == "register") {
                 navigateToLoginFragment()
+            } else if (source == "HomeDev") {
+                navigateToHomeDeveloperFragment()
+            } else if (source == "HomeEnterprise") {
+                navigateToHomeEnterpriseFragment()
             } else {
-                // Lógica para otros casos
-                Toast.makeText(requireContext(), "Otra acción según el origen", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "No existe ese origen", Toast.LENGTH_SHORT).show()
             }
         }
         return rootView
@@ -37,4 +41,19 @@ class HappyPathFragment : Fragment() {
             .commit()
     }
 
+    private fun navigateToHomeDeveloperFragment() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmenContainer, HomeDeveloperFragment())
+            .addToBackStack(null)
+            .commit()
+        (activity as MainActivity).showHomeTab()
+    }
+
+    private fun navigateToHomeEnterpriseFragment() {
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmenContainer, HomeEnterpriseFragment())
+            .addToBackStack(null)
+            .commit()
+        (activity as MainActivity).showHomeTab()
+    }
 }

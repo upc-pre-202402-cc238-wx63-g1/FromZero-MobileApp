@@ -89,50 +89,54 @@ class ViewProjectFragment : Fragment() {
                 btnConfirmApplyProject.setOnClickListener {
                     val call = projectRepository.addCandidateToProject(idProject, userId, token!!)
                     call.enqueue(object : Callback<ResponseBody> {
-                        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                        override fun onResponse(
+                            call: Call<ResponseBody>,
+                            response: Response<ResponseBody>
+                        ) {
                             //Log.d("ViewProjectFragment", "response: ${response.body()}")
                             if (response.isSuccessful) {
                                 Toast.makeText(context, "Postulación enviada", Toast.LENGTH_SHORT)
                                     .show()
                                 applyProjectDialog.dismiss()
-                                parentFragmentManager.beginTransaction()
-                                    .replace(R.id.fragmenContainer, HomeDeveloperFragment())
-                                    .addToBackStack(null)
-                                    .commit()
-                                (activity as MainActivity).showHomeTab()
+                                navigateToHappyPathFragment()
                             } else {
-                                Toast.makeText(context, "Error al postular", Toast.LENGTH_SHORT)
-                                    .show()
+                                //Toast.makeText(context, "Error al postular", Toast.LENGTH_SHORT) .show()
+                                navigateToErrorPathFragment()
                             }
                         }
 
                         override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
                             //Log.d("ViewProjectFragment", "response: ${t.message}")
-                            Toast.makeText(context, "Error al postular", Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(context, "Error al postular", Toast.LENGTH_SHORT).show()
+                            navigateToErrorPathFragment()
                         }
                     })
                 }
             }
         }
 
-        btDeleteProject.setOnClickListener{
+        btDeleteProject.setOnClickListener {
             deleteProjectDialog.show()
 
             btnConfirmDeleteProject.setOnClickListener {
                 val call = projectRepository.deleteProject(idProject, token!!)
                 call.enqueue(object : Callback<ResponseBody> {
-                    override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-                            Toast.makeText(context, "Proyecto eliminado", Toast.LENGTH_SHORT).show()
-                            deleteProjectDialog.dismiss()
-                            parentFragmentManager.beginTransaction()
-                                .replace(R.id.fragmenContainer, HomeEnterpriseFragment())
-                                .addToBackStack(null)
-                                .commit()
-                            (activity as MainActivity).showHomeTab()
+                    override fun onResponse(
+                        call: Call<ResponseBody>,
+                        response: Response<ResponseBody>
+                    ) {
+                        Toast.makeText(context, "Proyecto eliminado", Toast.LENGTH_SHORT).show()
+                        deleteProjectDialog.dismiss()
+                        parentFragmentManager.beginTransaction()
+                            .replace(R.id.fragmenContainer, HomeEnterpriseFragment())
+                            .addToBackStack(null)
+                            .commit()
+                        (activity as MainActivity).showHomeTab()
                     }
 
                     override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-                        Toast.makeText(context, "Error al eliminar proyecto", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Error al eliminar proyecto", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 })
             }
@@ -253,5 +257,23 @@ class ViewProjectFragment : Fragment() {
         transaction.commit()
     }
 
+    private fun navigateToErrorPathFragment() {
+        val errorPathFragment = ErrorPathFragment()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmenContainer, errorPathFragment)
+            .addToBackStack(null) // Agrega este fragmento al stack
+            .commit()
+    }
 
+    private fun navigateToHappyPathFragment() {
+        val happyPathFragment = HappyPathFragment()
+        happyPathFragment.arguments = Bundle().apply {
+            putString("source", "HomeDev")
+        }
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmenContainer, happyPathFragment)
+            .addToBackStack(null)
+            .commit()
+    }
 }

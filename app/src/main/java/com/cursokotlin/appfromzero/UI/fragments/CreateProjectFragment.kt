@@ -53,7 +53,7 @@ class CreateProjectFragment : Fragment() {
                 val description = etDescription.text.toString()
 
                 val languages = mutableListOf<String>()
-                if(etLanguages.text.toString().lowercase() == "java") languages.add("1")
+                if (etLanguages.text.toString().lowercase() == "java") languages.add("1")
                 else if (etLanguages.text.toString().lowercase() == "python") languages.add("2")
                 else if (etLanguages.text.toString().lowercase() == "javaScript") languages.add("3")
                 else if (etLanguages.text.toString().lowercase() == "c#") languages.add("4")
@@ -62,8 +62,14 @@ class CreateProjectFragment : Fragment() {
 
 
                 val frameworks = mutableListOf<String>()
-                if (etFrameworks.text.toString().lowercase() == "spring boot" || etFrameworks.text.toString().lowercase() =="spring") frameworks.add("1")
-                else if (etFrameworks.text.toString().lowercase() == "vue.js" || etFrameworks.text.toString().lowercase() == "vue") frameworks.add("2")
+                if (etFrameworks.text.toString()
+                        .lowercase() == "spring boot" || etFrameworks.text.toString()
+                        .lowercase() == "spring"
+                ) frameworks.add("1")
+                else if (etFrameworks.text.toString()
+                        .lowercase() == "vue.js" || etFrameworks.text.toString()
+                        .lowercase() == "vue"
+                ) frameworks.add("2")
                 else if (etFrameworks.text.toString().lowercase() == "angular") frameworks.add("3")
                 else if (etFrameworks.text.toString().lowercase() == "nest.js") frameworks.add("4")
                 else if (etFrameworks.text.toString().lowercase() == "net core") frameworks.add("5")
@@ -98,22 +104,18 @@ class CreateProjectFragment : Fragment() {
                             call: Call<ProjectResponse>,
                             response: Response<ProjectResponse>
                         ) {
-                            if (response.isSuccessful) {
-                                Toast.makeText(
-                                    context, "Proyecto creado correctamente", Toast.LENGTH_SHORT
-                                ).show()
-                                createProjectDialog.dismiss()
-                            } else {
-                                Toast.makeText(
-                                    context, "Error al crear el proyecto", Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                            Toast.makeText(
+                                context, "Proyecto creado correctamente", Toast.LENGTH_SHORT
+                            ).show()
+                            createProjectDialog.dismiss()
+                            navigateToHappyPathFragment()
                         }
 
                         override fun onFailure(call: Call<ProjectResponse>, t: Throwable) {
                             Toast.makeText(
                                 context, "Error al crear el proyecto", Toast.LENGTH_SHORT
                             ).show()
+                            navigateToErrorPathFragment()
                         }
                     })
                     createProjectDialog.dismiss()
@@ -121,6 +123,7 @@ class CreateProjectFragment : Fragment() {
 
             } catch (e: IllegalArgumentException) {
                 Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+                navigateToErrorPathFragment()
             }
         }
 
@@ -140,5 +143,25 @@ class CreateProjectFragment : Fragment() {
         createProjectDialog.setCancelable(true)
 
         btConfirmCreateProject = createProjectDialog.findViewById(R.id.btn_aceptar)
+    }
+
+    private fun navigateToErrorPathFragment() {
+        val errorPathFragment = ErrorPathFragment()
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmenContainer, errorPathFragment)
+            .addToBackStack(null) // Agrega este fragmento al stack
+            .commit()
+    }
+
+    private fun navigateToHappyPathFragment() {
+        val happyPathFragment = HappyPathFragment()
+        happyPathFragment.arguments = Bundle().apply {
+            putString("source", "HomeEnterprise")
+        }
+
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragmenContainer, happyPathFragment)
+            .addToBackStack(null)
+            .commit()
     }
 }
