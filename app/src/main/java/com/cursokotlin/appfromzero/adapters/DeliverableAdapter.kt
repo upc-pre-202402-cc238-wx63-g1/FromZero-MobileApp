@@ -72,7 +72,6 @@ class DeliverableAdapter(
             onReviewClick: (Deliverable) -> Unit,
             onSendClick: (Long) -> Unit
         ) {
-
             tvDeliverableName.text = deliverable.name
             tvProjectName.text = deliverable.projectName
             tvDescriptionText.text = deliverable.description
@@ -80,8 +79,7 @@ class DeliverableAdapter(
             tvState.text = deliverable.state
             tvDescription.text = "Descripción"
 
-
-             fun formatDate(dateString: String): String {
+            fun formatDate(dateString: String): String {
                 val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 val outputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 val date = inputFormat.parse(dateString)
@@ -95,18 +93,32 @@ class DeliverableAdapter(
                 "Completed" -> {
                     tvState.text = "Aprobado"
                     ivState.setImageResource(R.drawable.ic_check)
+
+                    //rol enterprise
+                    btDelete.isEnabled=false
+                    btEdit.isEnabled=false
                     btReview.isEnabled = false
+                    btReview.setOnClickListener {
+                        Toast.makeText(itemView.context, "Ya ha aprobado este entregable", Toast.LENGTH_SHORT).show()
+                    }
+
+                    //rol developer
                     btSend.isEnabled = false
+                    btSend.setOnClickListener {
+                        Toast.makeText(itemView.context, "Ya ha subido un avance a este entregable", Toast.LENGTH_SHORT).show()
+                    }
+
                 }
                 "Rejected" -> {
                     tvState.text = "Rechazado"
                     ivState.setImageResource(R.drawable.ic_reject)
-                    btReview.isEnabled = true
-                    btSend.isEnabled = false
+
                 }
                 "Awaiting Review" -> {
                     tvState.text = "En revisión"
                     ivState.setImageResource(R.drawable.ic_reviewing)
+
+                    //rol developer
                     btSend.isEnabled = false
                     btSend.setOnClickListener {
                         Toast.makeText(itemView.context, "Ya ha subido un avance a este entregable", Toast.LENGTH_SHORT).show()
@@ -119,11 +131,16 @@ class DeliverableAdapter(
                     btSend.isEnabled = true
                 }
                 else -> {
-
                     ivState.setImageResource(R.drawable.ic_pending)
                 }
             }
 
+
+            if (isExpanded) {
+                collapseCard()
+                isExpanded = false
+                ivArrow.setImageResource(R.drawable.arrow_down)
+            }
 
             btReview.setOnClickListener {
                 if (!btReview.isEnabled) {
@@ -133,12 +150,11 @@ class DeliverableAdapter(
                 }
             }
 
-
             btSend.setOnClickListener {
                 onSendClick(deliverable.id)
             }
 
-            // Configuración de la expansión del cardview
+
             tvDescriptionText.visibility = View.GONE
             tvDescription.visibility = View.GONE
             btDelete.visibility = View.GONE
@@ -208,13 +224,9 @@ class DeliverableAdapter(
             btReview.visibility = View.GONE
             btSend.visibility = View.GONE
 
-            cvDeliverableCard.measure(
-                View.MeasureSpec.makeMeasureSpec(cvDeliverableCard.width, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.UNSPECIFIED
-            )
-            val stateVisibleHeight = tvState.bottom + 100
+            val collapsedHeight = itemView.context.resources.getDimensionPixelSize(R.dimen.collapsed_card_height)
 
-            val animator = ValueAnimator.ofInt(initialHeight, stateVisibleHeight)
+            val animator = ValueAnimator.ofInt(initialHeight, collapsedHeight)
             animator.addUpdateListener { valueAnimator ->
                 val layoutParams = cvDeliverableCard.layoutParams
                 layoutParams.height = valueAnimator.animatedValue as Int

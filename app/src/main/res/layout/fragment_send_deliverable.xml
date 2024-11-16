@@ -81,8 +81,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etDeveloperMessage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ejemplo: Se entregó un prototipo interactivo de la interfaz de usuario de la Plataforma de Comercio Electrónico Geekit. " />
+            android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

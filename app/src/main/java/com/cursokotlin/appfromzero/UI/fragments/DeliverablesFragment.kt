@@ -81,7 +81,6 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             rvDeliverables.adapter = deliverableAdapter
             deliverableAdapter.notifyDataSetChanged()
 
-            Toast.makeText(requireContext(), "El rol de usuario es: $role", Toast.LENGTH_SHORT).show()
             if (role == "ROLE_DEVELOPER") {
                 ivAddDeliverable.visibility = View.GONE
                 cvCardEmpty.visibility = View.VISIBLE
