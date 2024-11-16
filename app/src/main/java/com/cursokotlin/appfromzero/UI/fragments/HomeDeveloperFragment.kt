@@ -22,6 +22,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
+import com.cursokotlin.appfromzero.adapters.CircleTransform
 import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
 import com.cursokotlin.appfromzero.data.repository.developer.DeveloperRepository
@@ -132,7 +133,8 @@ class HomeDeveloperFragment : Fragment() {
                                     summary = developerData.description,
                                     skills = developerData.specialties,
                                     phone = developerData.phone,
-                                    email = "example@gmail.com" // Assuming email is not provided in the response
+                                    email = "example@gmail.com",
+                                    profileImgUrl = developerData.profileImgUrl
                                 )
                                 bindDataToViews(role = "developer")
                             } else {
@@ -175,9 +177,10 @@ class HomeDeveloperFragment : Fragment() {
         if (role == "developer") {
             developer?.let {
                 Picasso.get()
-                    .load(it.profilePic)
+                    .load(it.profileImgUrl)
                     .placeholder(R.drawable.placeholder)
                     .error(R.drawable.placeholder)
+                    .transform(CircleTransform())
                     .into(ivProfileDevPhoto)
                 tvDevName.text = it.name
                 ratingBar.rating = it.rating
@@ -229,7 +232,7 @@ class HomeDeveloperFragment : Fragment() {
                     else -> ProjectState.BUSQUEDA_DEVELOPER
                 },
                 projectProgress = project.progress,
-                candidateList = project.candidatesList
+                candidateList = project.candidatesList,
             )
         }
         if (projectList.isEmpty()) {
@@ -405,7 +408,8 @@ class HomeDeveloperFragment : Fragment() {
                 country = developer!!.countryFlag.toString(), // Assuming countryFlag holds the country information
                 phone = etCellphone.text.toString(),
                 specialties = etDevSpecialties.text.toString(),
-                profileImgUrl = developer!!.profilePic.toString()
+                profileImgUrl = developer!!.profilePic.toString(),
+                
             )
 
             val call = developerRepository.updateDeveloperProfile(userId, updateRequest, token)
