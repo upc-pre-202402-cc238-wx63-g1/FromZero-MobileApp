@@ -134,5 +134,5 @@ class RolFragment : Fragment() {
         targetView.invalidate()
         targetView.requestLayout()
     }
-    
+
 }

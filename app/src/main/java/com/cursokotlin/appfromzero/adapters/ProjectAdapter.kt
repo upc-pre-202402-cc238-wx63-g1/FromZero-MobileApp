@@ -48,6 +48,7 @@ class ProjectAdapter(
         holder.description.text = spannableDescription
         holder.website.text = project.website
 
+        // Configurar clic en el arrow
         holder.arrow.setOnClickListener {
             if (holder.description.visibility == View.GONE) {
                 holder.description.visibility = View.VISIBLE
@@ -57,7 +58,9 @@ class ProjectAdapter(
                 holder.arrow.setImageResource(R.drawable.arrow_down)
             }
         }
-        holder.title.setOnClickListener {
+
+        // Configurar clic en toda la card
+        holder.itemView.setOnClickListener {
             clickListener.onItemClick(project)
         }
     }
