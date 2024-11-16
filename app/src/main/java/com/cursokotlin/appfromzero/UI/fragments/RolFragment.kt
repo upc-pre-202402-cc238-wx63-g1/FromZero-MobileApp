@@ -5,7 +5,6 @@ import android.animation.AnimatorSet
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
@@ -32,53 +31,51 @@ class RolFragment : Fragment() {
         devSelected = false
         empresaSelected = false
 
-        val tv_Empresa = rootView.findViewById<TextView>(R.id.tv_Empresa)
-        val tv_Dev = rootView.findViewById<TextView>(R.id.tv_Dev)
+        val tvEnterprise = rootView.findViewById<TextView>(R.id.tv_Empresa)
+        val tvDev = rootView.findViewById<TextView>(R.id.tv_Dev)
 
-        val cv_Empresa = rootView.findViewById<CardView>(R.id.cv_Empresa)
-        val iv_Empresa = rootView.findViewById<ImageView>(R.id.iv_empresa)
-        iv_Empresa.setImageResource(R.drawable.ic_baul)
+        val cvEnterprise = rootView.findViewById<CardView>(R.id.cv_Empresa)
+        val ivEnterprise = rootView.findViewById<ImageView>(R.id.iv_empresa)
+        ivEnterprise.setImageResource(R.drawable.ic_baul)
 
-        val cv_Dev = rootView.findViewById<CardView>(R.id.cv_Dev)
-        val iv_Dev = rootView.findViewById<ImageView>(R.id.iv_Dev)
-        iv_Dev.setImageResource(R.drawable.ic_dev_person)
+        val cvDev = rootView.findViewById<CardView>(R.id.cv_Dev)
+        val ivDev = rootView.findViewById<ImageView>(R.id.iv_Dev)
+        ivDev.setImageResource(R.drawable.ic_dev_person)
 
-        cv_Empresa.setOnTouchListener { _, motionEvent ->
-            if (motionEvent.action == MotionEvent.ACTION_DOWN && !empresaSelected) {
-                iv_Empresa.drawable.setTint(Color.parseColor("#45B7A8"))
-                tv_Empresa.setTextColor(Color.parseColor("#45B7A8"))
-                applyZoomAnimation(iv_Empresa, true)
-                applyZoomAnimation(tv_Empresa, true)
+        cvEnterprise.setOnClickListener {
+            if (!empresaSelected) {
+                ivEnterprise.drawable.setTint(Color.parseColor("#45B7A8"))
+                tvEnterprise.setTextColor(Color.parseColor("#45B7A8"))
+                applyZoomAnimation(ivEnterprise, true)
+                applyZoomAnimation(tvEnterprise, true)
 
                 if (devSelected) {
-                    iv_Dev.drawable.setTint(Color.parseColor("#6B74B4"))
-                    tv_Dev.setTextColor(Color.parseColor("#6B74B4"))
-                    applyZoomAnimation(iv_Dev, false)
-                    applyZoomAnimation(tv_Dev, false)
+                    ivDev.drawable.setTint(Color.parseColor("#6B74B4"))
+                    tvDev.setTextColor(Color.parseColor("#6B74B4"))
+                    applyZoomAnimation(ivDev, false)
+                    applyZoomAnimation(tvDev, false)
                     devSelected = false
                 }
                 empresaSelected = true
             }
-            false
         }
 
-        cv_Dev.setOnTouchListener { _, motionEvent ->
-            if (motionEvent.action == MotionEvent.ACTION_DOWN && !devSelected) {
-                iv_Dev.drawable.setTint(Color.parseColor("#45B7A8"))
-                tv_Dev.setTextColor(Color.parseColor("#45B7A8"))
-                applyZoomAnimation(iv_Dev, true)
-                applyZoomAnimation(tv_Dev, true)
+        cvDev.setOnClickListener {
+            if (!devSelected) {
+                ivDev.drawable.setTint(Color.parseColor("#45B7A8"))
+                tvDev.setTextColor(Color.parseColor("#45B7A8"))
+                applyZoomAnimation(ivDev, true)
+                applyZoomAnimation(tvDev, true)
 
                 if (empresaSelected) {
-                    iv_Empresa.drawable.setTint(Color.parseColor("#6B74B4"))
-                    tv_Empresa.setTextColor(Color.parseColor("#6B74B4"))
-                    applyZoomAnimation(iv_Empresa, false)
-                    applyZoomAnimation(tv_Empresa, false)
+                    ivEnterprise.drawable.setTint(Color.parseColor("#6B74B4"))
+                    tvEnterprise.setTextColor(Color.parseColor("#6B74B4"))
+                    applyZoomAnimation(ivEnterprise, false)
+                    applyZoomAnimation(tvEnterprise, false)
                     empresaSelected = false
                 }
                 devSelected = true
             }
-            false
         }
 
         val llVolver = rootView.findViewById<LinearLayout>(R.id.ll_Volver)
@@ -137,5 +134,5 @@ class RolFragment : Fragment() {
         targetView.invalidate()
         targetView.requestLayout()
     }
-
+    
 }
