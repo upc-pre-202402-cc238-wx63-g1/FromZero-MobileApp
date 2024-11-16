@@ -49,8 +49,8 @@ class ReviewDeliverableFragment : DialogFragment() {
 
         val btApprove = view.findViewById<Button>(R.id.btSend)
         btApprove.setOnClickListener {
-            if (developerMessage == "No hay ninguna entrega disponible.") {
-                Toast.makeText(requireContext(), "No puede realizar esta acción porque no existe una entrega.", Toast.LENGTH_SHORT).show()
+            if (developerMessage.isEmpty() || developerMessage == "No hay ninguna entrega disponible") {
+                Toast.makeText(requireContext(), "No puede realizar esta acción porque no existe una entrega", Toast.LENGTH_SHORT).show()
             } else {
                 token?.let { tokenString ->
                     reviewDeliverable(true, tokenString)
@@ -60,8 +60,8 @@ class ReviewDeliverableFragment : DialogFragment() {
 
         val btReject = view.findViewById<Button>(R.id.btReject)
         btReject.setOnClickListener {
-            if (developerMessage == "No hay ninguna entrega disponible.") {
-                Toast.makeText(requireContext(), "No puede realizar esta acción porque no existe una entrega.", Toast.LENGTH_SHORT).show()
+            if (developerMessage.isEmpty() || developerMessage == "No hay ninguna entrega disponible") {
+                Toast.makeText(requireContext(), "No puede realizar esta acción porque no existe una entrega", Toast.LENGTH_SHORT).show()
             } else {
                 token?.let { tokenString ->
                     reviewDeliverable(false, tokenString)
