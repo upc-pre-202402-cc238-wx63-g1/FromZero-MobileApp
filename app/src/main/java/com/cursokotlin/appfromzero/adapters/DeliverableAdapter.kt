@@ -79,21 +79,7 @@ class DeliverableAdapter(
             tvDate.text = deliverable.date.toString()
             tvState.text = deliverable.state
             tvDescription.text = "Descripción"
-            ivState.setImageResource(R.drawable.ic_clock)
-            ivState.setImageResource(R.drawable.ic_check)
-            ivArrow.setImageResource(R.drawable.arrow_down)
 
-            val inputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val outputDateFormat = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-            val formattedDate = deliverable.date?.let {
-                try {
-                    val date = inputDateFormat.parse(it)
-                    outputDateFormat.format(date)
-                } catch (e: Exception) {
-                    it
-                }
-            } ?: "No Date"
-            tvDate.text = formattedDate
 
             when (deliverable.state) {
                 "Completed" -> {
@@ -106,6 +92,7 @@ class DeliverableAdapter(
                     tvState.text = "Rechazado"
                     ivState.setImageResource(R.drawable.ic_reject)
                     btReview.isEnabled = true
+                    btSend.isEnabled = false
                 }
                 "Awaiting Review" -> {
                     tvState.text = "En revisión"
@@ -115,12 +102,18 @@ class DeliverableAdapter(
                         Toast.makeText(itemView.context, "Ya ha subido un avance a este entregable", Toast.LENGTH_SHORT).show()
                     }
                 }
-                else -> {
+                "Pending" -> {
                     tvState.text = "Pendiente"
                     ivState.setImageResource(R.drawable.ic_pending)
                     btReview.isEnabled = true
+                    btSend.isEnabled = true
+                }
+                else -> {
+
+                    ivState.setImageResource(R.drawable.ic_pending)
                 }
             }
+
 
             btReview.setOnClickListener {
                 if (!btReview.isEnabled) {
@@ -130,10 +123,12 @@ class DeliverableAdapter(
                 }
             }
 
+
             btSend.setOnClickListener {
                 onSendClick(deliverable.id)
             }
 
+            // Configuración de la expansión del cardview
             tvDescriptionText.visibility = View.GONE
             tvDescription.visibility = View.GONE
             btDelete.visibility = View.GONE
@@ -161,33 +156,6 @@ class DeliverableAdapter(
             btEdit.setOnClickListener {
                 onItemClick(deliverable)
             }
-        }
-
-        fun collapseCard() {
-            val initialHeight = cvDeliverableCard.height
-
-            tvDescriptionText.visibility = View.GONE
-            tvDescription.visibility = View.GONE
-            btDelete.visibility = View.GONE
-            btEdit.visibility = View.GONE
-            btReview.visibility = View.GONE
-            btSend.visibility = View.GONE
-
-            cvDeliverableCard.measure(
-                View.MeasureSpec.makeMeasureSpec(cvDeliverableCard.width, View.MeasureSpec.EXACTLY),
-                View.MeasureSpec.UNSPECIFIED
-            )
-            val stateVisibleHeight = tvState.bottom + 100
-
-            val animator = ValueAnimator.ofInt(initialHeight, stateVisibleHeight)
-            animator.addUpdateListener { valueAnimator ->
-                val layoutParams = cvDeliverableCard.layoutParams
-                layoutParams.height = valueAnimator.animatedValue as Int
-                cvDeliverableCard.layoutParams = layoutParams
-            }
-            animator.duration = 300
-            animator.interpolator = AccelerateDecelerateInterpolator()
-            animator.start()
         }
 
         private fun expandCard() {
@@ -219,5 +187,33 @@ class DeliverableAdapter(
             animator.interpolator = AccelerateDecelerateInterpolator()
             animator.start()
         }
+
+        fun collapseCard() {
+            val initialHeight = cvDeliverableCard.height
+
+            tvDescriptionText.visibility = View.GONE
+            tvDescription.visibility = View.GONE
+            btDelete.visibility = View.GONE
+            btEdit.visibility = View.GONE
+            btReview.visibility = View.GONE
+            btSend.visibility = View.GONE
+
+            cvDeliverableCard.measure(
+                View.MeasureSpec.makeMeasureSpec(cvDeliverableCard.width, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.UNSPECIFIED
+            )
+            val stateVisibleHeight = tvState.bottom + 100
+
+            val animator = ValueAnimator.ofInt(initialHeight, stateVisibleHeight)
+            animator.addUpdateListener { valueAnimator ->
+                val layoutParams = cvDeliverableCard.layoutParams
+                layoutParams.height = valueAnimator.animatedValue as Int
+                cvDeliverableCard.layoutParams = layoutParams
+            }
+            animator.duration = 300
+            animator.interpolator = AccelerateDecelerateInterpolator()
+            animator.start()
+        }
     }
+
 }

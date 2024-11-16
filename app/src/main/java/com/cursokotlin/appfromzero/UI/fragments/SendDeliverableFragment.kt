@@ -19,6 +19,7 @@ import retrofit2.Response
 
 class SendDeliverableFragment : DialogFragment() {
 
+    private var listener: OnDeliverableSentListener? = null
     private val deliverableRepository = DeliverableRepository(RetrofitClient.deliverableService)
     private var token: String? = null
     private var deliverableId: Long = 0L
@@ -59,6 +60,7 @@ class SendDeliverableFragment : DialogFragment() {
             override fun onResponse(call: Call<SendDeliverableResponse>, response: Response<SendDeliverableResponse>) {
                 if (response.isSuccessful) {
                     Toast.makeText(requireContext(), "Deliverable sent successfully", Toast.LENGTH_SHORT).show()
+                    listener?.onDeliverableSendState(deliverableId, "Awaiting Review")
                     dismiss()
                 } else {
                     val errorBody = response.errorBody()?.string()
@@ -71,6 +73,14 @@ class SendDeliverableFragment : DialogFragment() {
                 Toast.makeText(requireContext(), "Connection error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    interface OnDeliverableSentListener {
+        fun onDeliverableSendState(deliverableId: Long, newState: String)
+    }
+
+    fun setOnDeliverableSentListener(listener: OnDeliverableSentListener) {
+        this.listener = listener
     }
 
     override fun onStart() {

@@ -28,7 +28,8 @@ import retrofit2.Call
 import retrofit2.Response
 
 class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverableCreatedListener,
-    EditDeliverableFragment.OnDeliverableEditedListener {
+    EditDeliverableFragment.OnDeliverableEditedListener, SendDeliverableFragment.OnDeliverableSentListener,
+    ReviewDeliverableFragment.OnDeliverableReviewedListener {
 
     private lateinit var deliverableAdapter: DeliverableAdapter
     private lateinit var rvDeliverables: RecyclerView
@@ -74,7 +75,7 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
                 role,
                 { deliverable -> onDeliverableSelected(deliverable) },
                 { deliverableId -> deleteDeliverable(deliverableId) },
-                { deliverable -> onReviewDeliverable(deliverable) },
+                { deliverable -> onReviewDeliverable(deliverable.id, deliverable.developerMessage ?: "") },
                 { deliverableId -> onSendDeliverable(deliverableId) }
             )
             rvDeliverables.adapter = deliverableAdapter
@@ -234,19 +235,27 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         dialog.show(parentFragmentManager, "EditDeliverableDialog")
     }
 
-    private fun onReviewDeliverable(deliverable: Deliverable) {
-        Log.d("DeliverablesFragment", "onReviewDeliverable called for deliverableId: ${deliverable.id}")
-        val dialog = ReviewDeliverableFragment().apply {
-            arguments = Bundle().apply {
-                putLong("deliverableId", deliverable.id)
-                putString("developerMessage", deliverable.developerMessage ?: "No hay ninguna entrega disponible.")
-            }
-        }
-        dialog.show(parentFragmentManager, "ReviewDeliverableDialog")
+    private fun onReviewDeliverable(deliverableId: Long, developerMessage: String) {
+        val reviewDeliverableFragment = ReviewDeliverableFragment()
+        val bundle = Bundle()
+        bundle.putLong("deliverableId", deliverableId)
+        bundle.putString("developerMessage", developerMessage)
+        reviewDeliverableFragment.arguments = bundle
+        reviewDeliverableFragment.setOnDeliverableReviewedListener(this)
+        reviewDeliverableFragment.show(parentFragmentManager, "reviewDeliverableFragment")
     }
 
 
-    fun updateDeliverableState(deliverableId: Long, newState: String) {
+    private fun onSendDeliverable(deliverableId: Long) {
+        val sendDeliverableFragment = SendDeliverableFragment()
+        val bundle = Bundle()
+        bundle.putLong("deliverableId", deliverableId)
+        sendDeliverableFragment.arguments = bundle
+        sendDeliverableFragment.setOnDeliverableSentListener(this)
+        sendDeliverableFragment.show(parentFragmentManager, "sendDeliverableFragment")
+    }
+
+    override fun onDeliverableSendState(deliverableId: Long, newState: String) {
         val index = deliverables.indexOfFirst { it.id == deliverableId }
         if (index != -1) {
             deliverables[index].state = newState
@@ -254,12 +263,12 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         }
     }
 
-    private fun onSendDeliverable(deliverableId: Long) {
-        val sendDeliverableFragment = SendDeliverableFragment()
-        val bundle = Bundle()
-        bundle.putLong("deliverableId", deliverableId)
-        sendDeliverableFragment.arguments = bundle
-        sendDeliverableFragment.show(parentFragmentManager, "sendDeliverableFragment")
+    override fun onDeliverableReviewState(deliverableId: Long, newState: String) {
+        val index = deliverables.indexOfFirst { it.id == deliverableId }
+        if (index != -1) {
+            deliverables[index].state = newState
+            deliverableAdapter.notifyItemChanged(index)
+        }
     }
 
 }
