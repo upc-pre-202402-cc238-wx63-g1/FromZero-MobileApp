@@ -41,6 +41,7 @@ class ProjectCardAdapter(
                 .load(project.pictureUrl)
                 .placeholder(R.drawable.placeholder)
                 .error(R.drawable.placeholder)
+                .transform(CircleTransform())
                 .into(ivProfileEnterprisePhoto)
 
             when (project.projectState) {
