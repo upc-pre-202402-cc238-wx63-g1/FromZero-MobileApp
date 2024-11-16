@@ -117,14 +117,14 @@ class RolFragment : Fragment() {
         val scaleX = ObjectAnimator.ofFloat(
             targetView,
             "scaleX",
-            if (isZoomIn) 1.0f else 1.2f,
-            if (isZoomIn) 1.2f else 1.0f
+            if (isZoomIn) 1.0f else 1.1f,
+            if (isZoomIn) 1.1f else 1.0f
         )
         val scaleY = ObjectAnimator.ofFloat(
             targetView,
             "scaleY",
-            if (isZoomIn) 1.0f else 1.2f,
-            if (isZoomIn) 1.2f else 1.0f
+            if (isZoomIn) 1.0f else 1.1f,
+            if (isZoomIn) 1.1f else 1.0f
         )
 
         val animatorSet = AnimatorSet()
@@ -132,5 +132,10 @@ class RolFragment : Fragment() {
         animatorSet.duration = 300
         animatorSet.interpolator = DecelerateInterpolator()
         animatorSet.start()
+
+        // Forzar el rediseño
+        targetView.invalidate()
+        targetView.requestLayout()
     }
+
 }
