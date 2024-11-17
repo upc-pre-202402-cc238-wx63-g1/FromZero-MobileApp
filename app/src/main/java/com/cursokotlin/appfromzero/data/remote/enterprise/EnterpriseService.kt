@@ -17,7 +17,7 @@ interface EnterpriseService {
     ): Call<EnterpriseProfileResponse>
 
     @PUT("enterprises/{id}")
-    fun updateEnterpriseProfile(
+    fun updateEnterpriseByUserId(
         @Path("id") id: Long,
         @Body updateEnterpriseProfileRequest: UpdateEnterpriseProfileRequest,
         @Header("Authorization") token: String

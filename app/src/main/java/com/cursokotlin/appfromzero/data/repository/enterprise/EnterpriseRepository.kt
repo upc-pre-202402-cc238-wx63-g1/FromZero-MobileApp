@@ -11,6 +11,6 @@ class EnterpriseRepository (private val enterpriseService: EnterpriseService) {
     }
 
     fun updateEnterpriseProfile(id: Long, updateEnterpriseProfileRequest: UpdateEnterpriseProfileRequest, token: String): Call<EnterpriseProfileResponse>{
-        return enterpriseService.updateEnterpriseProfile(id, updateEnterpriseProfileRequest, "Bearer $token")
+        return enterpriseService.updateEnterpriseByUserId(id, updateEnterpriseProfileRequest, "Bearer $token")
     }
 }
