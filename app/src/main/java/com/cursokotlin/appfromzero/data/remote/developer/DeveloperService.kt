@@ -17,7 +17,7 @@ interface DeveloperService {
         @Header("Authorization") token: String
     ): Call<DeveloperProfileResponse>
     @PUT("developers/{id}")
-    fun updateDeveloperProfile(
+    fun updateDeveloperByUserId(
         @Path("id") id: Long,
         @Body updateDeveloperProfileRequest: UpdateDeveloperProfileRequest,
         @Header("Authorization") token: String
