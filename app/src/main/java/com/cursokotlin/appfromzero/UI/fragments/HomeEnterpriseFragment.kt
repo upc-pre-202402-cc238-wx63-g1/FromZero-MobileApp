@@ -110,6 +110,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home_enterprise, container, false)
+        projects = listOf()
 
         emptyView = view.findViewById(R.id.emptyView)
         btnCreateProject = view.findViewById(R.id.btnCreateProject)

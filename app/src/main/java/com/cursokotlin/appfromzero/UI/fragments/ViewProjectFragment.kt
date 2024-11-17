@@ -154,7 +154,7 @@ class ViewProjectFragment : Fragment() {
             ContextCompat.getDrawable(requireContext(), R.drawable.rounded_dialog_background)
         )
         applyProjectDialog.window?.setLayout(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
+            (resources.displayMetrics.widthPixels * 0.9).toInt(),
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         applyProjectDialog.setCancelable(true)
@@ -169,7 +169,7 @@ class ViewProjectFragment : Fragment() {
             ContextCompat.getDrawable(requireContext(), R.drawable.rounded_dialog_background)
         )
         deleteProjectDialog.window?.setLayout(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
+            (resources.displayMetrics.widthPixels * 0.9).toInt(),
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         deleteProjectDialog.setCancelable(true)

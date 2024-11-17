@@ -1,14 +1,18 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -35,6 +39,9 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
     private lateinit var rvDeliverables: RecyclerView
     private lateinit var ivAddDeliverable: ImageView
     private lateinit var cvCardEmpty: CardView
+    private lateinit var deleteDeliverableDialog: Dialog
+    private lateinit var btnConfirmDeleteDeliverable: Button
+    private lateinit var btnCancelDeleteDeliverable: Button
     private val homeViewModel: HomeViewModel by activityViewModels()
 
     private val projectRepository = ProjectRepository(RetrofitClient.projectService)
@@ -61,9 +68,26 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
             idProject = it.getLong("idProject")
         }
 
+        setupDeleteDeliverableDialog()
         initView(view)
         loadDeliverables(view, idProject, token)
         return view
+    }
+
+    private fun setupDeleteDeliverableDialog() {
+        deleteDeliverableDialog = Dialog(requireContext())
+        deleteDeliverableDialog.setContentView(R.layout.delete_project_dialog)
+        deleteDeliverableDialog.window?.setBackgroundDrawable(
+            ContextCompat.getDrawable(requireContext(), R.drawable.rounded_dialog_background)
+        )
+        deleteDeliverableDialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.9).toInt(),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        deleteDeliverableDialog.setCancelable(true)
+
+        btnConfirmDeleteDeliverable = deleteDeliverableDialog.findViewById(R.id.btn_aceptar)
+        btnCancelDeleteDeliverable = deleteDeliverableDialog.findViewById(R.id.btn_cancelar)
     }
 
     private fun initView(view: View) {
@@ -158,6 +182,21 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
     }
 
     private fun deleteDeliverable(deliverableId: Long) {
+        val tvTitle = deleteDeliverableDialog.findViewById<TextView>(R.id.tvTitle)
+        tvTitle.text = "¿Estás seguro de que quieres eliminar este entregable?"
+        deleteDeliverableDialog.show()
+
+        btnConfirmDeleteDeliverable.setOnClickListener {
+            deleteDeliverableDialog.dismiss()
+            performDeleteDeliverable(deliverableId)
+        }
+
+        btnCancelDeleteDeliverable.setOnClickListener {
+            deleteDeliverableDialog.dismiss()
+        }
+    }
+
+    private fun performDeleteDeliverable(deliverableId: Long) {
         val token = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
             .getString("token", null)
         if (token == null) {
