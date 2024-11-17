@@ -8,10 +8,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.CandidatesAdapter
+import com.cursokotlin.appfromzero.common.SharedViewModel
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
 import com.cursokotlin.appfromzero.data.repository.project.ProjectRepository
 import com.cursokotlin.appfromzero.models.project.Candidate
@@ -33,6 +35,7 @@ class ApplicantsFragment : DialogFragment(), CandidatesAdapter.OnCandidateAction
     private lateinit var adapter: CandidatesAdapter
     private var userId: Long = 0
     private var token: String? = null
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -72,6 +75,8 @@ class ApplicantsFragment : DialogFragment(), CandidatesAdapter.OnCandidateAction
                         if (response.isSuccessful) {
                             Log.d("ApplicantsFragment", "Developer assigned to project")
                             listener?.onDeveloperSelected(candidate)
+                            sharedViewModel.setAcceptedCandidate(candidate)
+                            dismiss()
                         } else {
                             Log.d("ApplicantsFragment", "Error assigning developer to project")
                         }
@@ -86,5 +91,7 @@ class ApplicantsFragment : DialogFragment(), CandidatesAdapter.OnCandidateAction
 
     override fun onReject(candidate: Candidate) {
         Log.d("ApplicantsFragment", "Rejected candidate: ${candidate.firstName} ${candidate.lastName}")
+        candidateList = candidateList.filter { it.userId != candidate.userId }
+        adapter.updateCandidates(candidateList)
     }
 }

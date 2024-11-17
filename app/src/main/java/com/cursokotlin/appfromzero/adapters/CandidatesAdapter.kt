@@ -95,6 +95,6 @@ class CandidatesAdapter(
 
     fun updateCandidates(newCandidates: List<Candidate>) {
         candidates = newCandidates
-        notifyItemRangeChanged(0, newCandidates.size)
+        notifyDataSetChanged()
     }
 }

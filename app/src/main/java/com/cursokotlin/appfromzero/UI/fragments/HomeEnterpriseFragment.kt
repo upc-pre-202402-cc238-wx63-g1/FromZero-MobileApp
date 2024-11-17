@@ -28,6 +28,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -35,6 +37,7 @@ import com.cursokotlin.appfromzero.MainActivity
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.adapters.CircleTransform
 import com.cursokotlin.appfromzero.adapters.ProjectCardAdapter
+import com.cursokotlin.appfromzero.common.SharedViewModel
 import com.cursokotlin.appfromzero.data.SupabaseStorageClient
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
 import com.cursokotlin.appfromzero.data.repository.enterprise.EnterpriseRepository
@@ -70,6 +73,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
     private lateinit var cvCardEmpty: LinearLayout
     private lateinit var adapter: ProjectCardAdapter
     private var projectList: List<ProjectCard> = emptyList()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private lateinit var emptyView: LinearLayout
     private lateinit var btnCreateProject: Button
@@ -116,6 +120,10 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
             replaceFragment(CreateProjectFragment())
         }
 
+        sharedViewModel.acceptedCandidate.observe(viewLifecycleOwner, Observer { candidate ->
+            updateProjectCards(view)
+        })
+
         setupRecyclerView(view)
         setChangeProfilePhotoListener()
 
@@ -127,6 +135,33 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         initEnterpriseView(view, userId, token, "ROLE_ENTERPRISE")
 
         return view
+    }
+
+    private fun updateProjectCards(view: View) {
+        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getLong("userId", 0)
+        val token = sharedPreferences.getString("token", null)
+
+        if(token != null) {
+            val projectCall = projectRepository.getProjectsByEnterpriseUserId(userId, token)
+            projectCall.enqueue(object : retrofit2.Callback<List<Project>> {
+                override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
+                    if (response.isSuccessful) {
+                        projects = response.body() ?: emptyList()
+                        bindProjectsToViews()
+                        setupRecyclerView(view)
+                    } else {
+                        Toast.makeText(requireContext(), "Error al obtener los proyectos", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<List<Project>>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+
+        bindProjectsToViews()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
