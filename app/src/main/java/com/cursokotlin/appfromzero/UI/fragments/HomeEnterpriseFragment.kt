@@ -127,6 +127,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         setupRecyclerView(view)
         setChangeProfilePhotoListener()
 
+
         val sharedPreferences =
             requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val userId = sharedPreferences.getLong("userId", 0)

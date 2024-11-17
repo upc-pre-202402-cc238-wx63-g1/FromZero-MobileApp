@@ -66,7 +66,7 @@
                     tools:ignore="RtlSymmetry">
 
                     <LinearLayout
-                        android:layout_width="292dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="154dp">
 
                         <LinearLayout
@@ -80,24 +80,40 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content">
 
-                                <ImageView
-                                    android:id="@+id/ivProfileDevPhoto"
-                                    android:layout_width="100dp"
-                                    android:layout_height="100dp"
-                                    android:layout_marginEnd="25dp"
-                                    android:src="@drawable/sample_profile" />
+                                <RelativeLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content">
+
+                                    <ImageView
+                                        android:id="@+id/ivProfileDevPhoto"
+                                        android:layout_width="100dp"
+                                        android:layout_height="100dp"
+                                        android:src="@drawable/sample_profile"
+                                        android:background="@drawable/circle_image"
+                                        android:scaleType="centerCrop"
+                                        android:padding="2dp"/>
+
+                                    <ImageButton
+                                        android:id="@+id/btnChangeDevProfilePhoto"
+                                        android:layout_width="36dp"
+                                        android:layout_height="36dp"
+                                        android:layout_alignBottom="@+id/ivProfileDevPhoto"
+                                        android:layout_alignEnd="@+id/ivProfileDevPhoto"
+                                        android:background="@drawable/rounded_button_edit_photo_background"
+                                        android:contentDescription="@string/bot_n_de_cambio_de_foto_de_perfil"
+                                        android:src="@drawable/ic_camera" />
+                                </RelativeLayout>
 
                                 <LinearLayout
-                                    android:layout_width="166dp"
+                                    android:layout_width="200dp"
                                     android:layout_height="100dp"
                                     android:gravity="center"
                                     android:orientation="vertical">
 
                                     <LinearLayout
-                                        android:layout_width="wrap_content"
+                                        android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_gravity="start"
-                                        android:gravity="center">
+                                        android:layout_gravity="start">
 
                                         <TextView
                                             android:id="@+id/tvDevName"
@@ -181,7 +197,7 @@
                     <LinearLayout
                         android:id="@+id/llExtendingDeveloper"
                         android:layout_width="match_parent"
-                        android:layout_height="280dp"
+                        android:layout_height="200dp"
                         android:layout_marginTop="20dp"
                         android:orientation="vertical"
                         android:visibility="gone">
@@ -208,7 +224,7 @@
                             android:id="@+id/etDeveloperDescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Juan es un desarrollador web con más de 5 años de experiencia en la creación de sitios web y aplicaciones móviles. Apasionado por la tecnología y el diseño, se especializa en el desarrollo frontend y backend, utilizando tecnologías como HTML, CSS, JavaScript, React y Node.js."
+                            android:text="Juan es un desarrollador web con más de 5 años de experiencia en la creación de sitios web y aplicaciones móviles. Apasionado por la tecnología"
                             android:textColor="@color/primary_text_color"
                             android:textSize="16sp"
                             android:visibility="gone" />
@@ -217,7 +233,7 @@
                             android:id="@+id/tvDeveloperDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Juan es un desarrollador web con más de 5 años de experiencia en la creación de sitios web y aplicaciones móviles. Apasionado por la tecnología y el diseño, se especializa en el desarrollo frontend y backend, utilizando tecnologías como HTML, CSS, JavaScript, React y Node.js."
+                            android:text="Juan es un desarrollador web con más de 5 años de experiencia en la creación de sitios web y aplicaciones móviles. Apasionado por la tecnología."
                             android:textSize="13dp" />
 
                         <LinearLayout

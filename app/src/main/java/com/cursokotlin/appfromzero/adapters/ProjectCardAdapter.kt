@@ -37,12 +37,20 @@ class ProjectCardAdapter(
             // tvNumCandidates.text = "Postulante: ${project.numPostulantes}"
             tvEnterpriseName.text = project.enterpriseName
 
-            Picasso.get()
-                .load(project.pictureUrl)
-                .placeholder(R.drawable.placeholder)
-                .error(R.drawable.placeholder)
-                .transform(CircleTransform())
-                .into(ivProfileEnterprisePhoto)
+            if (project.pictureUrl.isNullOrEmpty()) {
+                Picasso.get()
+                    .load(R.drawable.placeholder) // Cargar una imagen por defecto si la URL es nula o vacía
+                    .transform(CircleTransform())
+                    .into(ivProfileEnterprisePhoto)
+
+            } else {
+                Picasso.get()
+                    .load(project.pictureUrl)
+                    .transform(CircleTransform())
+                    .placeholder(R.drawable.placeholder) // Opcional: añadir un placeholder mientras carga
+                    .error(R.drawable.placeholder) // Opcional: añadir una imagen de error si la carga falla
+                    .into(ivProfileEnterprisePhoto)
+            }
 
             when (project.projectState) {
                 ProjectState.BUSQUEDA_DEVELOPER -> {

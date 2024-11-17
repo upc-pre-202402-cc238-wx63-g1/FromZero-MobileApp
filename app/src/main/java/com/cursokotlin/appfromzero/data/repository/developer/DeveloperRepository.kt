@@ -12,7 +12,7 @@ class DeveloperRepository (private val developerService: DeveloperService) {
     }
 
     fun updateDeveloperProfile(id: Long, updateDeveloperProfileRequest: UpdateDeveloperProfileRequest, token: String): Call<DeveloperProfileResponse>{
-        return developerService.updateDeveloperProfile(id, updateDeveloperProfileRequest, "Bearer $token")
+        return developerService.updateDeveloperByUserId(id, updateDeveloperProfileRequest, "Bearer $token")
     }
     
     fun getDevelopers( token: String): Call <List<DeveloperSearchCard>>{
