@@ -16,6 +16,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.Deliverable
+import com.google.android.material.snackbar.Snackbar
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -95,24 +96,16 @@ class DeliverableAdapter(
                     ivState.setImageResource(R.drawable.ic_check)
 
                     //rol enterprise
-                    btDelete.isEnabled=false
-                    btEdit.isEnabled=false
+                    btDelete.isEnabled = false
+                    btEdit.isEnabled = false
                     btReview.isEnabled = false
-                    btReview.setOnClickListener {
-                        Toast.makeText(itemView.context, "Ya ha aprobado este entregable", Toast.LENGTH_SHORT).show()
-                    }
-
                     //rol developer
                     btSend.isEnabled = false
-                    btSend.setOnClickListener {
-                        Toast.makeText(itemView.context, "Ya ha subido un avance a este entregable", Toast.LENGTH_SHORT).show()
-                    }
 
                 }
                 "Rejected" -> {
                     tvState.text = "Rechazado"
                     ivState.setImageResource(R.drawable.ic_reject)
-
                 }
                 "Awaiting Review" -> {
                     tvState.text = "En revisión"
@@ -120,9 +113,6 @@ class DeliverableAdapter(
 
                     //rol developer
                     btSend.isEnabled = false
-                    btSend.setOnClickListener {
-                        Toast.makeText(itemView.context, "Ya ha subido un avance a este entregable", Toast.LENGTH_SHORT).show()
-                    }
                 }
                 "Pending" -> {
                     tvState.text = "Pendiente"
@@ -136,6 +126,7 @@ class DeliverableAdapter(
             }
 
 
+
             if (isExpanded) {
                 collapseCard()
                 isExpanded = false
@@ -143,11 +134,7 @@ class DeliverableAdapter(
             }
 
             btReview.setOnClickListener {
-                if (!btReview.isEnabled) {
-                    Toast.makeText(itemView.context, "El entregable ya ha sido revisado", Toast.LENGTH_SHORT).show()
-                } else {
-                    onReviewClick(deliverable)
-                }
+                onReviewClick(deliverable)
             }
 
             btSend.setOnClickListener {
