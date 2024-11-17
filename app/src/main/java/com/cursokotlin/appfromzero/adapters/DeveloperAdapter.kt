@@ -1,11 +1,13 @@
 package com.cursokotlin.appfromzero.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
+import com.cursokotlin.appfromzero.adapters.CircleTransform
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.models.profile.DeveloperSearchCard
@@ -35,11 +37,14 @@ class DeveloperAdapter(
 
     override fun onBindViewHolder(holder: DeveloperViewHolder, position: Int) {
         val developer = developers[position]
+        Log.d("DeveloperAdapter", "Developer: $developer")
 
         // Carga la imagen del perfil usando Picasso
         Picasso.get()
             .load(developer.profileImgUrl)
-            .error(R.drawable.sample_profile)
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
+            .transform(CircleTransform())
             .into(holder.profilePic)
 
         // Carga la imagen de la bandera usando Picasso

@@ -8,6 +8,8 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.cardview.widget.CardView
+import com.cursokotlin.appfromzero.adapters.CircleTransform
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
@@ -36,8 +38,8 @@ class CandidatesAdapter(
         val skills: TextView = itemView.findViewById(R.id.tvDeveloperSkills)
         val arrow: ImageView = itemView.findViewById(R.id.ivArrow)
 
-        val btnAccept: Button = itemView.findViewById(R.id.btnAccept)
-        val btnReject: Button = itemView.findViewById(R.id.btnReject)
+        val btnAccept: CardView = itemView.findViewById(R.id.btnAccept)
+        val btnReject: CardView = itemView.findViewById(R.id.btnReject)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CandidateViewHolder {
@@ -52,7 +54,9 @@ class CandidatesAdapter(
         // Carga la imagen del perfil usando Picasso
         Picasso.get()
             .load(candidate.profileImgUrl)
-            .error(R.drawable.sample_profile)
+            .transform(CircleTransform())
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
             .into(holder.profilePic)
 
         // Carga la imagen de la bandera usando Picasso
@@ -91,6 +95,6 @@ class CandidatesAdapter(
 
     fun updateCandidates(newCandidates: List<Candidate>) {
         candidates = newCandidates
-        notifyItemRangeChanged(0, newCandidates.size)
+        notifyDataSetChanged()
     }
 }

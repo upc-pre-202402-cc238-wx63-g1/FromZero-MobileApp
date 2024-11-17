@@ -95,7 +95,7 @@
                                     android:layout_height="36dp"
                                     android:layout_alignBottom="@+id/ivProfilePhoto"
                                     android:layout_alignEnd="@+id/ivProfilePhoto"
-                                    android:background="@drawable/rounded_button_background"
+                                    android:background="@drawable/rounded_button_edit_photo_background"
                                     android:contentDescription="@string/bot_n_de_cambio_de_foto_de_perfil"
                                     android:src="@drawable/ic_camera" />
                             </RelativeLayout>
