@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="UI.fragments.SearchFragment" >
+    tools:context="UI.fragments.SearchFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background_gradient">
 
+        <!-- Icono -->
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="106dp"
@@ -23,6 +24,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.084" />
 
+        <!-- Título -->
         <TextView
             android:id="@+id/textView6"
             android:layout_width="329dp"
@@ -36,31 +38,50 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
+        <!-- Contenedor principal -->
         <FrameLayout
-            android:layout_width="406dp"
-            android:layout_height="450dp"
-            android:layout_marginTop="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="300dp"
+            android:layout_marginBottom="85dp"
             android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView6">
 
+            <!-- Scroll para contenido -->
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:fillViewport="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+
                     android:orientation="vertical">
 
-                    <!-- RecyclerView que mostrará los desarrolladores -->
+                    <!-- RecyclerView para desarrolladores -->
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvDevelopers"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="1dp"
                         android:layout_marginEnd="1dp" />
+
+                    <!-- Mensaje para lista vacía -->
+                    <TextView
+                        android:id="@+id/tvEmptyState"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center"
+                        android:padding="8dp"
+                        android:text="No se encontraron Desarrolladores"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="18sp"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
