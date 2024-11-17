@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
+import com.cursokotlin.appfromzero.adapters.CircleTransform
 import androidx.recyclerview.widget.RecyclerView
 import com.cursokotlin.appfromzero.R
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
@@ -52,7 +53,9 @@ class CandidatesAdapter(
         // Carga la imagen del perfil usando Picasso
         Picasso.get()
             .load(candidate.profileImgUrl)
-            .error(R.drawable.sample_profile)
+            .transform(CircleTransform())
+            .placeholder(R.drawable.placeholder)
+            .error(R.drawable.placeholder)
             .into(holder.profilePic)
 
         // Carga la imagen de la bandera usando Picasso

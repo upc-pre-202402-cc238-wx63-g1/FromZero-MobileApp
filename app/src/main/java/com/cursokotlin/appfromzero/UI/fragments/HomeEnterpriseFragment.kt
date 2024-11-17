@@ -308,6 +308,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
             override fun onItemClick(projectCard: ProjectCard) {
                 when (projectCard.projectState) {
                     ProjectState.BUSQUEDA_DEVELOPER -> {
+                        Log.d("SetupRecyclerView", "Postulando a ${projectCard.candidateList}")
                         val dialog = ApplicantsFragment()
                         dialog.setDeveloperList(projectCard.candidateList)
                         dialog.setProjectId(projectCard.idProject)

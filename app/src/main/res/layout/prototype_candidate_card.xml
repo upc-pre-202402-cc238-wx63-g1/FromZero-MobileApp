@@ -20,8 +20,10 @@
             android:layout_margin="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/sample_profile"
-            app:tint="@color/black" />
+            android:src="@drawable/sample_profile"
+            android:background="@drawable/circle_image"
+            android:scaleType="centerCrop"
+            android:padding="2dp"/>
 
         <!-- Nombre del desarrollador -->
         <TextView
