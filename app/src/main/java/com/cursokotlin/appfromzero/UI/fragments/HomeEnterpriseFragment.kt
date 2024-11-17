@@ -369,6 +369,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                     }
 
                     override fun onFailure(call: Call<List<Project>>, t: Throwable) {
+                        Log.d("FetchData", "Error: ${t.message}")
                         Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
                     }
                 })
@@ -476,7 +477,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                     "Finalizado" -> ProjectState.FINALIZADO
                     else -> ProjectState.BUSQUEDA_DEVELOPER
                 },
-                projectProgress = project.progress,
+                projectProgress = project.progress.toInt(),
                 candidateList = project.candidatesList
             )
         }

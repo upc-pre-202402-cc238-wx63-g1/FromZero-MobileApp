@@ -231,7 +231,7 @@ class HomeDeveloperFragment : Fragment() {
                     "Finalizado" -> ProjectState.FINALIZADO
                     else -> ProjectState.BUSQUEDA_DEVELOPER
                 },
-                projectProgress = project.progress,
+                projectProgress = project.progress.toInt(),
                 candidateList = project.candidatesList,
             )
         }

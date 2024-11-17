@@ -5,7 +5,7 @@ data class Project(
     val name: String,
     val description: String,
     val state: String,
-    val progress: Int,
+    val progress: Double,
     val ownerId: Long,
     val developerId: Long?,
     val candidatesList: List<Candidate>, // Adjust the type if you have a specific class for candidates

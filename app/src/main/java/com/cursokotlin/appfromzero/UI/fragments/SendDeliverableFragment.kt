@@ -19,6 +19,7 @@ import retrofit2.Response
 
 class SendDeliverableFragment : DialogFragment() {
 
+    private var listener: OnDeliverableSentListener? = null
     private val deliverableRepository = DeliverableRepository(RetrofitClient.deliverableService)
     private var token: String? = null
     private var deliverableId: Long = 0L
@@ -41,6 +42,7 @@ class SendDeliverableFragment : DialogFragment() {
     private fun initView(view: View) {
         val messageField = view.findViewById<EditText>(R.id.etDeveloperMessage)
         val sendButton = view.findViewById<Button>(R.id.btSend)
+        val cancelButton = view.findViewById<Button>(R.id.btCancel)
 
         sendButton.setOnClickListener {
             val message = messageField.text.toString()
@@ -49,8 +51,12 @@ class SendDeliverableFragment : DialogFragment() {
                     sendDeliverable(deliverableId, message, tokenString)
                 }
             } else {
-                Toast.makeText(requireContext(), "Please enter a message", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Ingrese un mensaje", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        cancelButton.setOnClickListener {
+            dismiss()
         }
     }
 
@@ -58,12 +64,13 @@ class SendDeliverableFragment : DialogFragment() {
         deliverableRepository.sendDeliverable(deliverableId, message, token).enqueue(object : Callback<SendDeliverableResponse> {
             override fun onResponse(call: Call<SendDeliverableResponse>, response: Response<SendDeliverableResponse>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(requireContext(), "Deliverable sent successfully", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Entregable enviado correctamente", Toast.LENGTH_SHORT).show()
+                    listener?.onDeliverableSendState(deliverableId, "Awaiting Review")
                     dismiss()
                 } else {
                     val errorBody = response.errorBody()?.string()
                     val statusCode = response.code()
-                    Toast.makeText(requireContext(), "Failed to send deliverable: ${response.message()} (Status code: $statusCode, Error: $errorBody)", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Entregable enviado incorrectamente: ${response.message()} (Status code: $statusCode, Error: $errorBody)", Toast.LENGTH_LONG).show()
                 }
             }
 
@@ -71,6 +78,14 @@ class SendDeliverableFragment : DialogFragment() {
                 Toast.makeText(requireContext(), "Connection error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    interface OnDeliverableSentListener {
+        fun onDeliverableSendState(deliverableId: Long, newState: String)
+    }
+
+    fun setOnDeliverableSentListener(listener: OnDeliverableSentListener) {
+        this.listener = listener
     }
 
     override fun onStart() {

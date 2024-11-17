@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/tvProjectName"
-            android:layout_width="279dp"
+            android:layout_width="250dp"
             android:layout_height="60dp"
             android:layout_marginStart="28dp"
             android:layout_marginTop="16dp"
@@ -30,7 +30,7 @@
 
         <TextView
             android:id="@+id/tvDeliverableName"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
             android:layout_marginTop="24dp"
@@ -157,9 +157,9 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
             android:backgroundTint="@color/white"
+            android:text="@string/revisar"
             android:textColor="@color/primary_title_color"
             android:textSize="22sp"
-            android:text="@string/revisar"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/ivArrow"
             app:layout_constraintEnd_toEndOf="parent"
@@ -168,7 +168,7 @@
             app:layout_constraintTop_toBottomOf="@+id/btDelete"
             app:layout_constraintVertical_bias="1.0"
             app:strokeColor="@color/material_dynamic_neutral80"
-            app:strokeWidth="1sp"/>
+            app:strokeWidth="1sp" />
 
         <ImageView
             android:id="@+id/ivArrow"

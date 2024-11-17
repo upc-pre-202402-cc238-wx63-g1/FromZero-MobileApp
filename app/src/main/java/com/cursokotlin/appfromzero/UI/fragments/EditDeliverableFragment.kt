@@ -120,7 +120,7 @@ class EditDeliverableFragment : DialogFragment() {
                         val responseBody = response.body()
 
                         if (responseBody != null) {
-
+                            val developerMessage = responseBody.developerMessage ?: "No Message"
                             val updatedDeliverable = Deliverable(
                                 id = responseBody.id,
                                 name = responseBody.name,
@@ -128,7 +128,7 @@ class EditDeliverableFragment : DialogFragment() {
                                 date = responseBody.date,
                                 state = responseBody.state,
                                 idProject = idProject,
-                                developerMessage = responseBody.developerMessage,
+                                developerMessage = developerMessage,
                                 projectName = projectName
                             )
 

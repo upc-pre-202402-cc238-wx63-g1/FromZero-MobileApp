@@ -24,6 +24,7 @@ class ReviewDeliverableFragment : DialogFragment() {
     private var token: String? = null
     private var deliverableId: Long = 0L
     private var developerMessage: String = "No hay una entrega disponible."
+    private var listener: OnDeliverableReviewedListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -48,8 +49,8 @@ class ReviewDeliverableFragment : DialogFragment() {
 
         val btApprove = view.findViewById<Button>(R.id.btSend)
         btApprove.setOnClickListener {
-            if (developerMessage == "No hay ninguna entrega disponible.") {
-                Toast.makeText(requireContext(), "No puede realizar esta acción porque no existe una entrega.", Toast.LENGTH_SHORT).show()
+            if (developerMessage.isEmpty() || developerMessage == "No hay ninguna entrega disponible") {
+                Toast.makeText(requireContext(), "No puede realizar esta acción porque no existe una entrega", Toast.LENGTH_SHORT).show()
             } else {
                 token?.let { tokenString ->
                     reviewDeliverable(true, tokenString)
@@ -59,8 +60,8 @@ class ReviewDeliverableFragment : DialogFragment() {
 
         val btReject = view.findViewById<Button>(R.id.btReject)
         btReject.setOnClickListener {
-            if (developerMessage == "No hay ninguna entrega disponible.") {
-                Toast.makeText(requireContext(), "No puede realizar esta acción porque no existe una entrega.", Toast.LENGTH_SHORT).show()
+            if (developerMessage.isEmpty() || developerMessage == "No hay ninguna entrega disponible") {
+                Toast.makeText(requireContext(), "No puede realizar esta acción porque no existe una entrega", Toast.LENGTH_SHORT).show()
             } else {
                 token?.let { tokenString ->
                     reviewDeliverable(false, tokenString)
@@ -80,8 +81,8 @@ class ReviewDeliverableFragment : DialogFragment() {
                     val message = if (accepted) "Entrega aprobada" else "Entrega rechazada"
                     Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 
-                    val newState = if (accepted) "Approved" else "Rejected"
-                    (activity as? DeliverablesFragment)?.updateDeliverableState(deliverableId, newState)
+                    val newState = if (accepted) "Completed" else "Rejected"
+                    listener?.onDeliverableReviewState(deliverableId, newState)
 
                     dismiss()
                 } else {
@@ -104,6 +105,14 @@ class ReviewDeliverableFragment : DialogFragment() {
         cancelButton.setOnClickListener {
             dismiss()
         }
+    }
+
+    fun setOnDeliverableReviewedListener(listener: OnDeliverableReviewedListener) {
+        this.listener = listener
+    }
+
+    interface OnDeliverableReviewedListener {
+        fun onDeliverableReviewState(deliverableId: Long, newState: String)
     }
 
     override fun onStart() {
