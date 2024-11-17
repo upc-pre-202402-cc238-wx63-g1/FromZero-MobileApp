@@ -40,10 +40,12 @@
 
         <!-- Contenedor principal -->
         <FrameLayout
-            android:layout_width="406dp"
-            android:layout_height="450dp"
-            android:layout_marginTop="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="300dp"
+            android:layout_marginBottom="85dp"
             android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView6">
@@ -57,6 +59,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+
                     android:orientation="vertical">
 
                     <!-- RecyclerView para desarrolladores -->
@@ -72,13 +75,13 @@
                         android:id="@+id/tvEmptyState"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
                         android:gravity="center"
+                        android:padding="8dp"
                         android:text="No se encontraron Desarrolladores"
                         android:textColor="@android:color/darker_gray"
                         android:textSize="18sp"
-                        android:visibility="gone"
-                        android:layout_marginTop="16dp"
-                        android:padding="8dp" />
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
