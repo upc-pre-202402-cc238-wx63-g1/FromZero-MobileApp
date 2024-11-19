@@ -1,7 +1,10 @@
 <resources>
     <string-array name="problem_types">
-        <item>Tipo de Problema 1</item>
-        <item>Tipo de Problema 2</item>
-        <item>Tipo de Problema 3</item>
+        <item>Problema de Conexión a Internet</item>
+        <item>Problema de Inicio de Sesión</item>
+        <item>Problema de Carga Lenta</item>
+        <item>Problema de Pago</item>
+        <item>Problema de Notificaciones</item>
+        <item>Otro</item>
     </string-array>
 </resources>

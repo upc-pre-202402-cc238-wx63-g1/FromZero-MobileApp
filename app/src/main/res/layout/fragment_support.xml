@@ -1,5 +1,4 @@
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,17 +10,18 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
         android:hint="Título del problema"
         android:textColorHint="@android:color/darker_gray"
-        app:layout_constraintTop_toTopOf="parent"
+        app:boxBackgroundColor="@android:color/white"
         app:boxStrokeColor="@android:color/white"
         app:hintTextColor="@android:color/darker_gray"
-        app:boxBackgroundColor="@android:color/white">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -31,17 +31,17 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="Tipo de Problema"
-        app:layout_constraintTop_toBottomOf="@id/titleInputLayout"
         app:boxBackgroundColor="@android:color/white"
         app:boxStrokeColor="@android:color/white"
-        app:hintTextColor="@android:color/darker_gray">
+        app:hintTextColor="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@id/titleInputLayout">
 
         <AutoCompleteTextView
             android:id="@+id/autoCompleteTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="none"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -51,19 +51,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:hint="Descripción del problema"
-        app:layout_constraintTop_toBottomOf="@id/typeInputLayout"
         app:boxBackgroundColor="@android:color/white"
         app:boxStrokeColor="@android:color/white"
-        app:hintTextColor="@android:color/darker_gray">
+        app:hintTextColor="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@id/typeInputLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:gravity="top"
             android:inputType="textMultiLine"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Área para adjuntar archivo -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/fileAttachmentArea"
         android:layout_width="match_parent"
@@ -76,25 +77,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:padding="16dp">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@drawable/ic_attach_file"
-                app:tint="@android:color/darker_gray"/>
+                app:tint="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:text="Adjuntar archivos (opcional)"
-                android:textColor="@android:color/darker_gray"
-                android:layout_marginStart="8dp"/>
+                android:textColor="@android:color/darker_gray" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
+    <!-- Botón Enviar -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/submitButton"
         android:layout_width="match_parent"
@@ -103,6 +105,6 @@
         android:backgroundTint="@android:color/white"
         android:text="Enviar"
         android:textColor="@android:color/black"
-        app:layout_constraintTop_toBottomOf="@id/fileAttachmentArea"/>
+        app:layout_constraintTop_toBottomOf="@id/fileAttachmentArea" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
