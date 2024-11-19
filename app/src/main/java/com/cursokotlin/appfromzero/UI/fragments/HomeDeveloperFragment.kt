@@ -263,6 +263,9 @@ class HomeDeveloperFragment : Fragment() {
                                 email = developer!!.email,
                                 profileImgUrl = developer!!.profileImgUrl
                             )
+                            val dao = AppDatabase.getInstance(requireContext()).getDao()
+                            dao.updateProfileImg(updatedDeveloper.userId, updatedDeveloper.profileImgUrl)
+
                             fetchData(userId, token, "ROLE_DEVELOPER", requireView())
                             bindDataToViews(role = "developer")
                             bindProjectsToViews(projects)
