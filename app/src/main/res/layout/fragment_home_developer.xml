@@ -224,7 +224,6 @@
                             android:id="@+id/etDeveloperDescription"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Juan es un desarrollador web con más de 5 años de experiencia en la creación de sitios web y aplicaciones móviles. Apasionado por la tecnología"
                             android:textColor="@color/primary_text_color"
                             android:textSize="16sp"
                             android:visibility="gone" />
@@ -233,7 +232,6 @@
                             android:id="@+id/tvDeveloperDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Juan es un desarrollador web con más de 5 años de experiencia en la creación de sitios web y aplicaciones móviles. Apasionado por la tecnología."
                             android:textSize="13dp" />
 
                         <LinearLayout
@@ -261,7 +259,6 @@
                                         android:id="@+id/etDeveloperPhone"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="924 830 455"
                                         android:textColor="@color/primary_text_color"
                                         android:textSize="16sp"
                                         android:visibility="gone" />
@@ -271,8 +268,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="4dp"
-                                        android:text="924 830 455"
-                                        android:textSize="13dp" />
+                                       android:textSize="13dp" />
 
                                     <ImageView
                                         android:id="@+id/ivEditDevProfilePhone"

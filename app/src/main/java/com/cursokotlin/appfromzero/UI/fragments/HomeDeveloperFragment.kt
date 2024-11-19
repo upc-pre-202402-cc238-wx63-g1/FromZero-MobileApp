@@ -316,6 +316,7 @@ class HomeDeveloperFragment : Fragment() {
             fetchDeveloperProfile(userId, token)
         } else {
             this.developer = dev
+            Log.d("Developer", developer.toString())
             bindDataToViews(role = "developer")
         }
         fetchProjects(userId, token, view)
@@ -403,6 +404,10 @@ class HomeDeveloperFragment : Fragment() {
                 tvCellphone.text = it.phone
                 tvEmail.text = it.email
                 tvDeveloperProjects.text = "0"
+                etDevDescription.setText(it.summary)
+                etDevSpecialties.setText(it.skills)
+                etCellphone.setText(it.phone)
+
             }
         }
     }
@@ -605,7 +610,7 @@ class HomeDeveloperFragment : Fragment() {
         }
     }
 
-private fun updateProfile()  {
+    private fun updateProfile()  {
     val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
     val userId = sharedPreferences.getLong("userId", 0)
     val token = sharedPreferences.getString("token", null)
@@ -627,6 +632,7 @@ private fun updateProfile()  {
                 specialties = etDevSpecialties.text.toString(),
                 profileImgUrl = profileImgUrl
             )
+
             Log.d("UpdateRequest", updateRequest.toString())
 
             val call = developerRepository.updateDeveloperProfile(userId, updateRequest, token)
@@ -646,6 +652,19 @@ private fun updateProfile()  {
                                 email = developer!!.email,
                                 profileImgUrl = updatedDeveloper.profileImgUrl
                             )
+
+                            val dao = AppDatabase.getInstance(requireContext()).getDao()
+
+                            dao.updateDeveloperProfile(updatedDeveloper.userId, updatedDeveloper.specialties, updatedDeveloper.description, updatedDeveloper.phone)
+                            val dev1 = dao.getDeveloperByUserId(userId)
+                            Log.d("DeveloperGet", dev1.toString())
+
+                            // Reassign the new values to the EditText fields
+                            etDevDescription.setText(updatedDeveloper.description)
+                            etDevSpecialties.setText(updatedDeveloper.specialties)
+                            etCellphone.setText(updatedDeveloper.phone)
+                            etEmail.setText(developer!!.email)
+
                             bindDataToViews(role = "developer")
                             Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show()
                         }
