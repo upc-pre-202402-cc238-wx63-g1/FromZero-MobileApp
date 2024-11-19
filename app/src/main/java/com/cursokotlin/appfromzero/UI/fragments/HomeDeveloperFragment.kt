@@ -36,6 +36,7 @@ import com.cursokotlin.appfromzero.data.SupabaseStorageClient
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
 import com.cursokotlin.appfromzero.data.repository.developer.DeveloperRepository
 import com.cursokotlin.appfromzero.data.repository.project.ProjectRepository
+import com.cursokotlin.appfromzero.db.AppDatabase
 import com.cursokotlin.appfromzero.models.Developer
 import com.cursokotlin.appfromzero.models.project.Project
 import com.cursokotlin.appfromzero.models.ProjectCard
@@ -290,7 +291,6 @@ class HomeDeveloperFragment : Fragment() {
 
         fetchData(userId, token, userRole, view)
         setRecyclerViewContraints(view, R.id.cvHomeDeveloperProfile)
-        initDeveloperComponent(view)
 
         setUpClickListener(view)
         setupTouchListener(view)
@@ -307,7 +307,17 @@ class HomeDeveloperFragment : Fragment() {
             return
         }
 
-        fetchDeveloperProfile(userId, token)
+        initDeveloperComponent(view)
+
+        val dao = AppDatabase.getInstance(requireContext()).getDao()
+        val dev = dao.getDeveloperByUserId(userId)
+
+        if ( dev == null) {
+            fetchDeveloperProfile(userId, token)
+        } else {
+            this.developer = dev
+            bindDataToViews(role = "developer")
+        }
         fetchProjects(userId, token, view)
     }
 
@@ -329,6 +339,8 @@ class HomeDeveloperFragment : Fragment() {
                             email = "example@gmail.com",
                             profileImgUrl = developerData.profileImgUrl
                         )
+                        val dao = AppDatabase.getInstance(requireContext()).getDao()
+                        dao.insertOne(developer!!)
                         bindDataToViews(role = "developer")
                     } ?: showToast("No se encontró el perfil del desarrollador")
                 } else {
