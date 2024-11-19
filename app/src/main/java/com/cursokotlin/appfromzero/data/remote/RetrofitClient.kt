@@ -4,6 +4,7 @@ import com.cursokotlin.appfromzero.common.Constants
 import com.cursokotlin.appfromzero.data.remote.authentication.AuthenticationService
 import com.cursokotlin.appfromzero.data.remote.deliverable.DeliverableService
 import com.cursokotlin.appfromzero.data.remote.comunication.MessageService
+import com.cursokotlin.appfromzero.data.remote.comunication.SupportService
 import com.cursokotlin.appfromzero.data.remote.developer.DeveloperService
 import com.cursokotlin.appfromzero.data.remote.enterprise.EnterpriseService
 import com.cursokotlin.appfromzero.data.remote.project.ProjectService
@@ -50,6 +51,9 @@ object RetrofitClient {
     }
     fun messageService(token: String): MessageService {
         return getClient(token).create(MessageService::class.java)
+    }
+    fun supportService(token: String): SupportService {
+        return getClient(token).create(SupportService::class.java)
     }
 
     val deliverableService: DeliverableService by lazy {
