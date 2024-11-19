@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Developer(
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     val id: Long? = null,
     @ColumnInfo(name = "name")
     val name: String,
