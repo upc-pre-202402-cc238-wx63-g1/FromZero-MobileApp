@@ -399,6 +399,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                     override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
                         if (response.isSuccessful) {
                             projects = response.body() ?: emptyList()
+
                             bindProjectsToViews()
                             setupRecyclerView(view)
                         } else {
@@ -502,6 +503,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
 
     private fun bindProjectsToViews() {
         Log.d("BindProjects", "Binding ${projects.size} projects to views")
+        Log.d("BindProjects", "Projects: $projects")
         this.projectList = projects.map { project ->
             ProjectCard(
                 idProject = project.id,

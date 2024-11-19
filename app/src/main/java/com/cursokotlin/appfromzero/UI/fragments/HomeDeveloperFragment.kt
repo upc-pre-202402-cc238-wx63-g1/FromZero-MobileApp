@@ -318,6 +318,7 @@ class HomeDeveloperFragment : Fragment() {
                 if (response.isSuccessful) {
                     response.body()?.let { developerData ->
                         developer = Developer(
+                            id = developerData.userId,
                             name = "${developerData.firstName} ${developerData.lastName}",
                             rating = 0f,
                             profilePic = R.drawable.placeholder,
