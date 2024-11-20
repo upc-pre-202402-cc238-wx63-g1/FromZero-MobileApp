@@ -5,10 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.cursokotlin.appfromzero.models.Developer
+import com.cursokotlin.appfromzero.models.Enterprise
 
-@Database(entities = [Developer::class], version = 1)
+@Database(entities = [Developer::class, Enterprise::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun getDao(): DeveloperDao
+    abstract fun getDeveloperDao(): DeveloperDao
+    abstract fun getEnterpriseDao(): EnterpriseDao
 
     companion object{
         private var INSTANCE: AppDatabase? = null

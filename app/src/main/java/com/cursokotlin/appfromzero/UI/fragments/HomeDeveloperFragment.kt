@@ -263,7 +263,7 @@ class HomeDeveloperFragment : Fragment() {
                                 email = developer!!.email,
                                 profileImgUrl = developer!!.profileImgUrl
                             )
-                            val dao = AppDatabase.getInstance(requireContext()).getDao()
+                            val dao = AppDatabase.getInstance(requireContext()).getDeveloperDao()
                             dao.updateProfileImg(updatedDeveloper.userId, updatedDeveloper.profileImgUrl)
 
                             fetchData(userId, token, "ROLE_DEVELOPER", requireView())
@@ -312,7 +312,7 @@ class HomeDeveloperFragment : Fragment() {
 
         initDeveloperComponent(view)
 
-        val dao = AppDatabase.getInstance(requireContext()).getDao()
+        val dao = AppDatabase.getInstance(requireContext()).getDeveloperDao()
         val dev = dao.getDeveloperByUserId(userId)
 
         if ( dev == null) {
@@ -343,7 +343,7 @@ class HomeDeveloperFragment : Fragment() {
                             email = "example@gmail.com",
                             profileImgUrl = developerData.profileImgUrl
                         )
-                        val dao = AppDatabase.getInstance(requireContext()).getDao()
+                        val dao = AppDatabase.getInstance(requireContext()).getDeveloperDao()
                         dao.insertOne(developer!!)
                         bindDataToViews(role = "developer")
                     } ?: showToast("No se encontró el perfil del desarrollador")
@@ -656,7 +656,7 @@ class HomeDeveloperFragment : Fragment() {
                                 profileImgUrl = updatedDeveloper.profileImgUrl
                             )
 
-                            val dao = AppDatabase.getInstance(requireContext()).getDao()
+                            val dao = AppDatabase.getInstance(requireContext()).getDeveloperDao()
 
                             dao.updateDeveloperProfile(updatedDeveloper.userId, updatedDeveloper.specialties, updatedDeveloper.description, updatedDeveloper.phone)
                             val dev1 = dao.getDeveloperByUserId(userId)

@@ -13,7 +13,7 @@ data class Enterprise (
     @ColumnInfo(name = "website")
     var website: String,
     @ColumnInfo(name = "pictureUrl")
-    var pictureUrl: String,
+    var profileImgUrl: String,
     @ColumnInfo(name = "description")
     var description: String,
     @ColumnInfo(name = "field")
