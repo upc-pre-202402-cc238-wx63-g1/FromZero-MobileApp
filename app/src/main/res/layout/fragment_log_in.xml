@@ -5,7 +5,7 @@
     android:id="@+id/ll_volver"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:backgroundTint="@color/green_fromzero"
+    android:background="@color/white"
     tools:context=".UI.fragments.LogInFragment">
 
     <ImageView
@@ -91,27 +91,29 @@
         android:translationY="640dp" />
 
     <LinearLayout
-        android:id="@+id/ll_Volver"
+    android:id="@+id/ll_Volver"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="top"
+    android:layout_marginBottom="20dp"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <ImageButton
+        android:id="@+id/imageButton3"
+        android:layout_width="32dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#00FFFFFF"
+        android:src="@drawable/ic_arrow_left"
+        app:tint="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/textView7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="clip_horizontal|center|end"
-        android:orientation="horizontal"
-        android:translationY="680dp">
-
-        <ImageButton
-            android:id="@+id/imageButton3"
-            android:layout_width="32dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#00FFFFFF"
-            android:src="@drawable/ic_arrow_left" />
-
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/volver"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+        android:text="@string/Volver"
+        android:textColor="@color/ic_launcher_background"
+        android:textSize="24sp"
+        android:textStyle="bold" />
     </LinearLayout>
 </FrameLayout>

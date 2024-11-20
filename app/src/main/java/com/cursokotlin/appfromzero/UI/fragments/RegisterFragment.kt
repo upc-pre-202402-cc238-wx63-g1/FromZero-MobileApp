@@ -1,5 +1,6 @@
 package com.cursokotlin.appfromzero.UI.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.constraintlayout.widget.Guideline
 import androidx.fragment.app.Fragment
@@ -53,24 +55,25 @@ class RegisterFragment : Fragment() {
 
         val btRegister = rootView.findViewById<Button>(R.id.bt_Registrar)
         btRegister.setOnClickListener {
-            val username = rootView.findViewById<EditText>(R.id.etEmail).text.toString()
-            val password = rootView.findViewById<EditText>(R.id.etPassword).text.toString()
-            if (userRole == "ROLE_DEVELOPER") {
-                val firstName = rootView.findViewById<EditText>(R.id.etFirstName).text.toString()
-                val lastName = rootView.findViewById<EditText>(R.id.etLastName).text.toString()
-                if (username.isNotEmpty() && password.isNotEmpty() && firstName.isNotEmpty() && lastName.isNotEmpty()) {
-                    performDeveloperRegister(username, password, firstName, lastName)
-                } else {
-                    Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
-                }
-            } else if (userRole == "ROLE_ENTERPRISE") {
-                val enterpriseName = rootView.findViewById<EditText>(R.id.etEnterpriseName).text.toString()
-                if (username.isNotEmpty() && password.isNotEmpty() && enterpriseName.isNotEmpty()) {
-                    performEnterpriseRegister(username, password, enterpriseName)
-                } else {
-                    Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
-                }
-            }
+            showTermsConditionsDialog(rootView)
+//            val username = rootView.findViewById<EditText>(R.id.etEmail).text.toString()
+//            val password = rootView.findViewById<EditText>(R.id.etPassword).text.toString()
+//            if (userRole == "ROLE_DEVELOPER") {
+//                val firstName = rootView.findViewById<EditText>(R.id.etFirstName).text.toString()
+//                val lastName = rootView.findViewById<EditText>(R.id.etLastName).text.toString()
+//                if (username.isNotEmpty() && password.isNotEmpty() && firstName.isNotEmpty() && lastName.isNotEmpty()) {
+//                    performDeveloperRegister(username, password, firstName, lastName)
+//                } else {
+//                    Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+//                }
+//            } else if (userRole == "ROLE_ENTERPRISE") {
+//                val enterpriseName = rootView.findViewById<EditText>(R.id.etEnterpriseName).text.toString()
+//                if (username.isNotEmpty() && password.isNotEmpty() && enterpriseName.isNotEmpty()) {
+//                    performEnterpriseRegister(username, password, enterpriseName)
+//                } else {
+//                    Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+//                }
+//            }
         }
 
         val btBack = rootView.findViewById<LinearLayout>(R.id.bt_Back)
@@ -143,5 +146,51 @@ class RegisterFragment : Fragment() {
             .replace(R.id.fragmentAuthContainer, errorPathFragment)
             .addToBackStack(null) // Agrega este fragmento al stack
             .commit()
+    }
+
+    private fun showTermsConditionsDialog(rootView: View) {
+        val dialog = Dialog(requireContext())
+        dialog.setContentView(R.layout.terms_and_conditions)
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 1).toInt(),
+            (resources.displayMetrics.heightPixels * 1).toInt()
+        )
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.window?.setDimAmount(0.8f)
+
+        val scrollView = dialog.findViewById<ScrollView>(R.id.scrollView)
+        val btnAcceptTerms = dialog.findViewById<Button>(R.id.btnAcceptTerms)
+
+        scrollView.viewTreeObserver.addOnScrollChangedListener {
+            val view = scrollView.getChildAt(scrollView.childCount - 1)
+            val diff = view.bottom - (scrollView.height + scrollView.scrollY)
+            btnAcceptTerms.isEnabled = diff <= 0
+        }
+
+        btnAcceptTerms.setOnClickListener {
+
+            val username = rootView.findViewById<EditText>(R.id.etEmail).text.toString()
+            val password = rootView.findViewById<EditText>(R.id.etPassword).text.toString()
+            if (userRole == "ROLE_DEVELOPER") {
+                val firstName = rootView.findViewById<EditText>(R.id.etFirstName).text.toString()
+                val lastName = rootView.findViewById<EditText>(R.id.etLastName).text.toString()
+                if (username.isNotEmpty() && password.isNotEmpty() && firstName.isNotEmpty() && lastName.isNotEmpty()) {
+                    performDeveloperRegister(username, password, firstName, lastName)
+                } else {
+                    Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+                }
+            } else if (userRole == "ROLE_ENTERPRISE") {
+                val enterpriseName = rootView.findViewById<EditText>(R.id.etEnterpriseName).text.toString()
+                if (username.isNotEmpty() && password.isNotEmpty() && enterpriseName.isNotEmpty()) {
+                    performEnterpriseRegister(username, password, enterpriseName)
+                } else {
+                    Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 }
