@@ -32,7 +32,8 @@ import retrofit2.Call
 import retrofit2.Response
 
 class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverableCreatedListener,
-    EditDeliverableFragment.OnDeliverableEditedListener, SendDeliverableFragment.OnDeliverableSentListener,
+    EditDeliverableFragment.OnDeliverableEditedListener,
+    SendDeliverableFragment.OnDeliverableSentListener,
     ReviewDeliverableFragment.OnDeliverableReviewedListener {
 
     private lateinit var deliverableAdapter: DeliverableAdapter
@@ -99,7 +100,12 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
                 role,
                 { deliverable -> onDeliverableSelected(deliverable) },
                 { deliverableId -> deleteDeliverable(deliverableId) },
-                { deliverable -> onReviewDeliverable(deliverable.id, deliverable.developerMessage ?: "") },
+                { deliverable ->
+                    onReviewDeliverable(
+                        deliverable.id,
+                        deliverable.developerMessage ?: ""
+                    )
+                },
                 { deliverableId -> onSendDeliverable(deliverableId) }
             )
             rvDeliverables.adapter = deliverableAdapter
@@ -144,7 +150,11 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
                     }
                     deliverableAdapter.notifyDataSetChanged()
                 } else {
-                    Toast.makeText(requireContext(), "Error al obtener el proyecto", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Error al obtener el proyecto",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
@@ -162,7 +172,10 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
 
         val deliverableCall = deliverableRepository.getDeliverablesByProjectId(projectId, token)
         deliverableCall.enqueue(object : retrofit2.Callback<List<Deliverable>> {
-            override fun onResponse(call: Call<List<Deliverable>>, response: Response<List<Deliverable>>) {
+            override fun onResponse(
+                call: Call<List<Deliverable>>,
+                response: Response<List<Deliverable>>
+            ) {
                 if (response.isSuccessful) {
                     deliverables = (response.body() ?: emptyList()).toMutableList()
                     bindDeliverablesToViews()
@@ -170,7 +183,11 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
                     loadProjectName(projectId, token)
                     Log.d("API Response", "Deliverables: $deliverables")
                 } else {
-                    Toast.makeText(requireContext(), "Error al obtener los entregables", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Error al obtener los entregables",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
@@ -208,14 +225,19 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         deleteCall.enqueue(object : retrofit2.Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 if (response.isSuccessful) {
-                    Toast.makeText(requireContext(), "Entregable eliminado", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Entregable eliminado", Toast.LENGTH_SHORT)
+                        .show()
                     deliverables.removeAll { it.id == deliverableId }
                     deliverableAdapter.notifyDataSetChanged()
                     loadDeliverables(requireView(), idProject, token)
                 } else {
                     val errorMessage = response.errorBody()?.string() ?: "Error desconocido"
                     Log.e("DeliverablesFragment", "Error al eliminar el deliverable: $errorMessage")
-                    Toast.makeText(requireContext(), "Error al eliminar el deliverable", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Error al eliminar el deliverable",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
@@ -246,7 +268,12 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         deliverables.add(deliverable)
         deliverableAdapter.notifyItemInserted(deliverables.size - 1)
         rvDeliverables.scrollToPosition(deliverables.size - 1)
-        loadDeliverables(requireView(), idProject, requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE).getString("token", null))
+        loadDeliverables(
+            requireView(),
+            idProject,
+            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                .getString("token", null)
+        )
     }
 
     override fun onDeliverableEdited(newDeliverable: Deliverable) {
@@ -254,7 +281,8 @@ class DeliverablesFragment : Fragment(), CreateDeliverableFragment.OnDeliverable
         if (index != -1) {
             deliverables[index] = newDeliverable
             deliverableAdapter.notifyItemChanged(index)
-            val viewHolder = rvDeliverables.findViewHolderForAdapterPosition(index) as? DeliverableAdapter.DeliverableViewHolder
+            val viewHolder =
+                rvDeliverables.findViewHolderForAdapterPosition(index) as? DeliverableAdapter.DeliverableViewHolder
             viewHolder?.collapseCard()
         }
     }

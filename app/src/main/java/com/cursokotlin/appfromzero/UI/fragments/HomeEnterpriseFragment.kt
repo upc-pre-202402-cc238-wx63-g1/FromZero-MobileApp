@@ -141,25 +141,34 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
     }
 
     private fun updateProjectCards(view: View) {
-        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val userId = sharedPreferences.getLong("userId", 0)
         val token = sharedPreferences.getString("token", null)
 
-        if(token != null) {
+        if (token != null) {
             val projectCall = projectRepository.getProjectsByEnterpriseUserId(userId, token)
             projectCall.enqueue(object : retrofit2.Callback<List<Project>> {
-                override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
+                override fun onResponse(
+                    call: Call<List<Project>>,
+                    response: Response<List<Project>>
+                ) {
                     if (response.isSuccessful) {
                         projects = response.body() ?: emptyList()
                         bindProjectsToViews()
                         setupRecyclerView(view)
                     } else {
-                        Toast.makeText(requireContext(), "Error al obtener los proyectos", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Error al obtener los proyectos",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<List<Project>>, t: Throwable) {
-                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT)
+                        .show()
                 }
             })
         }
@@ -174,7 +183,11 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
             if (uri != null) {
                 handleImageUri(uri)
             } else {
-                Toast.makeText(requireContext(), "No se seleccionó ninguna imagen", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "No se seleccionó ninguna imagen",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -186,7 +199,10 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         )
 
         if (permissions.any {
-                ContextCompat.checkSelfPermission(requireContext(), it) != PackageManager.PERMISSION_GRANTED
+                ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    it
+                ) != PackageManager.PERMISSION_GRANTED
             }) {
             ActivityCompat.requestPermissions(requireActivity(), permissions, 1)
         }
@@ -211,7 +227,8 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
             uploadImageToSupabase(file)  // Sube el archivo a Supabase
         } catch (e: Exception) {
             Log.e("ImageSelection", "Error al manejar el archivo seleccionado", e)
-            Toast.makeText(requireContext(), "Error al procesar la imagen", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Error al procesar la imagen", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -225,15 +242,27 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                         saveProfileImageUrl(url)  // Guarda el URL en tu base de datos
                         bindDataToViews(role = "empresa")
                         bindProjectsToViews()
-                        Toast.makeText(requireActivity(), "Imagen subida con éxito", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireActivity(),
+                            "Imagen subida con éxito",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        Toast.makeText(requireActivity(), "Error al subir la imagen", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireActivity(),
+                            "Error al subir la imagen",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             } catch (e: Exception) {
                 Log.e("SupabaseUpload", "Error al subir la imagen", e)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(requireActivity(), "Error al subir la imagen", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireActivity(),
+                        "Error al subir la imagen",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -241,7 +270,8 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
 
     // Función para enviar la URL de la imagen al backend
     private fun saveProfileImageUrl(url: String) {
-        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val userId = sharedPreferences.getLong("userId", 0)
         val token = sharedPreferences.getString("token", null)
 
@@ -260,7 +290,10 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
 
             val call = enterpriseRepository.updateEnterpriseProfile(userId, updateRequest, token)
             call.enqueue(object : retrofit2.Callback<EnterpriseProfileResponse> {
-                override fun onResponse(call: Call<EnterpriseProfileResponse>, response: Response<EnterpriseProfileResponse>) {
+                override fun onResponse(
+                    call: Call<EnterpriseProfileResponse>,
+                    response: Response<EnterpriseProfileResponse>
+                ) {
                     if (response.isSuccessful) {
                         val updatedEnterprise = response.body()
                         if (updatedEnterprise != null) {
@@ -275,18 +308,30 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                                 updatedEnterprise.phone
                             )
                             val dao = AppDatabase.getInstance(requireContext()).getEnterpriseDao()
-                            dao.updateProfileImg(updatedEnterprise.userId, updatedEnterprise.profileImgUrl)
+                            dao.updateProfileImg(
+                                updatedEnterprise.userId,
+                                updatedEnterprise.profileImgUrl
+                            )
 
                             bindDataToViews(role = "empresa")
-                            Toast.makeText(requireContext(), "Imagen de perfil actualizada con éxito", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Imagen de perfil actualizada con éxito",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } else {
-                        Toast.makeText(requireContext(), "Error al actualizar la imagen de perfil", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Error al actualizar la imagen de perfil",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<EnterpriseProfileResponse>, t: Throwable) {
-                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT)
+                        .show()
                 }
             })
         } else {
@@ -301,7 +346,13 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         val constraintSet = ConstraintSet()
         constraintSet.clone(constraintLayout)
 
-        constraintSet.connect(recyclerView.id, ConstraintSet.TOP, cvHomeEnterpriseProfile, ConstraintSet.BOTTOM, 15)
+        constraintSet.connect(
+            recyclerView.id,
+            ConstraintSet.TOP,
+            cvHomeEnterpriseProfile,
+            ConstraintSet.BOTTOM,
+            15
+        )
         constraintSet.applyTo(constraintLayout)
     }
 
@@ -336,7 +387,11 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
     }
 
     override fun onDeveloperSelected(developer: Candidate) {
-        Toast.makeText(context, "Seleccionaste a ${developer.firstName} ${developer.lastName}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            context,
+            "Seleccionaste a ${developer.firstName} ${developer.lastName}",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun setupRecyclerView(view: View) {
@@ -345,26 +400,38 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
 
         Log.d("SetupRecyclerView", "asdasd" + this.projectList.size)
 
-        adapter = ProjectCardAdapter(this.projectList, object : ProjectCardAdapter.OnItemClickListener {
-            override fun onItemClick(projectCard: ProjectCard) {
-                when (projectCard.projectState) {
-                    ProjectState.BUSQUEDA_DEVELOPER -> {
-                        Log.d("SetupRecyclerView", "Postulando a ${projectCard.candidateList}")
-                        val dialog = ApplicantsFragment()
-                        dialog.setDeveloperList(projectCard.candidateList)
-                        dialog.setProjectId(projectCard.idProject)
-                        dialog.setOnDeveloperSelectedListener(this@HomeEnterpriseFragment)
-                        dialog.show(parentFragmentManager, "ApplicantsDialog")
-                    }
-                    ProjectState.EN_PROGRESO -> {
-                        replaceFragmentViewProject(ViewProjectFragment(),projectCard.idProject, true, projectCard.projectProgress)
-                    }
-                    ProjectState.FINALIZADO -> {
-                        Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+        adapter =
+            ProjectCardAdapter(this.projectList, object : ProjectCardAdapter.OnItemClickListener {
+                override fun onItemClick(projectCard: ProjectCard) {
+                    when (projectCard.projectState) {
+                        ProjectState.BUSQUEDA_DEVELOPER -> {
+                            Log.d("SetupRecyclerView", "Postulando a ${projectCard.candidateList}")
+                            val dialog = ApplicantsFragment()
+                            dialog.setDeveloperList(projectCard.candidateList)
+                            dialog.setProjectId(projectCard.idProject)
+                            dialog.setOnDeveloperSelectedListener(this@HomeEnterpriseFragment)
+                            dialog.show(parentFragmentManager, "ApplicantsDialog")
+                        }
+
+                        ProjectState.EN_PROGRESO -> {
+                            replaceFragmentViewProject(
+                                ViewProjectFragment(),
+                                projectCard.idProject,
+                                true,
+                                projectCard.projectProgress
+                            )
+                        }
+
+                        ProjectState.FINALIZADO -> {
+                            Toast.makeText(
+                                context,
+                                "Revisando el proyecto ${projectCard.projectName}",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
-            }
-        })
+            })
 
         recyclerView.adapter = adapter
         Log.d("SetupRecyclerView", "RecyclerView and Adapter initialized")
@@ -388,7 +455,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         val enterpriseDao = dao.getEnterpriseByUserId(userId)
         Log.d("FetchData", "EnterpriseDao: $enterpriseDao")
 
-        if ( enterpriseDao == null){
+        if (enterpriseDao == null) {
             fetchEnterpriseProfile(userId, token)
         } else {
             this.enterprise = enterpriseDao
@@ -397,10 +464,13 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         fetchProjects(userId, token, view)
     }
 
-    private fun fetchEnterpriseProfile(userId: Long, token: String){
+    private fun fetchEnterpriseProfile(userId: Long, token: String) {
         val call = enterpriseRepository.getDeveloperByUserId(userId, token)
         call.enqueue(object : retrofit2.Callback<EnterpriseProfileResponse> {
-            override fun onResponse(call: Call<EnterpriseProfileResponse>, response: Response<EnterpriseProfileResponse>) {
+            override fun onResponse(
+                call: Call<EnterpriseProfileResponse>,
+                response: Response<EnterpriseProfileResponse>
+            ) {
                 if (response.isSuccessful) {
                     response.body()?.let { enterpriseData ->
                         enterprise = Enterprise(
@@ -418,7 +488,11 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                     dao.insertOne(enterprise!!)
                     bindDataToViews(role = "empresa")
                 } else {
-                    Toast.makeText(requireContext(), "Error al obtener los datos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Error al obtener los datos",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
@@ -428,7 +502,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         })
     }
 
-    private fun fetchProjects(userId: Long, token: String, view: View){
+    private fun fetchProjects(userId: Long, token: String, view: View) {
         val projectCall = projectRepository.getProjectsByEnterpriseUserId(userId, token)
         projectCall.enqueue(object : retrofit2.Callback<List<Project>> {
             override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
@@ -438,7 +512,11 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                     bindProjectsToViews()
                     setupRecyclerView(view)
                 } else {
-                    Toast.makeText(requireContext(), "Error al obtener los proyectos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Error al obtener los proyectos",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
@@ -559,21 +637,38 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         Log.d("BindProjects", "Project list size: ${projectList.size}")
 
         if (!::adapter.isInitialized) {
-            adapter = ProjectCardAdapter(this.projectList, object : ProjectCardAdapter.OnItemClickListener {
-                override fun onItemClick(projectCard: ProjectCard) {
-                    when (projectCard.projectState) {
-                        ProjectState.BUSQUEDA_DEVELOPER -> {
-                            Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
-                        }
-                        ProjectState.EN_PROGRESO -> {
-                            replaceFragmentViewProject(ViewProjectFragment(),projectCard.idProject, true, projectCard.projectProgress)
-                        }
-                        ProjectState.FINALIZADO -> {
-                            Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+            adapter = ProjectCardAdapter(
+                this.projectList,
+                object : ProjectCardAdapter.OnItemClickListener {
+                    override fun onItemClick(projectCard: ProjectCard) {
+                        when (projectCard.projectState) {
+                            ProjectState.BUSQUEDA_DEVELOPER -> {
+                                Toast.makeText(
+                                    context,
+                                    "Postulando a ${projectCard.projectName}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+
+                            ProjectState.EN_PROGRESO -> {
+                                replaceFragmentViewProject(
+                                    ViewProjectFragment(),
+                                    projectCard.idProject,
+                                    true,
+                                    projectCard.projectProgress
+                                )
+                            }
+
+                            ProjectState.FINALIZADO -> {
+                                Toast.makeText(
+                                    context,
+                                    "Revisando el proyecto ${projectCard.projectName}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                         }
                     }
-                }
-            })
+                })
             recyclerView.adapter = adapter
         }
 
@@ -595,7 +690,13 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         val constraintSet = ConstraintSet()
         constraintSet.clone(constraintLayout)
 
-        constraintSet.connect(emptyView.id, ConstraintSet.TOP, cvHomeEnterpriseProfile, ConstraintSet.BOTTOM, 15)
+        constraintSet.connect(
+            emptyView.id,
+            ConstraintSet.TOP,
+            cvHomeEnterpriseProfile,
+            ConstraintSet.BOTTOM,
+            15
+        )
         constraintSet.applyTo(constraintLayout)
     }
 
@@ -667,7 +768,8 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
     }
 
     private fun updateProfile() {
-        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val userId = sharedPreferences.getLong("userId", 0)
         val token = sharedPreferences.getString("token", null)
 
@@ -685,7 +787,10 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
 
             val call = enterpriseRepository.updateEnterpriseProfile(userId, updateRequest, token)
             call.enqueue(object : retrofit2.Callback<EnterpriseProfileResponse> {
-                override fun onResponse(call: Call<EnterpriseProfileResponse>, response: Response<EnterpriseProfileResponse>) {
+                override fun onResponse(
+                    call: Call<EnterpriseProfileResponse>,
+                    response: Response<EnterpriseProfileResponse>
+                ) {
                     if (response.isSuccessful) {
                         val updatedEnterprise = response.body()
                         if (updatedEnterprise != null) {
@@ -700,22 +805,41 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                                 updatedEnterprise.phone
                             )
                             val dao = AppDatabase.getInstance(requireContext()).getEnterpriseDao()
-                            dao.updateEnterpriseProfile(updatedEnterprise.userId, updatedEnterprise.website, updatedEnterprise.description, updatedEnterprise.sector, updatedEnterprise.phone)
+                            dao.updateEnterpriseProfile(
+                                updatedEnterprise.userId,
+                                updatedEnterprise.website,
+                                updatedEnterprise.description,
+                                updatedEnterprise.sector,
+                                updatedEnterprise.phone
+                            )
 
                             bindDataToViews(role = "empresa")
-                            Toast.makeText(requireContext(), "Perfil actualizado con éxito", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Perfil actualizado con éxito",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } else {
-                        Toast.makeText(requireContext(), "Error al actualizar el perfil", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Error al actualizar el perfil",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<EnterpriseProfileResponse>, t: Throwable) {
-                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT)
+                        .show()
                 }
             })
         } else {
-            Toast.makeText(requireContext(), "Token no encontrado o datos de empresa no disponibles", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "Token no encontrado o datos de empresa no disponibles",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -743,6 +867,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                 }
         }
     }
+
     private fun replaceFragment(fragment: Fragment) {
         val transaction = parentFragmentManager.beginTransaction()
         transaction.setReorderingAllowed(true)
@@ -751,14 +876,18 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         transaction.commit()
     }
 
-    private fun replaceFragmentViewProject(fragment: Fragment, idProject: Long, isWorking: Boolean, progress: Int) {
+    private fun replaceFragmentViewProject(
+        fragment: Fragment,
+        idProject: Long,
+        isWorking: Boolean,
+        progress: Int
+    ) {
         val bundle = Bundle().apply {
             putLong("idProject", idProject)
             putBoolean("isWorking", isWorking)
-            if(progress == 100) {
+            if (progress == 100) {
                 putBoolean("isFinished", true)
-            }
-            else{
+            } else {
                 putBoolean("isFinished", false)
             }
         }

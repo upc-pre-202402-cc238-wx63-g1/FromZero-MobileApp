@@ -27,7 +27,8 @@ class SearchProjectFragment : Fragment(), ProjectAdapter.OnItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_search_project, container, false)
-        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", null)
         setupRecyclerView(view)
         loadProject(token)
@@ -36,7 +37,7 @@ class SearchProjectFragment : Fragment(), ProjectAdapter.OnItemClickListener {
 
     private fun loadProject(token: String?) {
         if (token != null) {
-            val call = projectRepository.getProjectsByState("En busqueda",token)
+            val call = projectRepository.getProjectsByState("En busqueda", token)
             call.enqueue(object : retrofit2.Callback<List<ProjectSearchCard>> {
                 override fun onResponse(
                     call: Call<List<ProjectSearchCard>>,

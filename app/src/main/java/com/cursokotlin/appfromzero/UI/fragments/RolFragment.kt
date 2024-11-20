@@ -96,7 +96,8 @@ class RolFragment : Fragment() {
                 registerFragment.arguments = bundle
                 replaceFragment(registerFragment)
             } else {
-                Toast.makeText(requireContext(), "Por favor, seleccione un rol", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Por favor, seleccione un rol", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
         return rootView

@@ -61,23 +61,39 @@ class SendDeliverableFragment : DialogFragment() {
     }
 
     private fun sendDeliverable(deliverableId: Long, message: String, token: String) {
-        deliverableRepository.sendDeliverable(deliverableId, message, token).enqueue(object : Callback<SendDeliverableResponse> {
-            override fun onResponse(call: Call<SendDeliverableResponse>, response: Response<SendDeliverableResponse>) {
-                if (response.isSuccessful) {
-                    Toast.makeText(requireContext(), "Entregable enviado correctamente", Toast.LENGTH_SHORT).show()
-                    listener?.onDeliverableSendState(deliverableId, "Awaiting Review")
-                    dismiss()
-                } else {
-                    val errorBody = response.errorBody()?.string()
-                    val statusCode = response.code()
-                    Toast.makeText(requireContext(), "Entregable enviado incorrectamente: ${response.message()} (Status code: $statusCode, Error: $errorBody)", Toast.LENGTH_LONG).show()
+        deliverableRepository.sendDeliverable(deliverableId, message, token)
+            .enqueue(object : Callback<SendDeliverableResponse> {
+                override fun onResponse(
+                    call: Call<SendDeliverableResponse>,
+                    response: Response<SendDeliverableResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        Toast.makeText(
+                            requireContext(),
+                            "Entregable enviado correctamente",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        listener?.onDeliverableSendState(deliverableId, "Awaiting Review")
+                        dismiss()
+                    } else {
+                        val errorBody = response.errorBody()?.string()
+                        val statusCode = response.code()
+                        Toast.makeText(
+                            requireContext(),
+                            "Entregable enviado incorrectamente: ${response.message()} (Status code: $statusCode, Error: $errorBody)",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<SendDeliverableResponse>, t: Throwable) {
-                Toast.makeText(requireContext(), "Connection error: ${t.message}", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onFailure(call: Call<SendDeliverableResponse>, t: Throwable) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Connection error: ${t.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
     }
 
     interface OnDeliverableSentListener {

@@ -31,22 +31,23 @@ class SearchFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_search, container, false)
-        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val token = sharedPreferences.getString("token", null)
         setupRecyclerView(view)
         loadDevelopers(token)
         return view
     }
 
-    private fun loadDevelopers(token: String?){
-        if (token != null){
+    private fun loadDevelopers(token: String?) {
+        if (token != null) {
             val call = developerRepository.getDevelopers(token)
-            call.enqueue(object : retrofit2.Callback<List<DeveloperSearchCard>>{
+            call.enqueue(object : retrofit2.Callback<List<DeveloperSearchCard>> {
                 override fun onResponse(
                     call: Call<List<DeveloperSearchCard>>,
                     response: Response<List<DeveloperSearchCard>>
                 ) {
-                    if(response.isSuccessful){
+                    if (response.isSuccessful) {
                         Log.d("SearchDevelopers", "respuesta:" + response.body())
                     }
                     developerList = response.body() ?: emptyList()
@@ -62,12 +63,13 @@ class SearchFragment : Fragment() {
         }
 
     }
+
     private fun bindProjectsToViews() {
         developerList = developerList.map { developer ->
             DeveloperSearchCard(
                 id = developer.id,
                 firstName = developer.firstName,
-                lastName= developer.lastName,
+                lastName = developer.lastName,
                 rating = 3.5f,
                 description = developer.description,
                 country = developer.country,
@@ -77,6 +79,7 @@ class SearchFragment : Fragment() {
             )
         }
     }
+
     private fun setupRecyclerView(view: View) {
         val recyclerView: RecyclerView = view.findViewById(R.id.rvDevelopers)
         developerAdapter = DeveloperAdapter(developerList)

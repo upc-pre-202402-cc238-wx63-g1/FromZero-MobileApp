@@ -52,13 +52,16 @@ class CreateDeliverableFragment : DialogFragment() {
             val year = calendar.get(Calendar.YEAR)
             val month = calendar.get(Calendar.MONTH)
             val day = calendar.get(Calendar.DAY_OF_MONTH)
-            val datePickerDialog = DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
-                val formattedDate = String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
-                dateField.setText(formattedDate)
-            }, year, month, day)
+            val datePickerDialog =
+                DatePickerDialog(requireContext(), { _, selectedYear, selectedMonth, selectedDay ->
+                    val formattedDate =
+                        String.format("%d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay)
+                    dateField.setText(formattedDate)
+                }, year, month, day)
             datePickerDialog.show()
         }
     }
+
     private fun setupCreateButton(view: View) {
         val createButton = view.findViewById<Button>(R.id.btEdit)
         val titleField = view.findViewById<TextInputEditText>(R.id.etTitle)
@@ -76,16 +79,23 @@ class CreateDeliverableFragment : DialogFragment() {
                     description = description,
                     date = date,
                     projectId = idProject,
-                    state="Pendiente"
+                    state = "Pendiente"
                 )
 
 
-                val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                val sharedPreferences =
+                    requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
                 val token = sharedPreferences.getString("token", "") ?: ""
 
-                RetrofitClient.deliverableService.createDeliverable(newDeliverableResponse, "Bearer $token")
+                RetrofitClient.deliverableService.createDeliverable(
+                    newDeliverableResponse,
+                    "Bearer $token"
+                )
                     .enqueue(object : retrofit2.Callback<DeliverableResponse> {
-                        override fun onResponse(call: Call<DeliverableResponse>, response: Response<DeliverableResponse>) {
+                        override fun onResponse(
+                            call: Call<DeliverableResponse>,
+                            response: Response<DeliverableResponse>
+                        ) {
                             if (response.isSuccessful) {
 
                                 response.body()?.let {
@@ -103,16 +113,25 @@ class CreateDeliverableFragment : DialogFragment() {
                                     dismiss()
                                 }
                             } else {
-                                Toast.makeText(context, "Error al crear el entregable: ${response.message()}", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Error al crear el entregable: ${response.message()}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             }
                         }
 
                         override fun onFailure(call: Call<DeliverableResponse>, t: Throwable) {
-                            Toast.makeText(context, "Error de conexión: ${t.message}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                "Error de conexión: ${t.message}",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     })
             } else {
-                Toast.makeText(context, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Por favor, completa todos los campos", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }

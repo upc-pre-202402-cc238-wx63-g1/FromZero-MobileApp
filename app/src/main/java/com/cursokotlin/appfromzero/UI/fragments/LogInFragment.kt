@@ -26,7 +26,8 @@ import retrofit2.Response
 
 class LogInFragment : Fragment() {
 
-    private val authenticationRepository = AuthenticationRepository(RetrofitClient.authenticationService)
+    private val authenticationRepository =
+        AuthenticationRepository(RetrofitClient.authenticationService)
     private var uiState: UIState<AuthenticationResponse> = UIState()
 
     override fun onCreateView(
@@ -60,7 +61,11 @@ class LogInFragment : Fragment() {
             if (username.isNotEmpty() && password.isNotEmpty()) {
                 performLogin(username, password)
             } else {
-                Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Por favor, complete todos los campos",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -70,22 +75,26 @@ class LogInFragment : Fragment() {
     private fun performLogin(username: String, password: String) {
         uiState = UIState(isLoading = true)
         val request = AuthenticationRequest(username, password)
-        authenticationRepository.signIn(request).enqueue(object : Callback<AuthenticationResponse?> {
-            override fun onResponse(call: Call<AuthenticationResponse?>, response: Response<AuthenticationResponse?>) {
-                val resource = if (response.isSuccessful) {
-                    Resource.Success(response.body())
-                } else {
-                    Resource.Error("Login fallido")
+        authenticationRepository.signIn(request)
+            .enqueue(object : Callback<AuthenticationResponse?> {
+                override fun onResponse(
+                    call: Call<AuthenticationResponse?>,
+                    response: Response<AuthenticationResponse?>
+                ) {
+                    val resource = if (response.isSuccessful) {
+                        Resource.Success(response.body())
+                    } else {
+                        Resource.Error("Login fallido")
 
+                    }
+                    handleLoginResponse(resource)
                 }
-                handleLoginResponse(resource)
-            }
 
-            override fun onFailure(call: Call<AuthenticationResponse?>, t: Throwable) {
-                val resource = Resource.Error<AuthenticationResponse>("Error: ${t.message}")
-                handleLoginResponse(resource)
-            }
-        })
+                override fun onFailure(call: Call<AuthenticationResponse?>, t: Throwable) {
+                    val resource = Resource.Error<AuthenticationResponse>("Error: ${t.message}")
+                    handleLoginResponse(resource)
+                }
+            })
     }
 
     private fun handleLoginResponse(resource: Resource<AuthenticationResponse>) {
@@ -100,9 +109,11 @@ class LogInFragment : Fragment() {
                     saveUserData(userId, token, userRole)
                     navigateToMainActivity(userRole)
                 } else {
-                    Toast.makeText(requireContext(), "No se encontraron roles", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "No se encontraron roles", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
+
             is Resource.Error -> {
                 Toast.makeText(requireContext(), resource.message, Toast.LENGTH_SHORT).show()
                 navigateToErrorPathFragment()

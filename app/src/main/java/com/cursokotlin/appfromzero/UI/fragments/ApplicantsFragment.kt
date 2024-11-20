@@ -90,7 +90,10 @@ class ApplicantsFragment : DialogFragment(), CandidatesAdapter.OnCandidateAction
     }
 
     override fun onReject(candidate: Candidate) {
-        Log.d("ApplicantsFragment", "Rejected candidate: ${candidate.firstName} ${candidate.lastName}")
+        Log.d(
+            "ApplicantsFragment",
+            "Rejected candidate: ${candidate.firstName} ${candidate.lastName}"
+        )
         candidateList = candidateList.filter { it.userId != candidate.userId }
         adapter.updateCandidates(candidateList)
     }

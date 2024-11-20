@@ -115,7 +115,8 @@ class HomeDeveloperFragment : Fragment() {
         setupRecyclerView(view)
         setChangeProfilePhotoListener()
 
-        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val userRole = sharedPreferences.getString("userRole", null)
         val userId = sharedPreferences.getLong("userId", 0)
         val token = sharedPreferences.getString("token", null)
@@ -126,7 +127,7 @@ class HomeDeveloperFragment : Fragment() {
     }
 
     private fun setChangeProfilePhotoListener() {
-        btnChangeProfilePhoto.setOnClickListener{
+        btnChangeProfilePhoto.setOnClickListener {
             showPhotoOptions()
         }
     }
@@ -159,7 +160,10 @@ class HomeDeveloperFragment : Fragment() {
         )
 
         if (permissions.any {
-                ContextCompat.checkSelfPermission(requireContext(), it) != PackageManager.PERMISSION_GRANTED
+                ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    it
+                ) != PackageManager.PERMISSION_GRANTED
             }) {
             ActivityCompat.requestPermissions(requireActivity(), permissions, 1)
         }
@@ -172,7 +176,11 @@ class HomeDeveloperFragment : Fragment() {
             if (uri != null) {
                 handleImageUri(uri)
             } else {
-                Toast.makeText(requireContext(), "No se seleccionó ninguna imagen", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "No se seleccionó ninguna imagen",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -195,7 +203,8 @@ class HomeDeveloperFragment : Fragment() {
             uploadImageToSupabase(file)  // Sube el archivo a Supabase
         } catch (e: Exception) {
             Log.e("ImageSelection", "Error al manejar el archivo seleccionado", e)
-            Toast.makeText(requireContext(), "Error al procesar la imagen", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Error al procesar la imagen", Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
@@ -208,15 +217,27 @@ class HomeDeveloperFragment : Fragment() {
                         saveProfileImageUrl(url)  // Guarda el URL en tu base de datos
                         bindDataToViews(role = "empresa")
                         bindProjectsToViews(projects)
-                        Toast.makeText(requireActivity(), "Imagen subida con éxito", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireActivity(),
+                            "Imagen subida con éxito",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        Toast.makeText(requireActivity(), "Error al subir la imagen", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireActivity(),
+                            "Error al subir la imagen",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             } catch (e: Exception) {
                 Log.e("SupabaseUpload", "Error al subir la imagen", e)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(requireActivity(), "Error al subir la imagen", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireActivity(),
+                        "Error al subir la imagen",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -224,7 +245,8 @@ class HomeDeveloperFragment : Fragment() {
 
     private fun saveProfileImageUrl(url: String) {
 
-        val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val sharedPreferences =
+            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
         val userId = sharedPreferences.getLong("userId", 0)
         val token = sharedPreferences.getString("token", null)
 
@@ -248,7 +270,10 @@ class HomeDeveloperFragment : Fragment() {
 
             val call = developerRepository.updateDeveloperProfile(userId, updateRequest, token)
             call.enqueue(object : retrofit2.Callback<DeveloperProfileResponse> {
-                override fun onResponse(call: Call<DeveloperProfileResponse>, response: Response<DeveloperProfileResponse>) {
+                override fun onResponse(
+                    call: Call<DeveloperProfileResponse>,
+                    response: Response<DeveloperProfileResponse>
+                ) {
                     if (response.isSuccessful) {
                         val updatedDeveloper = response.body()
                         if (updatedDeveloper != null) {
@@ -264,27 +289,46 @@ class HomeDeveloperFragment : Fragment() {
                                 profileImgUrl = developer!!.profileImgUrl
                             )
                             val dao = AppDatabase.getInstance(requireContext()).getDeveloperDao()
-                            dao.updateProfileImg(updatedDeveloper.userId, updatedDeveloper.profileImgUrl)
+                            dao.updateProfileImg(
+                                updatedDeveloper.userId,
+                                updatedDeveloper.profileImgUrl
+                            )
 
                             fetchData(userId, token, "ROLE_DEVELOPER", requireView())
                             bindDataToViews(role = "developer")
                             bindProjectsToViews(projects)
-                            Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Profile updated successfully",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } else {
                         val errorBody = response.errorBody()?.string()
-                        Log.e("UpdateProfile", "Error updating profile: ${response.code()} - $errorBody")
-                        Toast.makeText(requireContext(), "Error updating profile: ${response.code()}", Toast.LENGTH_SHORT).show()
+                        Log.e(
+                            "UpdateProfile",
+                            "Error updating profile: ${response.code()} - $errorBody"
+                        )
+                        Toast.makeText(
+                            requireContext(),
+                            "Error updating profile: ${response.code()}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
 
                 override fun onFailure(call: Call<DeveloperProfileResponse>, t: Throwable) {
                     Log.e("UpdateProfile", "Error updating profile", t)
-                    Toast.makeText(requireContext(), "Error updating profile", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Error updating profile", Toast.LENGTH_SHORT)
+                        .show()
                 }
             })
         } else {
-            Toast.makeText(requireContext(), "Token not found or developer data not available", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "Token not found or developer data not available",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -315,7 +359,7 @@ class HomeDeveloperFragment : Fragment() {
         val dao = AppDatabase.getInstance(requireContext()).getDeveloperDao()
         val dev = dao.getDeveloperByUserId(userId)
 
-        if ( dev == null) {
+        if (dev == null) {
             fetchDeveloperProfile(userId, token)
         } else {
             this.developer = dev
@@ -328,7 +372,10 @@ class HomeDeveloperFragment : Fragment() {
     private fun fetchDeveloperProfile(userId: Long, token: String) {
         val call = developerRepository.getDeveloperByUserId(userId, token)
         call.enqueue(object : Callback<DeveloperProfileResponse> {
-            override fun onResponse(call: Call<DeveloperProfileResponse>, response: Response<DeveloperProfileResponse>) {
+            override fun onResponse(
+                call: Call<DeveloperProfileResponse>,
+                response: Response<DeveloperProfileResponse>
+            ) {
                 if (response.isSuccessful) {
                     response.body()?.let { developerData ->
                         developer = Developer(
@@ -424,13 +471,27 @@ class HomeDeveloperFragment : Fragment() {
             override fun onItemClick(projectCard: ProjectCard) {
                 when (projectCard.projectState) {
                     ProjectState.BUSQUEDA_DEVELOPER -> {
-                        Toast.makeText(context, "Postulando a ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Postulando a ${projectCard.projectName}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
+
                     ProjectState.EN_PROGRESO -> {
-                        replaceFragmentViewProject(ViewProjectFragment(), projectCard.idProject,true)
+                        replaceFragmentViewProject(
+                            ViewProjectFragment(),
+                            projectCard.idProject,
+                            true
+                        )
                     }
+
                     ProjectState.FINALIZADO -> {
-                        Toast.makeText(context, "Revisando el proyecto ${projectCard.projectName}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "Revisando el proyecto ${projectCard.projectName}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
@@ -542,7 +603,13 @@ class HomeDeveloperFragment : Fragment() {
         val constraintSet = ConstraintSet()
         constraintSet.clone(constraintLayout)
 
-        constraintSet.connect(recyclerView.id, ConstraintSet.TOP, cvHomeEnterpriseProfile, ConstraintSet.BOTTOM, 15)
+        constraintSet.connect(
+            recyclerView.id,
+            ConstraintSet.TOP,
+            cvHomeEnterpriseProfile,
+            ConstraintSet.BOTTOM,
+            15
+        )
         constraintSet.applyTo(constraintLayout)
     }
 
@@ -552,7 +619,13 @@ class HomeDeveloperFragment : Fragment() {
         if (constraintLayout != null) {
             val constraintSet = ConstraintSet()
             constraintSet.clone(constraintLayout)
-            constraintSet.connect(emptyView.id, ConstraintSet.TOP, cvHomeDeveloperProfile, ConstraintSet.BOTTOM, 15)
+            constraintSet.connect(
+                emptyView.id,
+                ConstraintSet.TOP,
+                cvHomeDeveloperProfile,
+                ConstraintSet.BOTTOM,
+                15
+            )
             constraintSet.applyTo(constraintLayout)
         } else {
             Log.e("HomeDeveloperFragment", "ConstraintLayout with ID clHomeUI not found")
@@ -613,83 +686,116 @@ class HomeDeveloperFragment : Fragment() {
         }
     }
 
-    private fun updateProfile()  {
-    val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
-    val userId = sharedPreferences.getLong("userId", 0)
-    val token = sharedPreferences.getString("token", null)
+    private fun updateProfile() {
+        val sharedPreferences =
+            requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+        val userId = sharedPreferences.getLong("userId", 0)
+        val token = sharedPreferences.getString("token", null)
 
-    Log.d("UpdateProfile", "Updating profile for user $token")
+        Log.d("UpdateProfile", "Updating profile for user $token")
 
-    if (token != null && developer != null) {
-        val nameParts = developer!!.name.split(" ")
-        val firstName = nameParts[0]
-        val lastName = nameParts.getOrElse(1) { "" }
+        if (token != null && developer != null) {
+            val nameParts = developer!!.name.split(" ")
+            val firstName = nameParts[0]
+            val lastName = nameParts.getOrElse(1) { "" }
 
-        developer!!.profileImgUrl?.let { profileImgUrl ->
-            val updateRequest = UpdateDeveloperProfileRequest(
-                firstName = firstName,
-                lastName = lastName,
-                description = etDevDescription.text.toString(),
-                country = developer!!.countryFlag.toString(), // Assuming countryFlag holds the country information
-                phone = etCellphone.text.toString(),
-                specialties = etDevSpecialties.text.toString(),
-                profileImgUrl = profileImgUrl
-            )
+            developer!!.profileImgUrl?.let { profileImgUrl ->
+                val updateRequest = UpdateDeveloperProfileRequest(
+                    firstName = firstName,
+                    lastName = lastName,
+                    description = etDevDescription.text.toString(),
+                    country = developer!!.countryFlag.toString(), // Assuming countryFlag holds the country information
+                    phone = etCellphone.text.toString(),
+                    specialties = etDevSpecialties.text.toString(),
+                    profileImgUrl = profileImgUrl
+                )
 
-            Log.d("UpdateRequest", updateRequest.toString())
+                Log.d("UpdateRequest", updateRequest.toString())
 
-            val call = developerRepository.updateDeveloperProfile(userId, updateRequest, token)
-            call.enqueue(object : retrofit2.Callback<DeveloperProfileResponse> {
-                override fun onResponse(call: Call<DeveloperProfileResponse>, response: Response<DeveloperProfileResponse>) {
-                    if (response.isSuccessful) {
-                        val updatedDeveloper = response.body()
-                        if (updatedDeveloper != null) {
-                            developer = Developer(
-                                name = "${updatedDeveloper.firstName} ${updatedDeveloper.lastName}",
-                                rating = developer!!.rating,
-                                profilePic = developer!!.profilePic,
-                                countryFlag = developer!!.countryFlag,
-                                summary = updatedDeveloper.description,
-                                skills = updatedDeveloper.specialties,
-                                phone = updatedDeveloper.phone,
-                                email = developer!!.email,
-                                profileImgUrl = updatedDeveloper.profileImgUrl
+                val call = developerRepository.updateDeveloperProfile(userId, updateRequest, token)
+                call.enqueue(object : retrofit2.Callback<DeveloperProfileResponse> {
+                    override fun onResponse(
+                        call: Call<DeveloperProfileResponse>,
+                        response: Response<DeveloperProfileResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            val updatedDeveloper = response.body()
+                            if (updatedDeveloper != null) {
+                                developer = Developer(
+                                    name = "${updatedDeveloper.firstName} ${updatedDeveloper.lastName}",
+                                    rating = developer!!.rating,
+                                    profilePic = developer!!.profilePic,
+                                    countryFlag = developer!!.countryFlag,
+                                    summary = updatedDeveloper.description,
+                                    skills = updatedDeveloper.specialties,
+                                    phone = updatedDeveloper.phone,
+                                    email = developer!!.email,
+                                    profileImgUrl = updatedDeveloper.profileImgUrl
+                                )
+
+                                val dao =
+                                    AppDatabase.getInstance(requireContext()).getDeveloperDao()
+
+                                dao.updateDeveloperProfile(
+                                    updatedDeveloper.userId,
+                                    updatedDeveloper.specialties,
+                                    updatedDeveloper.description,
+                                    updatedDeveloper.phone
+                                )
+                                val dev1 = dao.getDeveloperByUserId(userId)
+                                Log.d("DeveloperGet", dev1.toString())
+
+                                // Reassign the new values to the EditText fields
+                                etDevDescription.setText(updatedDeveloper.description)
+                                etDevSpecialties.setText(updatedDeveloper.specialties)
+                                etCellphone.setText(updatedDeveloper.phone)
+                                etEmail.setText(developer!!.email)
+
+                                bindDataToViews(role = "developer")
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Profile updated successfully",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        } else {
+                            val errorBody = response.errorBody()?.string()
+                            Log.e(
+                                "UpdateProfile",
+                                "Error updating profile: ${response.code()} - $errorBody"
                             )
-
-                            val dao = AppDatabase.getInstance(requireContext()).getDeveloperDao()
-
-                            dao.updateDeveloperProfile(updatedDeveloper.userId, updatedDeveloper.specialties, updatedDeveloper.description, updatedDeveloper.phone)
-                            val dev1 = dao.getDeveloperByUserId(userId)
-                            Log.d("DeveloperGet", dev1.toString())
-
-                            // Reassign the new values to the EditText fields
-                            etDevDescription.setText(updatedDeveloper.description)
-                            etDevSpecialties.setText(updatedDeveloper.specialties)
-                            etCellphone.setText(updatedDeveloper.phone)
-                            etEmail.setText(developer!!.email)
-
-                            bindDataToViews(role = "developer")
-                            Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                requireContext(),
+                                "Error updating profile: ${response.code()}",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                    } else {
-                        val errorBody = response.errorBody()?.string()
-                        Log.e("UpdateProfile", "Error updating profile: ${response.code()} - $errorBody")
-                        Toast.makeText(requireContext(), "Error updating profile: ${response.code()}", Toast.LENGTH_SHORT).show()
                     }
-                }
 
-                override fun onFailure(call: Call<DeveloperProfileResponse>, t: Throwable) {
-                    Log.e("UpdateProfile", "Error updating profile", t)
-                    Toast.makeText(requireContext(), "Error updating profile", Toast.LENGTH_SHORT).show()
-                }
-            })
-        } ?: run {
-            Toast.makeText(requireContext(), "Profile image URL is not available", Toast.LENGTH_SHORT).show()
+                    override fun onFailure(call: Call<DeveloperProfileResponse>, t: Throwable) {
+                        Log.e("UpdateProfile", "Error updating profile", t)
+                        Toast.makeText(
+                            requireContext(),
+                            "Error updating profile",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                })
+            } ?: run {
+                Toast.makeText(
+                    requireContext(),
+                    "Profile image URL is not available",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "Token not found or developer data not available",
+                Toast.LENGTH_SHORT
+            ).show()
         }
-    } else {
-        Toast.makeText(requireContext(), "Token not found or developer data not available", Toast.LENGTH_SHORT).show()
     }
-}
 
     private fun animateViewVisibility(
         view: View,
@@ -724,7 +830,11 @@ class HomeDeveloperFragment : Fragment() {
         transaction.commit()
     }
 
-    private fun replaceFragmentViewProject(fragment: Fragment, idProject: Long, isWorking: Boolean) {
+    private fun replaceFragmentViewProject(
+        fragment: Fragment,
+        idProject: Long,
+        isWorking: Boolean
+    ) {
         val bundle = Bundle().apply {
             putLong("idProject", idProject)
             putBoolean("isWorking", isWorking)

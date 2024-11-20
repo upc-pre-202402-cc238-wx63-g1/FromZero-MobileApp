@@ -54,7 +54,11 @@ class MessageFragment : Fragment() {
                 Log.d("MessageFragment", "Request: $request")
                 sendMessage(request)
             } else {
-                Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Por favor, complete todos los campos",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -63,13 +67,27 @@ class MessageFragment : Fragment() {
 
     private fun sendMessage(request: MessageRequest) {
         messageRepository.createMessage(request).enqueue(object : Callback<MessageResponse> {
-            override fun onResponse(call: Call<MessageResponse>, response: Response<MessageResponse>) {
+            override fun onResponse(
+                call: Call<MessageResponse>,
+                response: Response<MessageResponse>
+            ) {
                 if (response.isSuccessful) {
-                    Toast.makeText(requireContext(), "Mensaje enviado con éxito", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Mensaje enviado con éxito",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     clearInputFields()
                 } else {
-                    Log.e("MessageFragment", "Error al enviar el mensaje: ${response.errorBody()?.string()}")
-                    Toast.makeText(requireContext(), "Error al enviar el mensaje", Toast.LENGTH_SHORT).show()
+                    Log.e(
+                        "MessageFragment",
+                        "Error al enviar el mensaje: ${response.errorBody()?.string()}"
+                    )
+                    Toast.makeText(
+                        requireContext(),
+                        "Error al enviar el mensaje",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 

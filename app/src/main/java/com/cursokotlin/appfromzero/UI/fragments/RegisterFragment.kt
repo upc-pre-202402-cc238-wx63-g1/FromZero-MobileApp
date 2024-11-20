@@ -25,7 +25,8 @@ import retrofit2.Response
 
 class RegisterFragment : Fragment() {
 
-    private val authenticationRepository = AuthenticationRepository(RetrofitClient.authenticationService)
+    private val authenticationRepository =
+        AuthenticationRepository(RetrofitClient.authenticationService)
     private var userRole: String? = null
 
     override fun onCreateView(
@@ -85,47 +86,77 @@ class RegisterFragment : Fragment() {
     }
 
 
-    private fun performDeveloperRegister(username: String, firstName: String, lastName: String, password: String) {
+    private fun performDeveloperRegister(
+        username: String,
+        firstName: String,
+        lastName: String,
+        password: String
+    ) {
         val request = DeveloperRegisterRequest(username, firstName, lastName, password)
         Log.d("RegisterFragment", "DeveloperRegisterRequest: $request")
-        authenticationRepository.registerDeveloper(request).enqueue(object : Callback<RegisterResponse> {
-            override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
-                if (response.isSuccessful) {
-                    Log.d("RegisterFragment", "Registration successful: ${response.body()}")
-                    Toast.makeText(requireContext(), "Creación de cuenta exitosa", Toast.LENGTH_SHORT).show()
-                    navigateToHappyPathFragment()
-                } else {
-                    Toast.makeText(requireContext(), "Registration failed", Toast.LENGTH_SHORT).show()
+        authenticationRepository.registerDeveloper(request)
+            .enqueue(object : Callback<RegisterResponse> {
+                override fun onResponse(
+                    call: Call<RegisterResponse>,
+                    response: Response<RegisterResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        Log.d("RegisterFragment", "Registration successful: ${response.body()}")
+                        Toast.makeText(
+                            requireContext(),
+                            "Creación de cuenta exitosa",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navigateToHappyPathFragment()
+                    } else {
+                        Toast.makeText(requireContext(), "Registration failed", Toast.LENGTH_SHORT)
+                            .show()
+                        navigateToErrorPathFragment()
+                    }
+                }
+
+                override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT)
+                        .show()
                     navigateToErrorPathFragment()
                 }
-            }
-
-            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                navigateToErrorPathFragment()
-            }
-        })
+            })
     }
-    private fun performEnterpriseRegister(username: String,enterpriseName: String,password: String) {
-        val request = EnterpriseRegisterRequest(username, enterpriseName,password)
+
+    private fun performEnterpriseRegister(
+        username: String,
+        enterpriseName: String,
+        password: String
+    ) {
+        val request = EnterpriseRegisterRequest(username, enterpriseName, password)
         Log.d("RegisterFragment", "DeveloperRegisterRequest: $request")
-        authenticationRepository.registerEnterprise(request).enqueue(object : Callback<RegisterResponse> {
-            override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
-                if (response.isSuccessful) {
-                    Log.d("RegisterFragment", "Registration successful: ${response.body()}")
-                    Toast.makeText(requireContext(), "Creación de cuenta exitosa", Toast.LENGTH_SHORT).show()
-                    navigateToHappyPathFragment()
-                } else {
-                    Toast.makeText(requireContext(), "Registration failed", Toast.LENGTH_SHORT).show()
+        authenticationRepository.registerEnterprise(request)
+            .enqueue(object : Callback<RegisterResponse> {
+                override fun onResponse(
+                    call: Call<RegisterResponse>,
+                    response: Response<RegisterResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        Log.d("RegisterFragment", "Registration successful: ${response.body()}")
+                        Toast.makeText(
+                            requireContext(),
+                            "Creación de cuenta exitosa",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        navigateToHappyPathFragment()
+                    } else {
+                        Toast.makeText(requireContext(), "Registration failed", Toast.LENGTH_SHORT)
+                            .show()
+                        navigateToErrorPathFragment()
+                    }
+                }
+
+                override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT)
+                        .show()
                     navigateToErrorPathFragment()
                 }
-            }
-
-            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
-                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                navigateToErrorPathFragment()
-            }
-        })
+            })
     }
 
     private fun navigateToHappyPathFragment() {
@@ -177,14 +208,23 @@ class RegisterFragment : Fragment() {
                 if (username.isNotEmpty() && password.isNotEmpty() && firstName.isNotEmpty() && lastName.isNotEmpty()) {
                     performDeveloperRegister(username, password, firstName, lastName)
                 } else {
-                    Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Por favor, complete todos los campos",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             } else if (userRole == "ROLE_ENTERPRISE") {
-                val enterpriseName = rootView.findViewById<EditText>(R.id.etEnterpriseName).text.toString()
+                val enterpriseName =
+                    rootView.findViewById<EditText>(R.id.etEnterpriseName).text.toString()
                 if (username.isNotEmpty() && password.isNotEmpty() && enterpriseName.isNotEmpty()) {
                     performEnterpriseRegister(username, password, enterpriseName)
                 } else {
-                    Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Por favor, complete todos los campos",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 

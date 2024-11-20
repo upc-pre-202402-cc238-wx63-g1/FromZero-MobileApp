@@ -37,7 +37,8 @@ class ReviewDeliverableFragment : DialogFragment() {
     }
 
     private fun initArguments() {
-        developerMessage = arguments?.getString("developerMessage") ?: "No hay una entrega disponible."
+        developerMessage =
+            arguments?.getString("developerMessage") ?: "No hay una entrega disponible."
         deliverableId = arguments?.getLong("deliverableId") ?: 0L
         token = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
             .getString("token", null)
@@ -50,7 +51,11 @@ class ReviewDeliverableFragment : DialogFragment() {
         val btApprove = view.findViewById<Button>(R.id.btSend)
         btApprove.setOnClickListener {
             if (developerMessage.isEmpty() || developerMessage == "No hay ninguna entrega disponible") {
-                Toast.makeText(requireContext(), "No puede realizar esta acción porque no existe una entrega", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "No puede realizar esta acción porque no existe una entrega",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 token?.let { tokenString ->
                     reviewDeliverable(true, tokenString)
@@ -61,7 +66,11 @@ class ReviewDeliverableFragment : DialogFragment() {
         val btReject = view.findViewById<Button>(R.id.btReject)
         btReject.setOnClickListener {
             if (developerMessage.isEmpty() || developerMessage == "No hay ninguna entrega disponible") {
-                Toast.makeText(requireContext(), "No puede realizar esta acción porque no existe una entrega", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "No puede realizar esta acción porque no existe una entrega",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 token?.let { tokenString ->
                     reviewDeliverable(false, tokenString)
@@ -71,32 +80,48 @@ class ReviewDeliverableFragment : DialogFragment() {
     }
 
     private fun reviewDeliverable(accepted: Boolean, token: String) {
-        Log.d("ReviewDeliverable", "Sending request with deliverableId: $deliverableId, accepted: $accepted, token: $token")
+        Log.d(
+            "ReviewDeliverable",
+            "Sending request with deliverableId: $deliverableId, accepted: $accepted, token: $token"
+        )
 
-        deliverableRepository.reviewDeliverable(deliverableId, accepted, token).enqueue(object : Callback<ReviewDeliverableResponse> {
-            override fun onResponse(
-                call: Call<ReviewDeliverableResponse>, response: Response<ReviewDeliverableResponse>
-            ) {
-                if (response.isSuccessful) {
-                    val message = if (accepted) "Entrega aprobada" else "Entrega rechazada"
-                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+        deliverableRepository.reviewDeliverable(deliverableId, accepted, token)
+            .enqueue(object : Callback<ReviewDeliverableResponse> {
+                override fun onResponse(
+                    call: Call<ReviewDeliverableResponse>,
+                    response: Response<ReviewDeliverableResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        val message = if (accepted) "Entrega aprobada" else "Entrega rechazada"
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
 
-                    val newState = if (accepted) "Completed" else "Rejected"
-                    listener?.onDeliverableReviewState(deliverableId, newState)
+                        val newState = if (accepted) "Completed" else "Rejected"
+                        listener?.onDeliverableReviewState(deliverableId, newState)
 
-                    dismiss()
-                } else {
-                    val errorBody = response.errorBody()?.string()
-                    Log.e("ReviewDeliverable", "Error al realizar la acción. Código: ${response.code()}, Cuerpo: $errorBody")
-                    Toast.makeText(requireContext(), "Error al realizar la acción.", Toast.LENGTH_SHORT).show()
+                        dismiss()
+                    } else {
+                        val errorBody = response.errorBody()?.string()
+                        Log.e(
+                            "ReviewDeliverable",
+                            "Error al realizar la acción. Código: ${response.code()}, Cuerpo: $errorBody"
+                        )
+                        Toast.makeText(
+                            requireContext(),
+                            "Error al realizar la acción.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
-            }
 
-            override fun onFailure(call: Call<ReviewDeliverableResponse>, t: Throwable) {
-                Log.e("ReviewDeliverable", "Error de red: ${t.message}")
-                Toast.makeText(requireContext(), "Error de red. Intenta nuevamente.", Toast.LENGTH_SHORT).show()
-            }
-        })
+                override fun onFailure(call: Call<ReviewDeliverableResponse>, t: Throwable) {
+                    Log.e("ReviewDeliverable", "Error de red: ${t.message}")
+                    Toast.makeText(
+                        requireContext(),
+                        "Error de red. Intenta nuevamente.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
     }
 
 

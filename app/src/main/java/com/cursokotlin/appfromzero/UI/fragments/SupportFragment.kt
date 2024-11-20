@@ -52,7 +52,8 @@ class SupportFragment : Fragment() {
             android.R.layout.simple_dropdown_item_1line,
             problemTypes
         )
-        val autoCompleteTextView = view.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView)
+        val autoCompleteTextView =
+            view.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView)
         autoCompleteTextView.setAdapter(adapter)
 
         val fileAttachmentArea = view.findViewById<MaterialCardView>(R.id.fileAttachmentArea)
@@ -76,7 +77,11 @@ class SupportFragment : Fragment() {
                 Log.d("SupportFragment", "Request: $supportRequest")
                 createSupport(supportRequest)
             } else {
-                Toast.makeText(requireContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Por favor, complete todos los campos",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -99,13 +104,21 @@ class SupportFragment : Fragment() {
 
     private fun createSupport(request: SupportRequest) {
         supportRepository.createSupport(request).enqueue(object : Callback<SupportResponse> {
-            override fun onResponse(call: Call<SupportResponse>, response: Response<SupportResponse>) {
+            override fun onResponse(
+                call: Call<SupportResponse>,
+                response: Response<SupportResponse>
+            ) {
                 if (response.isSuccessful) {
-                    Toast.makeText(requireContext(), "Soporte creado con éxito", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Soporte creado con éxito", Toast.LENGTH_SHORT)
+                        .show()
                     clearInputFields()
                 } else {
-                    Log.e("SupportFragment", "Error al crear soporte: ${response.errorBody()?.string()}")
-                    Toast.makeText(requireContext(), "Error al crear soporte", Toast.LENGTH_SHORT).show()
+                    Log.e(
+                        "SupportFragment",
+                        "Error al crear soporte: ${response.errorBody()?.string()}"
+                    )
+                    Toast.makeText(requireContext(), "Error al crear soporte", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
 
