@@ -40,7 +40,7 @@ class RolFragment : Fragment() {
 
         val cvDev = rootView.findViewById<CardView>(R.id.cv_Dev)
         val ivDev = rootView.findViewById<ImageView>(R.id.iv_Dev)
-        ivDev.setImageResource(R.drawable.ic_dev_person)
+        ivDev.setImageResource(R.drawable.developer_icon)
 
         cvEnterprise.setOnClickListener {
             if (!empresaSelected) {

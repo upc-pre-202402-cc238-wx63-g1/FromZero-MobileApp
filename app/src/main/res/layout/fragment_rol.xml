@@ -67,6 +67,7 @@
                 android:padding="16dp">
 
                 <ImageView
+                    android:layout_marginTop="8dp"
                     android:id="@+id/iv_empresa"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -76,8 +77,9 @@
                     android:id="@+id/tv_Empresa"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
+                    android:paddingTop="15dp"
                     android:text="@string/empresa"
+
                     android:textColor="#5E35B1"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -104,8 +106,8 @@
                 <ImageView
                     android:id="@+id/iv_Dev"
                     android:layout_width="wrap_content"
-                    android:layout_height="118dp"
-                    android:src="@drawable/ic_dev_person" />
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/developer_icon" />
 
                 <TextView
                     android:id="@+id/tv_Dev"
