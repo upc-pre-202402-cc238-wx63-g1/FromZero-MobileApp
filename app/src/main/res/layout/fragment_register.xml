@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UI.fragments.RegisterFragment">
+    tools:context=".UI.fragments.RegisterFragment"
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -164,26 +165,27 @@
             android:id="@+id/bt_Back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="32dp"
-            android:gravity="center_vertical"
+            android:layout_gravity="top"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/bt_Registrar">
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
                 android:id="@+id/imageButton3"
                 android:layout_width="32dp"
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
-                android:src="@drawable/ic_arrow_left" />
+                android:src="@drawable/ic_arrow_left"
+                app:tint="#FFFFFF" />
 
             <TextView
                 android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/volver"
-                android:textColor="@color/black"
+                android:text="@string/Volver"
+                android:textColor="@color/ic_launcher_background"
                 android:textSize="24sp"
                 android:textStyle="bold" />
         </LinearLayout>
