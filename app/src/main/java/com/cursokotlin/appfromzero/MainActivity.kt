@@ -2,6 +2,7 @@ package com.cursokotlin.appfromzero
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -20,7 +21,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        setContentView(R.layout.activity_main)
+
+        // Ocultar la barra de navegación, mantener la barra de estado visible
+        window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // Oculta barra de navegación
+                        or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY // Permite interactuar y mantener la barra oculta
+                )
+
         setContentView(R.layout.activity_main)
 
         val sharedPreferences = getSharedPreferences("app_prefs", MODE_PRIVATE)
