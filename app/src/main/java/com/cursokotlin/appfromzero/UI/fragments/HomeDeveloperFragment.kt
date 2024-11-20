@@ -36,6 +36,7 @@ import com.cursokotlin.appfromzero.data.SupabaseStorageClient
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
 import com.cursokotlin.appfromzero.data.repository.developer.DeveloperRepository
 import com.cursokotlin.appfromzero.data.repository.project.ProjectRepository
+import com.cursokotlin.appfromzero.db.AppDatabase
 import com.cursokotlin.appfromzero.models.Developer
 import com.cursokotlin.appfromzero.models.project.Project
 import com.cursokotlin.appfromzero.models.ProjectCard
@@ -262,6 +263,9 @@ class HomeDeveloperFragment : Fragment() {
                                 email = developer!!.email,
                                 profileImgUrl = developer!!.profileImgUrl
                             )
+                            val dao = AppDatabase.getInstance(requireContext()).getDeveloperDao()
+                            dao.updateProfileImg(updatedDeveloper.userId, updatedDeveloper.profileImgUrl)
+
                             fetchData(userId, token, "ROLE_DEVELOPER", requireView())
                             bindDataToViews(role = "developer")
                             bindProjectsToViews(projects)
@@ -290,7 +294,6 @@ class HomeDeveloperFragment : Fragment() {
 
         fetchData(userId, token, userRole, view)
         setRecyclerViewContraints(view, R.id.cvHomeDeveloperProfile)
-        initDeveloperComponent(view)
 
         setUpClickListener(view)
         setupTouchListener(view)
@@ -307,7 +310,18 @@ class HomeDeveloperFragment : Fragment() {
             return
         }
 
-        fetchDeveloperProfile(userId, token)
+        initDeveloperComponent(view)
+
+        val dao = AppDatabase.getInstance(requireContext()).getDeveloperDao()
+        val dev = dao.getDeveloperByUserId(userId)
+
+        if ( dev == null) {
+            fetchDeveloperProfile(userId, token)
+        } else {
+            this.developer = dev
+            Log.d("Developer", developer.toString())
+            bindDataToViews(role = "developer")
+        }
         fetchProjects(userId, token, view)
     }
 
@@ -318,6 +332,7 @@ class HomeDeveloperFragment : Fragment() {
                 if (response.isSuccessful) {
                     response.body()?.let { developerData ->
                         developer = Developer(
+                            id = developerData.userId,
                             name = "${developerData.firstName} ${developerData.lastName}",
                             rating = 0f,
                             profilePic = R.drawable.placeholder,
@@ -328,6 +343,8 @@ class HomeDeveloperFragment : Fragment() {
                             email = "example@gmail.com",
                             profileImgUrl = developerData.profileImgUrl
                         )
+                        val dao = AppDatabase.getInstance(requireContext()).getDeveloperDao()
+                        dao.insertOne(developer!!)
                         bindDataToViews(role = "developer")
                     } ?: showToast("No se encontró el perfil del desarrollador")
                 } else {
@@ -390,6 +407,10 @@ class HomeDeveloperFragment : Fragment() {
                 tvCellphone.text = it.phone
                 tvEmail.text = it.email
                 tvDeveloperProjects.text = "0"
+                etDevDescription.setText(it.summary)
+                etDevSpecialties.setText(it.skills)
+                etCellphone.setText(it.phone)
+
             }
         }
     }
@@ -592,7 +613,7 @@ class HomeDeveloperFragment : Fragment() {
         }
     }
 
-private fun updateProfile()  {
+    private fun updateProfile()  {
     val sharedPreferences = requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
     val userId = sharedPreferences.getLong("userId", 0)
     val token = sharedPreferences.getString("token", null)
@@ -614,6 +635,7 @@ private fun updateProfile()  {
                 specialties = etDevSpecialties.text.toString(),
                 profileImgUrl = profileImgUrl
             )
+
             Log.d("UpdateRequest", updateRequest.toString())
 
             val call = developerRepository.updateDeveloperProfile(userId, updateRequest, token)
@@ -633,6 +655,19 @@ private fun updateProfile()  {
                                 email = developer!!.email,
                                 profileImgUrl = updatedDeveloper.profileImgUrl
                             )
+
+                            val dao = AppDatabase.getInstance(requireContext()).getDeveloperDao()
+
+                            dao.updateDeveloperProfile(updatedDeveloper.userId, updatedDeveloper.specialties, updatedDeveloper.description, updatedDeveloper.phone)
+                            val dev1 = dao.getDeveloperByUserId(userId)
+                            Log.d("DeveloperGet", dev1.toString())
+
+                            // Reassign the new values to the EditText fields
+                            etDevDescription.setText(updatedDeveloper.description)
+                            etDevSpecialties.setText(updatedDeveloper.specialties)
+                            etCellphone.setText(updatedDeveloper.phone)
+                            etEmail.setText(developer!!.email)
+
                             bindDataToViews(role = "developer")
                             Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show()
                         }

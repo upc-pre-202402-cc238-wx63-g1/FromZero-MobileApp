@@ -42,6 +42,7 @@ import com.cursokotlin.appfromzero.data.SupabaseStorageClient
 import com.cursokotlin.appfromzero.data.remote.RetrofitClient
 import com.cursokotlin.appfromzero.data.repository.enterprise.EnterpriseRepository
 import com.cursokotlin.appfromzero.data.repository.project.ProjectRepository
+import com.cursokotlin.appfromzero.db.AppDatabase
 import com.cursokotlin.appfromzero.models.Enterprise
 import com.cursokotlin.appfromzero.models.ProjectCard
 import com.cursokotlin.appfromzero.models.ProjectState
@@ -264,6 +265,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                         val updatedEnterprise = response.body()
                         if (updatedEnterprise != null) {
                             enterprise = Enterprise(
+                                updatedEnterprise.userId,
                                 updatedEnterprise.enterpriseName,
                                 updatedEnterprise.website,
                                 updatedEnterprise.profileImgUrl,
@@ -272,6 +274,9 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                                 updatedEnterprise.ruc,
                                 updatedEnterprise.phone
                             )
+                            val dao = AppDatabase.getInstance(requireContext()).getEnterpriseDao()
+                            dao.updateProfileImg(updatedEnterprise.userId, updatedEnterprise.profileImgUrl)
+
                             bindDataToViews(role = "empresa")
                             Toast.makeText(requireContext(), "Imagen de perfil actualizada con éxito", Toast.LENGTH_SHORT).show()
                         }
@@ -306,7 +311,6 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
 
         fetchData(userId, token, userRole, view)
         setRecyclerViewContraints(view, R.id.cvHomeEnterpriseProfile)
-        initEnterpriseComponent(view)
 
         setUpClickListener(view)
         setupTouchListener(view)
@@ -367,56 +371,82 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
     }
 
     private fun fetchData(userId: Long, token: String?, userRole: String, view: View) {
-        if (token != null) {
-            if (userRole == "ROLE_ENTERPRISE") {
-                val call = enterpriseRepository.getDeveloperByUserId(userId, token)
-                call.enqueue(object : retrofit2.Callback<EnterpriseProfileResponse> {
-                    override fun onResponse(call: Call<EnterpriseProfileResponse>, response: Response<EnterpriseProfileResponse>) {
-                        if (response.isSuccessful) {
-                            val enterpriseData = response.body()
-                            enterprise = Enterprise(
-                                enterpriseData?.enterpriseName ?: "",
-                                enterpriseData?.website ?: "",
-                                enterpriseData?.profileImgUrl ?: "",
-                                enterpriseData?.description ?: "",
-                                enterpriseData?.sector ?: "",
-                                enterpriseData?.ruc ?: "",
-                                enterpriseData?.phone ?: ""
-                            )
-                            bindDataToViews(role = "empresa")
-                        } else {
-                            Toast.makeText(requireContext(), "Error al obtener los datos", Toast.LENGTH_SHORT).show()
-                        }
-                    }
 
-                    override fun onFailure(call: Call<EnterpriseProfileResponse>, t: Throwable) {
-                        Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                    }
-                })
-
-                val projectCall = projectRepository.getProjectsByEnterpriseUserId(userId, token)
-                projectCall.enqueue(object : retrofit2.Callback<List<Project>> {
-                    override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
-                        if (response.isSuccessful) {
-                            projects = response.body() ?: emptyList()
-                            bindProjectsToViews()
-                            setupRecyclerView(view)
-                        } else {
-                            Toast.makeText(requireContext(), "Error al obtener los proyectos", Toast.LENGTH_SHORT).show()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<Project>>, t: Throwable) {
-                        Log.d("FetchData", "Error: ${t.message}")
-                        Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                    }
-                })
-            } else {
-                Toast.makeText(requireContext(), "No se encontró el rol del usuario", Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            Toast.makeText(requireContext(), "No se encontró el token", Toast.LENGTH_SHORT).show()
+        if (token.isNullOrEmpty()) {
+            showToast("Token no válido")
+            return
         }
+
+        if (userRole != "ROLE_ENTERPRISE") {
+            showToast("Rol del usuario no válido")
+            return
+        }
+
+        initEnterpriseComponent(view)
+
+        val dao = AppDatabase.getInstance(requireContext()).getEnterpriseDao()
+        val enterpriseDao = dao.getEnterpriseByUserId(userId)
+        Log.d("FetchData", "EnterpriseDao: $enterpriseDao")
+
+        if ( enterpriseDao == null){
+            fetchEnterpriseProfile(userId, token)
+        } else {
+            this.enterprise = enterpriseDao
+            bindDataToViews(role = "empresa")
+        }
+        fetchProjects(userId, token, view)
+    }
+
+    private fun fetchEnterpriseProfile(userId: Long, token: String){
+        val call = enterpriseRepository.getDeveloperByUserId(userId, token)
+        call.enqueue(object : retrofit2.Callback<EnterpriseProfileResponse> {
+            override fun onResponse(call: Call<EnterpriseProfileResponse>, response: Response<EnterpriseProfileResponse>) {
+                if (response.isSuccessful) {
+                    response.body()?.let { enterpriseData ->
+                        enterprise = Enterprise(
+                            id = enterpriseData.userId,
+                            name = enterpriseData.enterpriseName,
+                            website = enterpriseData.website,
+                            profileImgUrl = enterpriseData.profileImgUrl,
+                            description = enterpriseData.description,
+                            field = enterpriseData.sector,
+                            socialRazon = enterpriseData.ruc,
+                            cellphone = enterpriseData.phone
+                        )
+                    }
+                    val dao = AppDatabase.getInstance(requireContext()).getEnterpriseDao()
+                    dao.insertOne(enterprise!!)
+                    bindDataToViews(role = "empresa")
+                } else {
+                    Toast.makeText(requireContext(), "Error al obtener los datos", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<EnterpriseProfileResponse>, t: Throwable) {
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun fetchProjects(userId: Long, token: String, view: View){
+        val projectCall = projectRepository.getProjectsByEnterpriseUserId(userId, token)
+        projectCall.enqueue(object : retrofit2.Callback<List<Project>> {
+            override fun onResponse(call: Call<List<Project>>, response: Response<List<Project>>) {
+                if (response.isSuccessful) {
+                    projects = response.body() ?: emptyList()
+
+                    bindProjectsToViews()
+                    setupRecyclerView(view)
+                } else {
+                    Toast.makeText(requireContext(), "Error al obtener los proyectos", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<List<Project>>, t: Throwable) {
+                Log.d("FetchData", "Error: ${t.message}")
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun initEnterpriseComponent(view: View) {
@@ -448,8 +478,6 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         setupEditToggle(ivEditProfileSector, tvEnterpriseSector, etEnterpriseSector)
         setupEditToggle(ivEditProfileDescription, tvEnterpriseDescription, etEnterpriseDescription)
         setupEditToggle(ivEditProfilePhone, tvEnterpriseCellphone, etEnterprisePhone)
-
-        bindDataToViews(role = "empresa")
     }
 
     private fun setChangeProfilePhotoListener() {
@@ -484,7 +512,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
         if (role == "empresa") {
             enterprise?.let {
                 Picasso.get()
-                    .load(it.pictureUrl)
+                    .load(it.profileImgUrl)
                     .placeholder(R.drawable.placeholder)  // Imagen de carga
                     .error(R.drawable.placeholder)  // Imagen en caso de error
                     .transform(CircleTransform())  // Aplica el recorte circular
@@ -495,20 +523,28 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                 tvEnterpriseRUC.text = it.socialRazon
                 tvEnterpriseDescription.text = it.description
                 tvEnterpriseCellphone.text = it.cellphone
+                etEnterpriseWebsite.setText(it.website)
+                etEnterpriseSector.setText(it.field)
+                etEnterpriseDescription.setText(it.description)
+                etEnterprisePhone.setText(it.cellphone)
             }
         }
     }
 
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
 
     private fun bindProjectsToViews() {
         Log.d("BindProjects", "Binding ${projects.size} projects to views")
+        Log.d("BindProjects", "Projects: $projects")
         this.projectList = projects.map { project ->
             ProjectCard(
                 idProject = project.id,
                 projectName = project.name,
                 numPostulantes = project.candidatesList.size,
                 enterpriseName = enterprise?.name ?: "",
-                pictureUrl = enterprise?.pictureUrl ?: "",
+                pictureUrl = enterprise?.profileImgUrl ?: "",
                 projectState = when (project.state) {
                     "En busqueda" -> ProjectState.BUSQUEDA_DEVELOPER
                     "En progreso" -> ProjectState.EN_PROGRESO
@@ -643,7 +679,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                 ruc = enterprise!!.socialRazon,
                 phone = etEnterprisePhone.text.toString(),
                 website = etEnterpriseWebsite.text.toString(),
-                profileImgUrl = enterprise!!.pictureUrl,
+                profileImgUrl = enterprise!!.profileImgUrl,
                 sector = etEnterpriseSector.text.toString()
             )
 
@@ -654,6 +690,7 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                         val updatedEnterprise = response.body()
                         if (updatedEnterprise != null) {
                             enterprise = Enterprise(
+                                updatedEnterprise.userId,
                                 updatedEnterprise.enterpriseName,
                                 updatedEnterprise.website,
                                 updatedEnterprise.profileImgUrl,
@@ -662,6 +699,9 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                                 updatedEnterprise.ruc,
                                 updatedEnterprise.phone
                             )
+                            val dao = AppDatabase.getInstance(requireContext()).getEnterpriseDao()
+                            dao.updateEnterpriseProfile(updatedEnterprise.userId, updatedEnterprise.website, updatedEnterprise.description, updatedEnterprise.sector, updatedEnterprise.phone)
+
                             bindDataToViews(role = "empresa")
                             Toast.makeText(requireContext(), "Perfil actualizado con éxito", Toast.LENGTH_SHORT).show()
                         }
