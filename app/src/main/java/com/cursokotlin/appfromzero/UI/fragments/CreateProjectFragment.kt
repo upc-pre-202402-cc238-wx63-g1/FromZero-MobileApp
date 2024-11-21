@@ -55,7 +55,7 @@ class CreateProjectFragment : Fragment() {
                 val languages = mutableListOf<String>()
                 if (etLanguages.text.toString().lowercase() == "java") languages.add("1")
                 else if (etLanguages.text.toString().lowercase() == "python") languages.add("2")
-                else if (etLanguages.text.toString().lowercase() == "javaScript") languages.add("3")
+                else if (etLanguages.text.toString().lowercase() == "javascript") languages.add("3")
                 else if (etLanguages.text.toString().lowercase() == "c#") languages.add("4")
                 else if (etLanguages.text.toString().lowercase() == "ruby") languages.add("5")
                 else throw IllegalArgumentException("Lenguaje no válido")
