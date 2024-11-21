@@ -11,6 +11,8 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.constraintlayout.widget.Guideline
 import androidx.fragment.app.Fragment
 import com.cursokotlin.appfromzero.R
@@ -40,6 +42,9 @@ class RegisterFragment : Fragment() {
         val etFirstNameLayout = rootView.findViewById<View>(R.id.etFirstNameLayout)
         val etLastNameLayout = rootView.findViewById<View>(R.id.etLastNameLayout)
         val etEnterpriseNameLayout = rootView.findViewById<View>(R.id.etEnterpriseNameLayout)
+        val btRegister = rootView.findViewById<Button>(R.id.bt_Registrar)
+        val constraintLayout = rootView.findViewById<ConstraintLayout>(R.id.constraintLayout)
+
 //        val guideline = rootView.findViewById<Guideline>(R.id.guideline) // Add this line
 //        val dynamicguideline = rootView.findViewById<Guideline>(R.id.dynamicGuideline)
 
@@ -53,11 +58,23 @@ class RegisterFragment : Fragment() {
             etFirstNameLayout.visibility = View.GONE
             etLastNameLayout.visibility = View.GONE
             etEnterpriseNameLayout.visibility = View.VISIBLE
+
+            val constraintSet = ConstraintSet()
+            constraintSet.clone(constraintLayout)
+
+            // Change the layout_constraintTop_toBottomOf constraint
+            constraintSet.connect(
+                R.id.bt_Registrar,
+                ConstraintSet.TOP,
+                R.id.etEnterpriseNameLayout, // Change this to the ID of the new element you want to connect to
+                ConstraintSet.BOTTOM,
+                48 // Margin in dp
+            )
+            constraintSet.applyTo(constraintLayout)
 //            guideline.setGuidelineBegin(1310)
 //            dynamicguideline.setGuidelineBegin(1270)
         }
 
-        val btRegister = rootView.findViewById<Button>(R.id.bt_Registrar)
         btRegister.setOnClickListener {
             val username = rootView.findViewById<EditText>(R.id.etEmail).text.toString()
             val password = rootView.findViewById<EditText>(R.id.etPassword).text.toString()
