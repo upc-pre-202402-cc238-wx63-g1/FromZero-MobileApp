@@ -62,12 +62,12 @@
                     android:gravity="center"
                     android:orientation="vertical"
                     android:paddingEnd="35dp"
-                    android:paddingBottom="30dp"
+                    android:paddingBottom="35dp"
                     tools:ignore="RtlSymmetry">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="154dp">
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -106,7 +106,7 @@
 
                                 <LinearLayout
                                     android:layout_width="200dp"
-                                    android:layout_height="100dp"
+                                    android:layout_height="wrap_content"
                                     android:gravity="center"
                                     android:orientation="vertical">
 
@@ -172,7 +172,7 @@
                                     <com.google.android.material.textfield.TextInputEditText
                                         android:id="@+id/etDevSpecialties"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
+                                        android:layout_height="20dp"
                                         android:text="Desarrollo web, Desarrollo móvil, Diseño de interfaces"
                                         android:textColor="@color/primary_text_color"
                                         android:textSize="16sp"
@@ -197,7 +197,7 @@
                     <LinearLayout
                         android:id="@+id/llExtendingDeveloper"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:orientation="vertical"
                         android:visibility="gone">
