@@ -377,6 +377,9 @@ class HomeDeveloperFragment : Fragment() {
                 response: Response<DeveloperProfileResponse>
             ) {
                 if (response.isSuccessful) {
+                    val sharedPreferences =
+                        requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                    val email = sharedPreferences.getString("email", null)
                     response.body()?.let { developerData ->
                         developer = Developer(
                             id = developerData.userId,
@@ -387,7 +390,7 @@ class HomeDeveloperFragment : Fragment() {
                             summary = developerData.description ?: "Sin descripción",
                             skills = developerData.specialties ?: "Sin especialidades",
                             phone = developerData.phone ?: "No disponible",
-                            email = "example@gmail.com",
+                            email = email ?: "No disponible",
                             profileImgUrl = developerData.profileImgUrl
                         )
                         val dao = AppDatabase.getInstance(requireContext()).getDeveloperDao()

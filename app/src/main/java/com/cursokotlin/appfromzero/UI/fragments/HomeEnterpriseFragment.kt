@@ -471,6 +471,9 @@ class HomeEnterpriseFragment : Fragment(), ApplicantsFragment.OnDeveloperSelecte
                 call: Call<EnterpriseProfileResponse>,
                 response: Response<EnterpriseProfileResponse>
             ) {
+                val sharedPreferences =
+                    requireContext().getSharedPreferences("app_prefs", Context.MODE_PRIVATE)
+                val email = sharedPreferences.getString("email", null)
                 if (response.isSuccessful) {
                     response.body()?.let { enterpriseData ->
                         enterprise = Enterprise(
