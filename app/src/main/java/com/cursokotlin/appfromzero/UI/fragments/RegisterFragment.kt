@@ -40,26 +40,52 @@ class RegisterFragment : Fragment() {
         val etFirstNameLayout = rootView.findViewById<View>(R.id.etFirstNameLayout)
         val etLastNameLayout = rootView.findViewById<View>(R.id.etLastNameLayout)
         val etEnterpriseNameLayout = rootView.findViewById<View>(R.id.etEnterpriseNameLayout)
-        val guideline = rootView.findViewById<Guideline>(R.id.guideline) // Add this line
-        val dynamicguideline = rootView.findViewById<Guideline>(R.id.dynamicGuideline)
+//        val guideline = rootView.findViewById<Guideline>(R.id.guideline) // Add this line
+//        val dynamicguideline = rootView.findViewById<Guideline>(R.id.dynamicGuideline)
 
         if (userRole == "ROLE_DEVELOPER") {
             etFirstNameLayout.visibility = View.VISIBLE
             etLastNameLayout.visibility = View.VISIBLE
             etEnterpriseNameLayout.visibility = View.GONE
-            guideline.setGuidelineBegin(1520)
-            dynamicguideline.setGuidelineBegin(1500)
+//            guideline.setGuidelineBegin(1520)
+//            dynamicguideline.setGuidelineBegin(1500)
         } else if (userRole == "ROLE_ENTERPRISE") {
             etFirstNameLayout.visibility = View.GONE
             etLastNameLayout.visibility = View.GONE
             etEnterpriseNameLayout.visibility = View.VISIBLE
-            guideline.setGuidelineBegin(1310)
-            dynamicguideline.setGuidelineBegin(1270)
+//            guideline.setGuidelineBegin(1310)
+//            dynamicguideline.setGuidelineBegin(1270)
         }
 
         val btRegister = rootView.findViewById<Button>(R.id.bt_Registrar)
         btRegister.setOnClickListener {
-            showTermsConditionsDialog(rootView)
+            val username = rootView.findViewById<EditText>(R.id.etEmail).text.toString()
+            val password = rootView.findViewById<EditText>(R.id.etPassword).text.toString()
+            if (userRole == "ROLE_DEVELOPER") {
+                val firstName = rootView.findViewById<EditText>(R.id.etFirstName).text.toString()
+                val lastName = rootView.findViewById<EditText>(R.id.etLastName).text.toString()
+                if (username.isNotEmpty() && password.isNotEmpty() && firstName.isNotEmpty() && lastName.isNotEmpty()) {
+                    showTermsConditionsDialog(rootView)
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Por favor, complete todos los campos",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else if (userRole == "ROLE_ENTERPRISE") {
+                val enterpriseName =
+                    rootView.findViewById<EditText>(R.id.etEnterpriseName).text.toString()
+                if (username.isNotEmpty() && password.isNotEmpty() && enterpriseName.isNotEmpty()) {
+                    showTermsConditionsDialog(rootView)
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Por favor, complete todos los campos",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
 
         val btBack = rootView.findViewById<LinearLayout>(R.id.bt_Back)
@@ -190,27 +216,11 @@ class RegisterFragment : Fragment() {
             if (userRole == "ROLE_DEVELOPER") {
                 val firstName = rootView.findViewById<EditText>(R.id.etFirstName).text.toString()
                 val lastName = rootView.findViewById<EditText>(R.id.etLastName).text.toString()
-                if (username.isNotEmpty() && password.isNotEmpty() && firstName.isNotEmpty() && lastName.isNotEmpty()) {
                     performDeveloperRegister(username, password, firstName, lastName)
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Por favor, complete todos los campos",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
             } else if (userRole == "ROLE_ENTERPRISE") {
                 val enterpriseName =
                     rootView.findViewById<EditText>(R.id.etEnterpriseName).text.toString()
-                if (username.isNotEmpty() && password.isNotEmpty() && enterpriseName.isNotEmpty()) {
                     performEnterpriseRegister(username, password, enterpriseName)
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Por favor, complete todos los campos",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
             }
 
             dialog.dismiss()
