@@ -87,17 +87,17 @@ class LogInFragment : Fragment() {
                         Resource.Error("Login fallido")
 
                     }
-                    handleLoginResponse(resource)
+                    handleLoginResponse(resource,username)
                 }
 
                 override fun onFailure(call: Call<AuthenticationResponse?>, t: Throwable) {
                     val resource = Resource.Error<AuthenticationResponse>("Error: ${t.message}")
-                    handleLoginResponse(resource)
+                    handleLoginResponse(resource, username)
                 }
             })
     }
 
-    private fun handleLoginResponse(resource: Resource<AuthenticationResponse>) {
+    private fun handleLoginResponse(resource: Resource<AuthenticationResponse>, email: String) {
         uiState = UIState(isLoading = false)
         when (resource) {
             is Resource.Success -> {
@@ -106,7 +106,7 @@ class LogInFragment : Fragment() {
                 val token = resource.data?.token ?: ""
                 if (!userRoles.isNullOrEmpty()) {
                     val userRole = userRoles[0]
-                    saveUserData(userId, token, userRole)
+                    saveUserData(userId, token, userRole, email)
                     navigateToMainActivity(userRole)
                 } else {
                     Toast.makeText(requireContext(), "No se encontraron roles", Toast.LENGTH_SHORT)
@@ -121,12 +121,13 @@ class LogInFragment : Fragment() {
         }
     }
 
-    private fun saveUserData(userId: Long, token: String, userRole: String) {
+    private fun saveUserData(userId: Long, token: String, userRole: String, email: String) {
         val sharedPreferences = requireContext().getSharedPreferences("app_prefs", MODE_PRIVATE)
         with(sharedPreferences.edit()) {
             putLong("userId", userId)
             putString("token", token)
             putString("userRole", userRole)
+            putString("email", email)
             apply()
         }
     }
@@ -137,6 +138,7 @@ class LogInFragment : Fragment() {
             remove("userId")
             remove("token")
             remove("userRole")
+            remove("email")
             apply()
         }
     }
