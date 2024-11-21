@@ -65,24 +65,30 @@
             app:layout_constraintTop_toBottomOf="@+id/tvDeveloperName" />
 
         <!-- Subtítulo de Resumen -->
+
+        <!-- Resumen (expandible) -->
         <TextView
             android:id="@+id/tvResumeTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="16dp"
-            android:text="@string/resume"
+            android:layout_marginEnd="32dp"
+            android:text="@string/resumen"
             android:textStyle="bold"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rbDeveloperRating" />
 
-        <!-- Resumen (expandible) -->
         <TextView
             android:id="@+id/tvDeveloperSummary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="32dp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -94,7 +100,9 @@
             android:id="@+id/tvSkillsTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="32dp"
             android:text="@string/skills"
             android:textStyle="bold"
             android:visibility="gone"
@@ -107,11 +115,16 @@
             android:id="@+id/tvDeveloperSkills"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:layout_marginTop="4dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="32dp"
             android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvSkillsTitle"
+            app:layout_constraintVertical_bias="0.19"
             tools:text="Android, iOS, Kotlin, Swift" />
 
         <!-- Botón de expandir/cerrar -->
@@ -119,11 +132,11 @@
             android:id="@+id/ivArrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvDeveloperSkills"
             app:srcCompat="@drawable/arrow_down" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
